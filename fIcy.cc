@@ -151,7 +151,7 @@ sigPipe(const int)
 void
 sigPipeInst()
 {
-  sigaction_t sa;
+  struct sigaction sa;
   sa.sa_flags = SA_RESETHAND;
   sigemptyset(&sa.sa_mask);
   sa.sa_handler = sigPipe;

@@ -8,11 +8,12 @@ FICY_OBJECTS := fIcy.o resolver.o socket.o http.o \
 
 # parameters
 DEPS := Makedepend
-#if $(CXX) != "gcc"
-CPPFLAGS += -MDupdate $(DEPS)	# SGI MIPSPro
+#if $(CXX) != "g++"
+DGEN := -MDupdate $(DEPS)	# SGI MIPSPro
 #else
-CPPFLAGS += -MD -MF $(DEPS)	# GNU cc
+DGEN := -MD -MF $(DEPS)		# GNU cc
 #endif
+CPPFLAGS += $(DGEN)
 
 
 # suffixes, rules
