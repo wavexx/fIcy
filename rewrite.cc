@@ -24,15 +24,8 @@ using std::runtime_error;
 #include <sys/wait.h>
 
 
-Rewrite::Rewrite(const char* script)
+Rewrite::Rewrite(const char* arg, const arg_t type)
 {
-  // no script specified
-  if(!script)
-  {
-    pid = -1;
-    return;
-  }
-
   // create two pipes
   if((pipe(in) < 0) || (pipe(out) < 0))
     throw runtime_error("cannot create pipes");
@@ -59,7 +52,7 @@ Rewrite::Rewrite(const char* script)
       throw runtime_error("cannot remap descriptors");
 
     // execute the coprocess
-    execlp(fIcy::sed, fIcy::sed, "-u", "-f", script, NULL);
+    execlp(fIcy::sed, fIcy::sed, "-u", (type == expr? "-e": "-f"), arg, NULL);
     throw runtime_error(string("cannot execute ") + fIcy::sed);
   }
 }
@@ -67,10 +60,6 @@ Rewrite::Rewrite(const char* script)
 
 Rewrite::~Rewrite() throw()
 {
-  // no filter specified, return immediately
-  if(pid < 0)
-    return;
-
   // close and wait
   close(in[0]);
   close(out[1]);
@@ -81,10 +70,6 @@ Rewrite::~Rewrite() throw()
 void
 Rewrite::operator()(string& buf)
 {
-  // no filter specified, return immediately
-  if(pid < 0)
-    return;
-
   // write to the coprocess
   char c = '\n';
   write(out[1], buf.data(), buf.size());

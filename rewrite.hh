@@ -21,8 +21,10 @@ class Rewrite
   int out[2];
 
 public:
+  enum arg_t {expr, file};
+
   explicit
-  Rewrite(const char* script = NULL);
+  Rewrite(const char* arg, const arg_t type);
 
   ~Rewrite() throw();
 
