@@ -11,7 +11,7 @@
 #include <locale>
 
 // some defines
-#define FICY_VERSION "1.0.9beta"
+#define FICY_VERSION "1.0.9"
 
 
 // some constants
@@ -36,8 +36,8 @@ namespace fIcy
     "  -q file\tAppend file sequence list to file (only when saving)\n"
     "  -x regex\tDump only titles matching regex\n"
     "  -X regex\tDo NOT dump titles matching regex\n"
-    "  -e\t\tEnumerate files when song metadata changes. Use file as a prefix\n"
-    "  -m\t\tUse song metadata when writing filenames. file used as a prefix\n"
+    "  -e\t\tEnumerate files when song metadata changes. Use file as prefix\n"
+    "  -m\t\tUse song metadata when writing filenames. file used as prefix\n"
     "  -v\t\tVerbose\n"
     "  -t\t\tDisplay metadata while downloading\n"
     "  -c\t\tDo not clobber files (implicit with -n)\n"
@@ -52,7 +52,7 @@ namespace fIcy
   const size_t maxFrames = 6;
 
   const char fResyncHelp[] =
-    " [-shv] [-n frames] [-m len] file\n\n"
+    " [-bshv] [-n frames] [-m len] file\n\n"
     "  -b\t\tRevert to buffered mode (implicit with -s)\n"
     "  -s\t\tSimulate only (print frame sync offsets: start and size)\n"
     "  -v\t\tIncrement verbosity level\n"
