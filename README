@@ -63,7 +63,7 @@ Options
 			in combination with -m or -e.
 
 
-Examples:
+Examples
 
 	Use fIcy to display ICY titles while playing:
 
@@ -89,13 +89,13 @@ Examples:
 		fIcy -t mega.station | mpg123 -
 
 
-DISCLAIMER:
+DISCLAIMER
 
 	We would like to remind you that saving public streams without paying
 	the rights is *ILLEGAL* unless explicitly stated.
 
 
-Notes:
+Notes
 
 	The output files produced by fIcy may miss audio framing informations
 	and headers since the separation does not consider the audio data. For
@@ -107,7 +107,7 @@ Notes:
 	The fIcy project is located at http://ficy.sf.net/
 
 
-Installation:
+Installation
 
 	fIcy comes with a very simple Makefile that should work on any system
 	using gcc, or IRIX. GNU make or pmake is required. Documentation is

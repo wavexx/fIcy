@@ -37,7 +37,7 @@ sub par_start($)
 {
   par_end;
   my $title = shift;
-  print "<h2>$title</h2>";
+  print "<a name=\"$title\"><h2>$title</h2>";
 }
 
 
@@ -78,6 +78,7 @@ while(<>)
   s/\(r\)/&reg;/g;
   s/\(c\)/&copy;/g;
   s/\(tm\)/&trade;/g;
+  s/\"/&quot;/g;
 
   # text structure
   if($incode)

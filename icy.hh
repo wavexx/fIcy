@@ -1,6 +1,6 @@
 /*
  * icy - protocol functions and constants
- * Copyright(c) 2003 of wave++ (Yuri D'Elia)
+ * Copyright(c) 2003-2004 of wave++ (Yuri D'Elia)
  * Distributed under GNU LGPL without ANY warranty.
  */
 

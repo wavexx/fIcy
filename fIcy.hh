@@ -11,7 +11,7 @@
 #include <locale>
 
 // some defines
-#define FICY_VERSION "1.0.4beta"
+#define FICY_VERSION "1.0.4"
 
 
 // some constants

@@ -1,4 +1,4 @@
-fIcy 1.0.4:
+fIcy 1.0.4: Mon May 03 CEST 2004
 
 	* ohg now included into the distribution.
 	* Better filename sanitization.
