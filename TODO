@@ -7,7 +7,3 @@ wave++:
 
 	* Split the ICY class into ICE/OGG subclasses, to support
 	seamless operation when using OGG streams.
-
-	* Change the semantics of -p (or add another flag), to make
-	duping both non-blocking and non-fatal instead of signal
-	based operations. This is more desiderable.

@@ -168,11 +168,7 @@ sigTerm(const int)
 void
 sigPipeInst()
 {
-  struct sigaction sa;
-  sa.sa_flags = SA_RESETHAND;
-  sigemptyset(&sa.sa_mask);
-  sa.sa_handler = sigPipe;
-  sigaction(SIGPIPE, &sa, NULL);
+  signal(SIGPIPE, SIG_IGN);
 }
 
 
@@ -440,6 +436,13 @@ main(int argc, char* const argv[])
 
     for(;;)
     {
+      if(dupStdout && !cout)
+      {
+	// try an empty write to determine if the file is ready
+	if(!write(STDOUT_FILENO, NULL, 0))
+	  cout.clear();
+      }
+
       // read the stream
       if(reader.dup(out.get(), metaInt, dupStdout) != metaInt)
       {

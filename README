@@ -45,10 +45,9 @@ Options
 
 	-n		If the file exists create new one with .n as suffix.
 
-	-p		When duping and writing, continue even if SIGPIPE is
-			received.  Useful when you pipe the output to a media
-			player and want to kill it while not interrupting the
-			rip.
+	-p		When duping consider writing errors as transient.
+			Useful when you pipe the output to a media player and
+			want to kill it while not interrupting the rip.
 
 	-o <file>	Dump the output to file.
 			Hint: to dump without a prefix use "./"
@@ -85,7 +84,14 @@ Examples
 
 		fIcy -s .mp3 -o ./ -mp 1.2.3.4 8080 /path/to/stream | mpg123 -
 
-	URL parsing examples. Both "icy" and "http" are recognized as
+	Same as above, but allows the player to be restarted later by using
+	a named fifo:
+
+		mknod fifo
+		fIcy -p ... > fifo
+		mpg123 fifo
+
+	URL parsing examples. Both "icy" and "http" are recognised as
 	valid protocols, as well as nothing:
 
 		fIcy -t icy://a.radio.invalid:8888/ | mpg123 -
@@ -93,6 +99,18 @@ Examples
 		fIcy -t http://example.com/radio | mpg123 -
 
 		fIcy -t mega.station | mpg123 -
+
+
+Companion software:
+
+	bfr:	http://www.glines.org:8000/software/buffer.html
+		Audio-oriented rebuffering tool. Ideal for lousy streams.
+
+	mp3check:	http://sourceforge.net/projects/mp3check/
+			mp3 integrity checker.
+
+	mp3asm:	http://sourceforge.net/projects/mp3asm/
+		Frame-level mp3 cutting tool.
 
 
 DISCLAIMER

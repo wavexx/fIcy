@@ -1,6 +1,7 @@
 fIcy 1.0.5:
 
 	* BEWARE: -i has changed semantics.
+	* -p has changed semantics. Look into README's example section.
 
 fIcy 1.0.4: Mon May 03 CEST 2004
 

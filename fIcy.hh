@@ -38,7 +38,7 @@ namespace fIcy
     "  -c\tDo not clobber files (implicit with -n)\n"
     "  -i\tAbort when clobbering is attempted (implies -c)\n"
     "  -n\tIf the file exists create a new file with .n appended\n"
-    "  -p\tWhen duping and writing, continue even if SIGPIPE is received\n"
+    "  -p\tWhen duping consider writing errors as transient\n"
     "  -r\tRemove partials. Keep only complete sequences\n"
     "  -h\tThis help (how cute!)\n\n";
 }
