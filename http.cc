@@ -128,9 +128,10 @@ namespace Http
     using std::auto_ptr;
     auto_ptr<Socket> s(gen(Proto::get, file, reply, headers));
 
-    // close the write end
-    s->close(SHUT_WR);
-
+    // we used to close the write end here, as HTTP/1.0 requests really end
+    // here and we're very happy to relase some resources. Unfortunately,
+    // SHOUTcast > 1.9 servers simply interrupt the connection when receiving
+    // the notification. "We fixed all known bugs in 1.9".
     return s.release();
   }
 }

@@ -176,5 +176,5 @@ Installation
 
 	   CXX="eg++" make -e
 
-	instead of changing manually the Makefile. Please note that at least
-	gcc >= 3 is required to compile fIcy.
+	instead of changing manually the Makefile. Please note that, when using
+	gcc, at least g++ >= 3 is required to compile fIcy.

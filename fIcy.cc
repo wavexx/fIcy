@@ -418,6 +418,7 @@ main(int argc, char* const argv[])
     ICY::Reader reader(*s, fIcy::bufSz);
     size_t enu(0);
     time_t tStamp(0);
+    std::string oldTitle;
 
     // initial file
     auto_ptr<std::ostream> out;
@@ -454,7 +455,8 @@ main(int argc, char* const argv[])
         {
           map<std::string, std::string>::const_iterator title(
               data.find(ICY::Proto::mTitle));
-          if(title != data.end() && title->second.size() > 0)
+          if(title != data.end() && title->second != oldTitle &&
+	      title->second.size() > 0)
           {
             if(showMeta)
 	      tStamp = display_status(title->second, enu, tStamp);
@@ -496,6 +498,7 @@ main(int argc, char* const argv[])
             }
 
 	    // update stream number
+	    oldTitle = title->second;
 	    ++enu;
           }
         }

@@ -1,6 +1,8 @@
-fIcy 1.0.6:
+fIcy 1.0.6: Tue Nov 02 CET 2004
 
 	* OpenBSD compilation fixes (thanks to Tobias Franke "deimoz").
+	* SHOUTcast > 1.9 compatibility [aka: bug in SHOUTcast] fixes.
+	* Reduced HTTP's request fragmentation.
 
 fIcy 1.0.5: Mon Sep 06 CEST 2004
 
