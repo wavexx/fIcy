@@ -1,0 +1,29 @@
+fIcy 1.0.3:
+
+	* Support for removing partial dumps.
+	* URL parsing on the command line.
+	* New -r flag to remove partial dumps.
+
+fIcy 1.0.2: Mon Mar 15 CET 2004
+
+	* SIGPIPE handler
+	* public release!
+
+fIcy 1.0.1: Oct 2003
+
+	* Now works on linux.
+
+fIcy 1.0.0: earlyer in 2003
+
+	* Now in "C"(r)
+
+fIcy 0.0.0: late 2002
+
+	* Original source:
+
+	#!/bin/sh
+	netcat "$1" "$2" << EOF | sed -e "1,9d"
+	GET $1 HTTP/1.0
+	Host: $1:$2
+
+	EOF

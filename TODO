@@ -1,6 +1,4 @@
 SethX:
 
-	* Skip the first and the last song of the ripped stream,
-	because they are not complete.
 	* Add a time offset after witch to change title, due to the
 	"soft" mixing in many streams.
