@@ -37,7 +37,7 @@ namespace ICY
 
 
   ssize_t
-  Reader::dup(std::ostream* out, const size_t size, const bool dup)
+  Reader::dup(std::ostream* out, const size_t size, bool dup)
   {
     size_t r(0);
     
@@ -51,8 +51,13 @@ namespace ICY
         out->write(buf, p);
       if(dup)
       {
+	// check for writing errors, but do not throw exceptions: SIGPIPE
+	// should be generated already.
         cout.write(buf, p);
-	cout.flush();
+	if(!cout)
+	  dup = false;
+	else
+	  cout.flush();
       }
 
       r += p;

@@ -32,7 +32,7 @@ fIcy: $(FICY_OBJECTS)
 # stubs
 .PHONY: all clean distclean
 clean:
-	rm -rf $(TARGETS) $(FICY_OBJECTS) ii_files core
+	rm -rf $(TARGETS) $(FICY_OBJECTS) ii_files core $(DEPS)
 
 distclean: clean
 	rm -rf *~

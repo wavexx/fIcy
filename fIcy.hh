@@ -1,6 +1,6 @@
 /*
  * fIcy - HTTP/1.0-ICY stream extractor/separator
- * Copyright(c) 2003 of wave++ (Yuri D'Elia)
+ * Copyright(c) 2003-2004 of wave++ (Yuri D'Elia)
  * Distributed under GNU LGPL without ANY warranty.
  */
 
@@ -26,7 +26,7 @@ namespace fIcy
   
   // an embedded help string
   const char help[] =
-    " [-demvtcinh] [-o file] [-s sfx] <server> [port [path]]\n\n"
+    " [-demvtcinph] [-o file] [-s sfx] <server> [port [path]]\n\n"
     "  -d\tDo not dup the output to stdout\n"
     "  -o file\tDump the output to file (or use file as a prefix)\n"
     "  -s sfx\tUse sfx as a suffix for new files\n"

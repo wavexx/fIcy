@@ -142,8 +142,11 @@ newNFWrap(string& file, const bool ign = false)
 void
 sigPipe(const int)
 {
-  cerr << "broken pipe: disabling duping.\n";
+  msg("broken pipe: disabling duping.");
   dupStdout = false;
+
+  // close the descriptor: this is needed to release the resource
+  close(STDOUT_FILENO);
 }
 
 
@@ -346,7 +349,7 @@ main(int argc, char* const argv[])
               if(enuFiles)
               {
                 char buf[16];
-                snprintf(buf, sizeof(buf), "[%lu] ", enu);
+                snprintf(buf, sizeof(buf), (useMeta? "[%lu] ": "%lu"), enu);
                 newFName += buf;
                 ++enu;
               }

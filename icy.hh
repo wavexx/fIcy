@@ -69,7 +69,7 @@ namespace ICY
 
     // duping function
     ssize_t
-    dup(std::ostream* out, const size_t size, const bool dup = true);
+    dup(std::ostream* out, const size_t size, bool dup = true);
 
 
     // metadata decoding
