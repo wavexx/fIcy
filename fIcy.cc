@@ -177,7 +177,7 @@ main(int argc, char* const argv[])
   bool instSignal(false);
 
   int arg;
-  while((arg = getopt(argc, argv, "do:emvtcs:inh")) != -1)
+  while((arg = getopt(argc, argv, "do:emvtcs:inph")) != -1)
     switch(arg)
     {
     case 'd':
