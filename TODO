@@ -9,6 +9,12 @@ Known bugs:
 	"bit reservoir" handling is lacking. Will be fixed in future
 	release of fIcy.
 
+	* fResync will deliberately remove any form of ID3v1 or v2 tag if
+	run on a "sane" file.
+
+	* Running fResync on a read-only file is still possible and in certain
+	race conditions can remove the source file.
+
 Internals:
 
 	* OGG support isn't there yet.

@@ -161,7 +161,7 @@ search_sync(ifstream& fd, const params_t& params, region_t& reg)
     return true;
 
   size_t end(mpeg::sync_reverse(buf.get(), mlen, params.maxframes));
-  if(!end)
+  if(!end || (pos + end) <= reg.start)
     return true;
   reg.size = (pos + end) - reg.start;
 
