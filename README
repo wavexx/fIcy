@@ -73,8 +73,13 @@ fIcy options
 			will use this file in the future.
 
 	-x <regex>	Save only files whose title (NOT filename) matches
-			against this extended regular expression.
-			Duping unaffected.
+			against this (or one of these) extended regular
+			expressions. Multiple -x can be specified on the
+			command line to form OR conditions. Duping unaffected.
+			Can be combined with -X.
+
+	-X <regex>	Do NOT save files whose title matches against this
+			extended regular expression. Same semantics as -x.
 
 
 fResync options

@@ -11,6 +11,7 @@
 #include "hdrparse.hh"
 #include "sanitize.hh"
 #include "urlparse.hh"
+#include "match.hh"
 #include "msg.hh"
 using std::string;
 using std::map;
@@ -24,6 +25,8 @@ using std::cerr;
 using std::ofstream;
 
 #include <stdexcept>
+using std::runtime_error;
+
 #include <limits>
 #include <memory>
 using std::auto_ptr;
@@ -36,7 +39,6 @@ using std::auto_ptr;
 #include <unistd.h>
 #include <string.h>
 #include <time.h>
-#include <regex.h>
 
 
 // constants (urgh)
@@ -64,15 +66,14 @@ newFWrap(const char* file, const bool clobber, const bool ign)
     if(ign)
       return NULL;
     else
-      throw std::runtime_error(
-	  string("cannot clobber existing file: ") + file);
+      throw runtime_error(string("cannot clobber existing file: ") + file);
   }
 
   ofstream* out(new ofstream(file, std::ios_base::out));
   if(!*out)
   {
     delete out;
-    throw std::runtime_error(string("cannot write `") + file + "'");
+    throw runtime_error(string("cannot write `") + file + "'");
   }
 
   return out;
@@ -99,7 +100,7 @@ newNFWrap(string& file, const bool ign)
     }
 
     if(!(out || ign))
-      throw std::runtime_error(string("no free files for `") + file + "'");
+      throw runtime_error(string("no free files for `") + file + "'");
   }
 
   return out;
@@ -192,38 +193,20 @@ write_seq(ofstream& out, const char* file)
   {
     out << file << std::endl;
     if(!out)
-      throw std::runtime_error("cannot append to sequence file");
+      throw runtime_error("cannot append to sequence file");
   }
-}
-
-
-// compile a regular expression with error checking
-bool
-regex_compile(regex_t& data, const char* regex)
-{
-  int res;
-  if(res = regcomp(&data, regex, REG_EXTENDED | REG_NOSUB))
-  {
-    char buf[128];
-    regerror(res, &data, buf, sizeof(buf));
-    err("regex: %s", buf);
-    return true;
-  }
-
-  return false;
 }
 
 
 // implementation
 int
-main(int argc, char* const argv[])
+main(int argc, char* const argv[]) try
 {
   // option defaults
   prg = argv[0];
 
   char* outFile(NULL);
   char* suffix(NULL);
-  char* regex(NULL);
   ofstream seq;
   bool enuFiles(false);
   bool useMeta(false);
@@ -233,6 +216,7 @@ main(int argc, char* const argv[])
   bool numEFiles(false);
   bool instSignal(false);
   bool rmPartial(false);
+  Match match;
 
   int arg;
   while((arg = getopt(argc, argv, "do:emvtcs:inprhq:x:")) != -1)
@@ -297,7 +281,11 @@ main(int argc, char* const argv[])
       break;
 
     case 'x':
-      regex = optarg;
+      match.include(optarg);
+      break;
+
+    case 'X':
+      match.exclude(optarg);
       break;
 
     case 'h':
@@ -360,161 +348,163 @@ main(int argc, char* const argv[])
   if(rmPartial && (enuFiles || useMeta))
     sigTermInst(!instSignal);
 
-  // compile the regex
-  regex_t regexData;
-  if(regex && regex_compile(regexData, regex))
-    return Exit::args;
-
-  try
-  {
-    // resolve the hostname
-    msg("connecting to (%s %d)", server.c_str(), port);
-    Http::Http httpc(server.c_str(), port);
+  // resolve the hostname
+  msg("connecting to (%s %d)", server.c_str(), port);
+  Http::Http httpc(server.c_str(), port);
     
-    // setup headers
-    Http::Header qHeaders;
-    Http::Header aHeaders;
-    Http::Reply reply(&aHeaders);
+  // setup headers
+  Http::Header qHeaders;
+  Http::Header aHeaders;
+  Http::Reply reply(&aHeaders);
+  
+  // query
+  qHeaders.push_back(fIcy::userAgent);
+  if(reqMeta)
+    qHeaders.push_back(ICY::Proto::reqMeta);
+  
+  msg("requesting stream on (%s)", path.c_str());
+  auto_ptr<Socket> s(httpc.get(path.c_str(), reply, &qHeaders));
 
-    // query
-    qHeaders.push_back(fIcy::userAgent);
-    if(reqMeta)
-      qHeaders.push_back(ICY::Proto::reqMeta);
-
-    msg("requesting stream on (%s)", path.c_str());
-    auto_ptr<Socket> s(httpc.get(path.c_str(), reply, &qHeaders));
-
-    // validate the reply
-    if(reply.code != Http::Proto::ok)
-    {
-      err("unexpected reply: %d %s", reply.code,
-	  sanitize_esc(
-	      (reply.description.size()? reply.description: reply.proto)
-	      ).c_str());
-      return Exit::fail;
-    }
-
-    map<string, string> pReply(Http::hdrParse(aHeaders));
-    if(reqMeta && pReply.find(ICY::Proto::metaint) == pReply.end())
-    {
-      err("requested metadata, but got nothing.");
-      return Exit::fail;
-    }
-
-    // show some headers
-    if(verbose)
-    {
-      shwIcyHdr(pReply, ICY::Proto::notice1, "Notice: ");
-      shwIcyHdr(pReply, ICY::Proto::notice2, "Notice: ");
-      shwIcyHdr(pReply, ICY::Proto::title, "Title: ");
-      shwIcyHdr(pReply, ICY::Proto::genre, "Genre: ");
-      shwIcyHdr(pReply, ICY::Proto::url, "URL: ");
-      shwIcyHdr(pReply, ICY::Proto::br, "Bit Rate: ");
-    }
-    
-    // start reading
-    size_t metaInt(reqMeta?
-        atol(pReply.find(ICY::Proto::metaint)->second.c_str()): fIcy::bufSz);
-    ICY::Reader reader(*s, fIcy::bufSz);
-    size_t enu(0);
-    time_t tStamp(0);
-    std::string oldTitle;
-
-    // initial file
-    auto_ptr<std::ostream> out;
-    if(outFile && !(enuFiles || useMeta))
-      out.reset(newFWrap(outFile, clobber, false));
-    else
-      // the first filename is unknown as the metadata block will
-      // arrive in the next metaInt bytes
-      out.reset();
-
-    for(;;)
-    {
-      if(dupStdout && !cout)
-      {
-	// try an empty write to determine if the file is ready
-	if(!write(STDOUT_FILENO, NULL, 0))
-	  cout.clear();
-      }
-
-      // read the stream
-      if(reader.dup(out.get(), metaInt, dupStdout) != metaInt)
-      {
-        msg("connection terminated");
-        break;
-      }
-      if(!(outFile || dupStdout))
-	break;
-      
-      // read metadata
-      if(reqMeta)
-      {
-        map<std::string, std::string> data;
-        if(reader.readMeta(data))
-        {
-          map<std::string, std::string>::const_iterator title(
-              data.find(ICY::Proto::mTitle));
-          if(title != data.end() && title->second != oldTitle &&
-	      title->second.size() > 0)
-          {
-            if(showMeta)
-	      tStamp = display_status(title->second, enu, tStamp);
-
-	    // skip the first filename generation when discarding partials,
-	    // or just skip non-matching titles.
-            if((enuFiles || useMeta) && (enu || !rmPartial) && (!regex ||
-		   !regexec(&regexData, regex, 0, NULL, 0)))
-            {
-              string newFName(outFile);
-              if(enuFiles)
-              {
-                char buf[16];
-                snprintf(buf, sizeof(buf), (useMeta? "[%lu] ": "%lu"), enu);
-                newFName += buf;
-              }
-              if(useMeta)
-                newFName += sanitize_file(title->second);
-              if(suffix)
-                newFName += suffix;
-
-              // open the new file
-              if(numEFiles)
-                out.reset(newNFWrap(newFName, ignFErr));
-              else
-                out.reset(newFWrap(newFName.c_str(), clobber, ignFErr));
-
-	      // update the last filename pointer
-	      if(lastFName)
-		free(lastFName);
-              if(out.get())
-	      {
-		lastFName = strdup(newFName.c_str());
-		write_seq(seq, lastFName);
-                msg("file changed to: %s", lastFName);
-	      }
-	      else
-		lastFName = NULL;
-            }
-
-	    // update stream number
-	    oldTitle = title->second;
-	    ++enu;
-          }
-        }
-      }
-    }
-  }
-  catch(std::runtime_error& err)
+  // validate the reply
+  if(reply.code != Http::Proto::ok)
   {
-    ::err("software caused error: %s", err.what());
+    err("unexpected reply: %d %s", reply.code,
+	sanitize_esc(
+	    (reply.description.size()? reply.description: reply.proto)
+	    ).c_str());
     return Exit::fail;
   }
-  catch(...)
+  
+  map<string, string> pReply(Http::hdrParse(aHeaders));
+  if(reqMeta && pReply.find(ICY::Proto::metaint) == pReply.end())
   {
-    err("unknown error, aborting");
-    abort();
+    err("requested metadata, but got nothing.");
+    return Exit::fail;
+  }
+  
+  // show some headers
+  if(verbose)
+  {
+    shwIcyHdr(pReply, ICY::Proto::notice1, "Notice: ");
+    shwIcyHdr(pReply, ICY::Proto::notice2, "Notice: ");
+    shwIcyHdr(pReply, ICY::Proto::title, "Title: ");
+    shwIcyHdr(pReply, ICY::Proto::genre, "Genre: ");
+    shwIcyHdr(pReply, ICY::Proto::url, "URL: ");
+    shwIcyHdr(pReply, ICY::Proto::br, "Bit Rate: ");
+  }
+  
+  // start reading
+  size_t metaInt(reqMeta?
+      atol(pReply.find(ICY::Proto::metaint)->second.c_str()): fIcy::bufSz);
+  ICY::Reader reader(*s, fIcy::bufSz);
+  size_t enu(0);
+  time_t tStamp(0);
+  string oldTitle;
+  
+  // initial file
+  auto_ptr<std::ostream> out;
+  if(outFile && !(enuFiles || useMeta))
+    out.reset(newFWrap(outFile, clobber, false));
+  else
+    // the first filename is unknown as the metadata block will
+    // arrive in the next metaInt bytes
+    out.reset();
+
+  for(;;)
+  {
+    if(dupStdout && !cout)
+    {
+      // try an empty write to determine if the file is ready
+      if(!write(STDOUT_FILENO, NULL, 0))
+	cout.clear();
+    }
+    
+    // read the stream
+    if(reader.dup(out.get(), metaInt, dupStdout) != metaInt)
+    {
+      msg("connection terminated");
+      break;
+    }
+    if(!(outFile || dupStdout))
+      break;
+    
+    // read metadata
+    if(reqMeta)
+    {
+      map<string, string> data;
+      if(reader.readMeta(data))
+      {
+	map<string, string>::const_iterator it(
+	    data.find(ICY::Proto::mTitle));
+	if((it != data.end()) && (it->second != oldTitle) &&
+	    (it->second.size() > 0))
+	{
+	  // de-uglify
+	  const string& title(it->second);
+	  string newFName;
+	  
+	  if(showMeta)
+	    tStamp = display_status(title, enu, tStamp);
+	  
+	  // skip the first filename generation when discarding partials
+	  // or when the title doesn't match
+	  if((enuFiles || useMeta) && (enu || !rmPartial) &&
+	      match(title.c_str()))
+	  {
+	    newFName = outFile;
+
+	    if(enuFiles)
+	    {
+	      char buf[16];
+	      snprintf(buf, sizeof(buf), (useMeta? "[%lu] ": "%lu"), enu);
+	      newFName += buf;
+	    }
+	    if(useMeta)
+	      newFName += sanitize_file(title);
+	    if(suffix)
+	      newFName += suffix;
+	    
+	    // open the new file
+	    if(numEFiles)
+	      out.reset(newNFWrap(newFName, ignFErr));
+	    else
+	      out.reset(newFWrap(newFName.c_str(), clobber, ignFErr));
+	  }
+	  else
+	    out.reset();
+	  
+	  // update the last filename pointer
+	  if(lastFName)
+	    free(lastFName);
+	  if(out.get())
+	  {
+	    lastFName = strdup(newFName.c_str());
+	    write_seq(seq, lastFName);
+	    msg("file changed to: %s", lastFName);
+	  }
+	  else if(lastFName)
+	  {
+	    lastFName = NULL;
+	    msg("file reset");
+	  }
+	  
+	  // update stream number
+	  oldTitle = title;
+	  ++enu;
+	}
+      }
+    }
   }
 
   return Exit::success;
+}
+catch(runtime_error& err)
+{
+  ::err("%s", err.what());
+  return Exit::fail;
+}
+catch(...)
+{
+  err("unknown error, aborting");
+  abort();
 }

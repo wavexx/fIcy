@@ -11,7 +11,7 @@
 #include <locale>
 
 // some defines
-#define FICY_VERSION "1.0.6"
+#define FICY_VERSION "1.0.7beta"
 
 
 // some constants
@@ -29,12 +29,13 @@ namespace fIcy
   const size_t bufSz = 1024;
   
   const char fIcyHelp[] =
-    " [-dosqxemvtcinprh] <server [port [path]]|url>\n\n"
+    " [-dosqxXemvtcinprh] <server [port [path]]|url>\n\n"
     "  -d\tDo not dup the output to stdout\n"
     "  -o file\tDump the output to file (or use file as a prefix)\n"
     "  -s sfx\tUse sfx as a suffix for new files\n"
     "  -q file\tAppend file sequence list to file (only when saving)\n"
-    "  -x regex\tDump only titles maching regex\n"
+    "  -x regex\tDump only titles matching regex\n"
+    "  -X regex\tDo NOT dump titles matching regex\n"
     "  -e\tEnumerate files when song metadata changes. Use file as a prefix\n"
     "  -m\tUse song metadata when writing filenames. file used as a prefix\n"
     "  -v\tVerbose\n"
