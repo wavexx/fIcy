@@ -113,10 +113,11 @@ Params::Params(int argc, char* argv[])
   // fIcy parameters
   if(--argc >= 0)
   {
-    fIcyParams = new char*[argc + 3];
-    paramPos = argc + 1;
+    fIcyParams = new char*[argc + 4];
     fIcyParams[0] = path;
-    fIcyParams[argc + 2] = NULL;
+    fIcyParams[argc + 1] = "--";
+    paramPos = argc + 2;
+    fIcyParams[argc + 3] = NULL;
 
     for(int i = 1; i <= argc; ++i)
       fIcyParams[i] = argv[optind++];
