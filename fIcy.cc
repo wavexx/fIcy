@@ -347,15 +347,15 @@ main(int argc, char* const argv[]) try
   }
 
   // spawn the rewrite coprocess before installing signals
-  // TODO: we should probably mask the signal now
+  // TODO: we should probably mask the signal now instead!
   Rewrite rewrite(sedFile);
 
   // install the signals
-  instSignal = instSignal && dupStdout;
+  instSignal = (instSignal && dupStdout);
   if(instSignal)
     sigPipeInst();
   if(rmPartial && (enuFiles || useMeta))
-    sigTermInst(!instSignal);
+    sigTermInst(!(instSignal || sedFile));
 
   // resolve the hostname
   msg("connecting to (%s %d)", server.c_str(), port);
