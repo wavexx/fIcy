@@ -11,7 +11,7 @@ Usage
 
 	fIcy [options] <server [port [path]]|url>
 
-	Options available: [-dehimnptr] [-o <prefix>] [-s <suffix>]
+	Options available: [-dehimnptrqx] [-o <prefix>] [-s <suffix>]
 
 
 Files
@@ -66,6 +66,10 @@ Options
 
 	-q <file>	Append file sequence list to file. This may be used to
 			rejoin splitted parts with an external tool.
+
+	-x <regex>	Save only files whose title (NOT filename) matches
+			against this extended regular expression.
+			Duping unaffected.
 
 
 Examples

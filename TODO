@@ -7,3 +7,5 @@ wave++:
 
 	* Split the ICY class into ICE/OGG subclasses, to support
 	seamless operation when using OGG streams.
+
+	* Too much code depends on the order of evaluation of expressions.

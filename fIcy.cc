@@ -29,11 +29,13 @@ using std::auto_ptr;
 
 // c system headers
 #include <cstdlib>
+#include <sys/types.h>
 #include <stdarg.h>
 #include <signal.h>
 #include <unistd.h>
 #include <string.h>
 #include <time.h>
+#include <regex.h>
 
 
 // constants (urgh)
@@ -230,6 +232,23 @@ write_seq(ofstream& out, const char* file)
 }
 
 
+// compile a regular expression with error checking
+bool
+regex_compile(regex_t& data, const char* regex)
+{
+  int res;
+  if(res = regcomp(&data, regex, REG_EXTENDED | REG_NOSUB))
+  {
+    char buf[128];
+    regerror(res, &data, buf, sizeof(buf));
+    err("regex: %s", buf);
+    return true;
+  }
+
+  return false;
+}
+
+
 // implementation
 int
 main(int argc, char* const argv[])
@@ -239,6 +258,7 @@ main(int argc, char* const argv[])
 
   char* outFile(NULL);
   char* suffix(NULL);
+  char* regex(NULL);
   ofstream seq;
   bool enuFiles(false);
   bool useMeta(false);
@@ -250,7 +270,7 @@ main(int argc, char* const argv[])
   bool rmPartial(false);
 
   int arg;
-  while((arg = getopt(argc, argv, "do:emvtcs:inprhq:")) != -1)
+  while((arg = getopt(argc, argv, "do:emvtcs:inprhq:x:")) != -1)
     switch(arg)
     {
     case 'd':
@@ -309,6 +329,10 @@ main(int argc, char* const argv[])
 	err("cannot open `%s' for appending", optarg);
 	return Exit::fail;
       }
+      break;
+
+    case 'x':
+      regex = optarg;
       break;
 
     case 'h':
@@ -370,6 +394,11 @@ main(int argc, char* const argv[])
     sigPipeInst();
   if(rmPartial && (enuFiles || useMeta))
     sigTermInst(!instSignal);
+
+  // compile the regex
+  regex_t regexData;
+  if(regex && regex_compile(regexData, regex))
+    return Exit::args;
 
   try
   {
@@ -465,8 +494,10 @@ main(int argc, char* const argv[])
             if(showMeta)
 	      tStamp = display_status(title->second, enu, tStamp);
 
-	    // skip the first filename generation when discarding partials
-            if((enuFiles || useMeta) && (enu || !rmPartial))
+	    // skip the first filename generation when discarding partials,
+	    // or just skip non-matching titles.
+            if((enuFiles || useMeta) && (enu || !rmPartial) && (!regex ||
+		   !regexec(&regexData, regex, 0, NULL, 0)))
             {
               string newFName(outFile);
               if(enuFiles)

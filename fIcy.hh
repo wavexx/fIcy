@@ -31,6 +31,7 @@ namespace fIcy
     "  -o file\tDump the output to file (or use file as a prefix)\n"
     "  -s sfx\tUse sfx as a suffix for new files\n"
     "  -q file\tAppend file sequence list to file (only when saving)\n"
+    "  -x regex\tDump only titles maching regex\n"
     "  -e\tEnumerate files when song metadata changes. Use file as a prefix\n"
     "  -m\tUse song metadata when writing filenames. file used as a prefix\n"
     "  -v\tVerbose\n"
