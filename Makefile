@@ -1,13 +1,13 @@
 # Makefile for fIcy (for pmake or gmake)
-# Copyright(c) 2004 by wave++ (Yuri D'Elia) <wavexx@users.sf.net>
+# Copyright(c) 2004-2005 by wave++ (Yuri D'Elia) <wavexx@users.sf.net>
 
 # configuration
 TARGETS := fIcy fResync fPls
-FICY_OBJECTS := fIcy.o resolver.o socket.o http.o msg.o match.o \
+FICY_OBJECTS := fIcy.o resolver.o socket.o http.o msg.o match.o tmparse.o \
 	urlencode.o urlparse.o hdrparse.o icy.o sanitize.o rewrite.o
 FRESYNC_OBJECTS := fResync.o msg.o mpeg.o copy.o
 FPLS_OBJECTS := fPls.o msg.o resolver.o http.o socket.o \
-	urlencode.o urlparse.o plsparse.o
+	urlencode.o urlparse.o plsparse.o tmparse.o
 
 # parameters
 DEPS := Makedepend

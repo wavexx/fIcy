@@ -1,6 +1,6 @@
 /*
  * fIcy - HTTP/1.0-ICY stream extractor/separator
- * Copyright(c) 2003-2004 of wave++ (Yuri D'Elia)
+ * Copyright(c) 2003-2005 of wave++ (Yuri D'Elia)
  * Distributed under GNU LGPL without ANY warranty.
  */
 
@@ -40,6 +40,7 @@ namespace fIcy
     "  -I file\tLoad include/exclude regexs from file\n"
     "  -f expr\tRewrite titles using the specified sed expression\n"
     "  -F file\tRewrite titles using the specified sed script\n"
+    "  -T time\tMaximum playing time\n"
     "  -e\t\tEnumerate files when song metadata changes. Use file as prefix\n"
     "  -m\t\tUse song metadata when writing filenames. file used as prefix\n"
     "  -v\t\tVerbose\n"
@@ -75,7 +76,7 @@ namespace fIcy
     "  -P path\tSpecify fIcy executable name/path\n"
     "  -R max\tMax per-stream retries\n"
     "  -L max\tMax playlist loops\n"
-    "  -T sec\tWait sec seconds after each failure\n\n";
+    "  -T time\tWait the specified time after each failure\n\n";
 }
 
 

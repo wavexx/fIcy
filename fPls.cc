@@ -1,6 +1,6 @@
 /*
  * fPls - playlist handler for fIcy
- * Copyright(c) 2004 of wave++ (Yuri D'Elia) <wavexx@users.sf.net>
+ * Copyright(c) 2004-2005 of wave++ (Yuri D'Elia) <wavexx@users.sf.net>
  * Distributed under GNU LGPL without ANY warranty.
  */
 
@@ -10,6 +10,7 @@
 #include "http.hh"
 #include "urlparse.hh"
 #include "plsparse.hh"
+#include "tmparse.hh"
 using std::string;
 using std::list;
 
@@ -97,7 +98,7 @@ Params::Params(int argc, char* argv[])
       break;
 
     case 'T':
-      waitSecs = strtoul(optarg, NULL, 0);
+      waitSecs = tmParse(optarg);
       break;
 
     case 'h':

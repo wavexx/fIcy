@@ -1,6 +1,6 @@
 /*
  * fIcy - HTTP/1.0-ICY stream extractor/separator - implementation
- * Copyright(c) 2003-2004 of wave++ (Yuri D'Elia) <wavexx@users.sf.net>
+ * Copyright(c) 2003-2005 of wave++ (Yuri D'Elia) <wavexx@users.sf.net>
  * Distributed under GNU LGPL without ANY warranty.
  */
 
@@ -11,6 +11,7 @@
 #include "hdrparse.hh"
 #include "sanitize.hh"
 #include "urlparse.hh"
+#include "tmparse.hh"
 #include "rewrite.hh"
 #include "match.hh"
 #include "msg.hh"
@@ -217,11 +218,12 @@ main(int argc, char* const argv[]) try
   bool numEFiles(false);
   bool instSignal(false);
   bool rmPartial(false);
+  time_t maxTime(0);
   auto_ptr<Rewrite> rewrite;
   BMatch match;
 
   int arg;
-  while((arg = getopt(argc, argv, "do:emvtcs:inprhq:x:X:I:f:F:")) != -1)
+  while((arg = getopt(argc, argv, "do:emvtcs:inprhq:x:X:I:f:F:T:")) != -1)
     switch(arg)
     {
     case 'd':
@@ -300,6 +302,10 @@ main(int argc, char* const argv[]) try
 
     case 'F':
       rewrite.reset(new Rewrite(optarg, Rewrite::file));
+      break;
+
+    case 'T':
+      maxTime = tmParse(optarg);
       break;
 
     case 'h':
@@ -404,6 +410,13 @@ main(int argc, char* const argv[]) try
     shwIcyHdr(pReply, ICY::Proto::genre, "Genre: ");
     shwIcyHdr(pReply, ICY::Proto::url, "URL: ");
     shwIcyHdr(pReply, ICY::Proto::br, "Bit Rate: ");
+  }
+
+  // ensure the max playing time starts _after_ connect
+  if(maxTime)
+  {
+    signal(SIGALRM, sigTerm);
+    alarm(maxTime);
   }
   
   // start reading
