@@ -136,7 +136,7 @@ while(<>)
   s/[ \t]+/ /g;
   s/&lt;([^\"@]+@[^\">]+)&gt;/&lt;<a href="mailto:$1">$1<\/a>&gt;/g;
   s/\*(\w+)\*/<strong>$1<\/strong>/g;
-  s/\b([A-Z]+)\b/<em>$1<\/em>/g;
+  s/\b([A-Z]{2,})\b/<em>$1<\/em>/g;
   s/(\w+:\/\/\S+)/<a href="$1">$1<\/a>/g;
 
   print;
