@@ -203,7 +203,7 @@ hour(std::ostream& fd)
 
 
 time_t
-displayStatus(const string& title, const size_t num, const time_t last)
+display_status(const string& title, const size_t num, const time_t last)
 {
   time_t now(time(NULL));
 
@@ -214,7 +214,7 @@ displayStatus(const string& title, const size_t num, const time_t last)
       hour << ((now - last) % 60) << "]\n";
   }
 
-  cerr << "playing #" << num << ": " << title << std::flush;
+  cerr << "playing #" << num << ": " << sanitize_esc(title) << std::flush;
   return now;
 }
 
@@ -424,7 +424,7 @@ main(int argc, char* const argv[])
           if(title != data.end() && title->second.size() > 0)
           {
             if(showMeta)
-	      tStamp = displayStatus(title->second, enu, tStamp);
+	      tStamp = display_status(title->second, enu, tStamp);
 
 	    // skip the first filename generation when discarding partials
             if((enuFiles || useMeta) && (enu || !rmPartial))
@@ -437,7 +437,7 @@ main(int argc, char* const argv[])
                 newFName += buf;
               }
               if(useMeta)
-                newFName += sanitize(title->second);
+                newFName += sanitize_file(title->second);
               if(suffix)
                 newFName += suffix;
 

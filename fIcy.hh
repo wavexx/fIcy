@@ -11,7 +11,7 @@
 #include <locale>
 
 // some defines
-#define FICY_VERSION "1.0.3"
+#define FICY_VERSION "1.0.4"
 
 
 // some constants
@@ -39,7 +39,7 @@ namespace fIcy
     "  -n\tIf the file exists create a new file with .n appended\n"
     "  -p\tWhen duping and writing, continue even if SIGPIPE is received\n"
     "  -r\tRemove partials. Keep only complete sequences\n"
-    "  -h\tThis help (how cute!).\n\n";
+    "  -h\tThis help (how cute!)\n\n";
 }
 
 
