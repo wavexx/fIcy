@@ -26,6 +26,8 @@ Usage
 
 	fIcy [options] <server [port [path]]|url>
 
+	fPls [options] <file|url> [fIcy options]
+
 	fResync [options] file
 
 
@@ -97,6 +99,21 @@ fResync options
 			this value to determine the maximal region of the file
 			to be checked.
 
+fPls options
+
+	-P path		Specify a different name or full path for the fIcy
+	   		executable (defaults to "fIcy").
+
+	-v		Verbose.
+
+	-R max		Specifies the maximal number of retries to do for
+	   		each stream upon connection/read failure.
+
+	-L max		Specifies the maximal number of loops to do for
+	   		the entire playlist (-1 for infinite).
+
+	-W sec		Wait time (in seconds) to pause after each failure.
+
 
 Examples
 
@@ -130,6 +147,10 @@ Examples
 		fIcy -t http://example.com/radio | mpg123 -
 
 		fIcy -t mega.station | mpg123 -
+
+	Rip a station supporting failures/multiple fall-back streams:
+
+		fPls -L -1 http://netradio.invalid/listen.pls -s mp3 -o ./ -mr
 
 	Cleanup a ripped and/or damaged mp3 file:
 

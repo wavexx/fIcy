@@ -11,7 +11,7 @@
 #include <locale>
 
 // some defines
-#define FICY_VERSION "1.0.7"
+#define FICY_VERSION "1.0.8beta"
 
 
 // some constants
@@ -57,6 +57,20 @@ namespace fIcy
     "  -v\tIncrement verbosity level\n"
     "  -n frames\tNumber of frames to check\n"
     "  -m len\tMaximum frame length\n\n";
+
+  
+  // fPls defaults
+  const size_t maxRetries = 1;
+  const size_t maxLoops = 1;
+  const size_t waitSecs = 3;
+
+  const char fPlsHelp[] =
+    " [-PRLTvh] <file|url> [fIcy options]\n\n"
+    "  -v\tVerbose\n"
+    "  -P path\tSpecify fIcy executable name/path\n"
+    "  -R max\tMax per-stream retries\n"
+    "  -L max\tMax playlist loops\n"
+    "  -T sec\tWait sec seconds after each failure\n\n";
 }
 
 

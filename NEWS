@@ -1,3 +1,8 @@
+fIcy 1.0.8:
+
+	* Bug in fResync truncation code.
+	* New utility: fPls: playlist handler.
+
 fIcy 1.0.7: Sat Nov 06 CET 2004
 
 	* Using -x did not reset the file for non-matching titles.
