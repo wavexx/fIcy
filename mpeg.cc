@@ -105,6 +105,11 @@ namespace mpeg
       rem = len - (pos - start);
       if(check_frames(pos, rem, min))
 	return (pos - start);
+      else
+      {
+	++pos;
+	--rem;
+      }
     }
 
     return len;
@@ -138,6 +143,8 @@ namespace mpeg
       rem = (pos - start);
       if((frmlen = check_frames(pos, len - rem, min)))
 	return (rem + frmlen);
+      else
+	--rem;
     }
 
     return 0;
