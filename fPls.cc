@@ -258,7 +258,7 @@ main(int argc, char* argv[]) try
   msg("loaded %d elements", playlist.size());
 
   // main loop
-  for(long loop = 0; loop != params.maxLoops; ++loop)
+  for(size_t loop = 0; static_cast<long>(loop) != params.maxLoops; ++loop)
   {
     for(list<string>::const_iterator it = playlist.begin();
 	it != playlist.end(); ++it)
