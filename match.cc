@@ -16,7 +16,7 @@ using std::runtime_error;
 
 // compile a regular expression with error checking
 void
-Match::compile(regex_t& data, const char* regex, int flags)
+BMatch::compile(regex_t& data, const char* regex, int flags)
 {
   int res;
 
@@ -30,7 +30,7 @@ Match::compile(regex_t& data, const char* regex, int flags)
 
 
 void
-Match::compInsert(std::vector<regex_t>& v, const char* regex, int flags)
+BMatch::compInsert(std::vector<regex_t>& v, const char* regex, int flags)
 {
   regex_t buf;
   compile(buf, regex, flags);
@@ -39,7 +39,7 @@ Match::compInsert(std::vector<regex_t>& v, const char* regex, int flags)
 
 
 bool
-Match::operator()(const char* string, int flags)
+BMatch::operator()(const char* string, int flags)
 {
   bool retIncl(!incl.size());
   for(vector<regex_t>::const_iterator it = incl.begin(); it != incl.end(); ++it)

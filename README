@@ -147,6 +147,9 @@ Companion software:
 	mp3asm <http://sourceforge.net/projects/mp3asm/>:
 		Frame-level mp3 cutting tool.
 
+	Combining these in the right pipeline order is left as an exercise to
+	the user.
+
 
 DISCLAIMER
 
@@ -159,7 +162,7 @@ Notes
 	The output files produced by fIcy may miss audio framing informations
 	and headers since the separation does not consider the audio data. For
 	this reason, your player may fail to reproduce the dump: this is
-	expected. fResync can be used to cleanup MPEG files.
+	expected. fResync can be used to cleanup MPEG files after processing.
 
 	You can also use other tools such as mp3asm for cutting the file
 	in arbitrary positions without diminishing the quality.
@@ -168,6 +171,8 @@ Notes
 	developer: wave++ <wavexx@users.sf.net>. Our "Concept Developer": SethX
 	<sethx@users.sf.net> has been downsized to QA and testing (blame him
 	for each bug). The fIcy project is located at http://ficy.sf.net/
+	A general support mailing list is hosted on source-force here
+	http://sourceforge.net/mail/?group_id=104571
 
 
 Installation

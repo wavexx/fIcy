@@ -1,7 +1,7 @@
-fIcy 1.0.7:
+fIcy 1.0.7: Sat Nov 06 CET 2004
 
 	* Using -x did not reset the file for non-matching titles.
-	* New -X flag: do not save matching titles (complements -x).
+	* New -X flag: exclude matching titles (complements -x).
 	* Multiple -x and -X can be combined on the command line.
 
 fIcy 1.0.6: Tue Nov 02 CET 2004

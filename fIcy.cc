@@ -216,10 +216,10 @@ main(int argc, char* const argv[]) try
   bool numEFiles(false);
   bool instSignal(false);
   bool rmPartial(false);
-  Match match;
+  BMatch match;
 
   int arg;
-  while((arg = getopt(argc, argv, "do:emvtcs:inprhq:x:")) != -1)
+  while((arg = getopt(argc, argv, "do:emvtcs:inprhq:x:X:")) != -1)
     switch(arg)
     {
     case 'd':

@@ -14,11 +14,13 @@
 
 
 /*
+ * boolean class matcher
+ *
  * incl and excl vectors are traversed using OR, and then combined with AND
  * (that is, both condition must be satisfacted with AT LEAST one regex).
  * for an empty incl set, the match is always accepted.
  */
-class Match
+class BMatch
 {
   std::vector<regex_t> incl;
   std::vector<regex_t> excl;
