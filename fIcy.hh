@@ -11,7 +11,7 @@
 #include <locale>
 
 // some defines
-#define FICY_VERSION "1.0.2"
+#define FICY_VERSION "1.0.3"
 
 
 // some constants
@@ -26,7 +26,7 @@ namespace fIcy
   
   // an embedded help string
   const char help[] =
-    " [-demvtcinph] [-o file] [-s sfx] <server> [port [path]]\n\n"
+    " [-demvtcinprh] [-o file] [-s sfx] <server [port [path]]|url>\n\n"
     "  -d\tDo not dup the output to stdout\n"
     "  -o file\tDump the output to file (or use file as a prefix)\n"
     "  -s sfx\tUse sfx as a suffix for new files\n"
@@ -38,6 +38,7 @@ namespace fIcy
     "  -i\tIgnore file creation errors (reccomended when using -c)\n"
     "  -n\tIf the file exists create a new file with .n appended\n"
     "  -p\tWhen duping and writing, continue even if SIGPIPE is received\n"
+    "  -r\tRemove partials. Keep only complete sequences\n"
     "  -h\tThis help (how cute!).\n\n";
 }
 

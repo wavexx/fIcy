@@ -4,7 +4,7 @@
 # configuration
 TARGETS := fIcy
 FICY_OBJECTS := fIcy.o resolver.o socket.o http.o \
-	urlencode.o hdrparse.o icy.o sanitize.o
+	urlencode.o urlparse.o hdrparse.o icy.o sanitize.o
 
 # parameters
 DEPS := Makedepend

@@ -10,6 +10,7 @@
 #include "http.hh"
 #include "hdrparse.hh"
 #include "sanitize.hh"
+#include "urlparse.hh"
 using std::string;
 using std::map;
 
@@ -178,9 +179,10 @@ main(int argc, char* const argv[])
   bool ignFErr(false);
   bool numEFiles(false);
   bool instSignal(false);
+  bool rmPartial(false);
 
   int arg;
-  while((arg = getopt(argc, argv, "do:emvtcs:inph")) != -1)
+  while((arg = getopt(argc, argv, "do:emvtcs:inprh")) != -1)
     switch(arg)
     {
     case 'd':
@@ -227,6 +229,10 @@ main(int argc, char* const argv[])
       instSignal = true;
       break;
 
+    case 'r':
+      rmPartial = true;
+      break;
+
     case 'h':
       cout << prg << fIcy::help << prg << " v" << fIcy::version <<
         " is\n" << fIcy::copyright;
@@ -243,13 +249,30 @@ main(int argc, char* const argv[])
     return Exit::args;
   }
 
-  const char* server(argv[optind++]);
-  const int port(atoi(argv[optind++]));
-  const char* path((argc == 3)? argv[optind++]: "/");
-  bool reqMeta(enuFiles || useMeta || showMeta);
+  // connection parameters
+  string proto;
+  string server;
+  int port;
+  string path;
+  if(argc > 1)
+  {
+    server = argv[optind++];
+    port = atoi(argv[optind++]);
+    path = (argc == 3? argv[optind++]: "/");
+  }
+  else
+  {
+    urlParse(proto, server, port, path, argv[optind++]);
+    if(proto.size() && proto != "http" && proto != "icy")
+    {
+      err("unknown protocol \"%s\"", proto.c_str());
+      return Exit::args;
+    }
+  }
 
   // check for parameters consistency
   // enuFiles and useMeta requires a prefix
+  bool reqMeta(enuFiles || useMeta || showMeta);
   if((useMeta || enuFiles) && !outFile)
   {
     err("a prefix is required (see -o) when writing multiple files");
@@ -270,8 +293,8 @@ main(int argc, char* const argv[])
   try
   {
     // resolve the hostname
-    msg("connecting to (%s %d)", server, port);
-    Http::Http httpc(server, port);
+    msg("connecting to (%s %d)", server.c_str(), port);
+    Http::Http httpc(server.c_str(), port);
     
     // setup headers
     Http::Header headers;
@@ -281,8 +304,8 @@ main(int argc, char* const argv[])
     if(reqMeta)
       headers.push_back(ICY::Proto::reqMeta);
 
-    msg("requesting stream on (%s)", path);
-    auto_ptr<Socket> s(httpc.get(path, &headers, &reply));
+    msg("requesting stream on (%s)", path.c_str());
+    auto_ptr<Socket> s(httpc.get(path.c_str(), &headers, &reply));
 
     // validate the reply
     map<string, string> pReply(Http::hdrParse(reply));
