@@ -4,6 +4,9 @@
  * Distributed under GNU LGPL without ANY warranty.
  */
 
+// local headers
+#include "msg.hh"
+
 // c system headers
 #include <stdarg.h>
 #include <cstdio>
