@@ -132,7 +132,7 @@ Examples
 		fIcy -s .mp3 -o ./ -mp 1.2.3.4 8080 /path/to/stream | mpg123 -
 
 	Same as above, but allows the player to be restarted later by using
-	a named fifo:
+	a named fifo (note that you can later open "fifo" with any player):
 
 		$ mkfifo fifo
 		$ fIcy -p ... > fifo
@@ -146,11 +146,10 @@ Examples
 
 		fIcy -t http://example.com/radio | mpg123 -
 
-		fIcy -t mega.station | mpg123 -
+	Rip a station using a playlist instead of direct connection to the
+	stream, supporting failures and multiple fall-back streams:
 
-	Rip a station supporting failures/multiple fall-back streams:
-
-		fPls -L -1 http://netradio.invalid/listen.pls -s mp3 -o ./ -mr
+		fPls -L-1 http://netradio.invalid/listen.pls -s.mp3 -o./ -cmrd
 
 	Cleanup a ripped and/or damaged mp3 file:
 
@@ -205,7 +204,14 @@ Installation
 	If you need to use a different compiler (for example on OpenBSD), you
 	can call make as follows:
 
-	   CXX="eg++" make -e
+		CXX="eg++" make -e
 
 	instead of changing manually the Makefile. Please note that, when using
 	gcc, at least g++ >= 3 is required to compile fIcy.
+
+	There's no "make install" target. Instead you should copy the generated
+	executables into the final path, usually doing:
+
+		cp fIcy fPls fResync /usr/local/bin
+
+	Also note that, for "fPls" to work, fIcy must be already installed.

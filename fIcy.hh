@@ -11,7 +11,7 @@
 #include <locale>
 
 // some defines
-#define FICY_VERSION "1.0.8beta"
+#define FICY_VERSION "1.0.8"
 
 
 // some constants
@@ -62,7 +62,7 @@ namespace fIcy
   // fPls defaults
   const size_t maxRetries = 1;
   const size_t maxLoops = 1;
-  const size_t waitSecs = 3;
+  const size_t waitSecs = 15;
 
   const char fPlsHelp[] =
     " [-PRLTvh] <file|url> [fIcy options]\n\n"
