@@ -21,12 +21,13 @@ DUPD :=
 DGEN = -MD -MF $*.d
 DUPD = cat *.d <&- > $(DEPS)
 #endif
+CPPFLAGS += $(DGEN)
 
 
 # suffixes, rules
 .SUFFIXES: .cc .o
 .cc.o:
-	$(CXX) $(DGEN) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
 	-@$(DUPD)
 
 

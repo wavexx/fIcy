@@ -30,21 +30,21 @@ namespace fIcy
   
   const char fIcyHelp[] =
     " [-dosqxXemvtcinprh] <server [port [path]]|url>\n\n"
-    "  -d\tDo not dup the output to stdout\n"
+    "  -d\t\tDo not dup the output to stdout\n"
     "  -o file\tDump the output to file (or use file as a prefix)\n"
     "  -s sfx\tUse sfx as a suffix for new files\n"
     "  -q file\tAppend file sequence list to file (only when saving)\n"
     "  -x regex\tDump only titles matching regex\n"
     "  -X regex\tDo NOT dump titles matching regex\n"
-    "  -e\tEnumerate files when song metadata changes. Use file as a prefix\n"
-    "  -m\tUse song metadata when writing filenames. file used as a prefix\n"
-    "  -v\tVerbose\n"
-    "  -t\tDisplay metadata while downloading\n"
-    "  -c\tDo not clobber files (implicit with -n)\n"
-    "  -i\tAbort when clobbering is attempted (implies -c)\n"
-    "  -n\tIf the file exists create a new file with .n appended\n"
-    "  -p\tWhen duping consider writing errors as transient\n"
-    "  -r\tRemove partials. Keep only complete sequences\n\n";
+    "  -e\t\tEnumerate files when song metadata changes. Use file as a prefix\n"
+    "  -m\t\tUse song metadata when writing filenames. file used as a prefix\n"
+    "  -v\t\tVerbose\n"
+    "  -t\t\tDisplay metadata while downloading\n"
+    "  -c\t\tDo not clobber files (implicit with -n)\n"
+    "  -i\t\tAbort when clobbering is attempted (implies -c)\n"
+    "  -n\t\tIf the file exists create a new file with .n appended\n"
+    "  -p\t\tWhen duping consider writing errors as transient\n"
+    "  -r\t\tRemove partials. Keep only complete sequences\n\n";
 
 
   // fResync defaults
@@ -53,8 +53,8 @@ namespace fIcy
 
   const char fResyncHelp[] =
     " [-shv] [-n frames] [-m len] file\n\n"
-    "  -s\tSimulate only (print frame sync offsets: start and size)\n"
-    "  -v\tIncrement verbosity level\n"
+    "  -s\t\tSimulate only (print frame sync offsets: start and size)\n"
+    "  -v\t\tIncrement verbosity level\n"
     "  -n frames\tNumber of frames to check\n"
     "  -m len\tMaximum frame length\n\n";
 
@@ -66,7 +66,7 @@ namespace fIcy
 
   const char fPlsHelp[] =
     " [-PRLTvh] <file|url> [fIcy options]\n\n"
-    "  -v\tVerbose\n"
+    "  -v\t\tVerbose\n"
     "  -P path\tSpecify fIcy executable name/path\n"
     "  -R max\tMax per-stream retries\n"
     "  -L max\tMax playlist loops\n"

@@ -3,6 +3,9 @@ Features:
 	* fResync should have an option to check the entire file for errors
 	instead of checking only the extremes.
 
+	* fIcy should have an option to rewrite the filename (to strip out
+	banners and so on).
+
 Known bugs:
 
 	* fResync isn't 100% effective yet. CRC verification and
