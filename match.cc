@@ -43,7 +43,7 @@ BMatch::operator()(const char* string, int flags)
 {
   bool retIncl(!incl.size());
   for(vector<regex_t>::const_iterator it = incl.begin(); it != incl.end(); ++it)
-    if(!regexec(it, string, 0, NULL, flags))
+    if(!regexec(&*it, string, 0, NULL, flags))
     {
       retIncl = true;
       break;
@@ -51,7 +51,7 @@ BMatch::operator()(const char* string, int flags)
 
   bool retExcl(true);
   for(vector<regex_t>::const_iterator it = excl.begin(); it != excl.end(); ++it)
-    if(!regexec(it, string, 0, NULL, flags))
+    if(!regexec(&*it, string, 0, NULL, flags))
     {
       retExcl = false;
       break;
