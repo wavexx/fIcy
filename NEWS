@@ -1,4 +1,4 @@
-fIcy 1.0.3:
+fIcy 1.0.3: Fri Apr 09 CEST 2004
 
 	* Support for removing partial dumps.
 	* URL parsing on the command line.
