@@ -399,7 +399,7 @@ main(int argc, char* const argv[]) try
   ICY::Reader reader(*s, fIcy::bufSz);
   size_t enu(0);
   time_t tStamp(0);
-  string oldTitle;
+  string lastTitle;
   
   // initial file
   auto_ptr<std::ostream> out;
@@ -436,7 +436,7 @@ main(int argc, char* const argv[]) try
       {
 	map<string, string>::const_iterator it(
 	    data.find(ICY::Proto::mTitle));
-	if((it != data.end()) && (it->second != oldTitle) &&
+	if((it != data.end()) && (it->second != lastTitle) &&
 	    (it->second.size() > 0))
 	{
 	  // de-uglify
@@ -489,7 +489,7 @@ main(int argc, char* const argv[]) try
 	  }
 	  
 	  // update stream number
-	  oldTitle = title;
+	  lastTitle = title;
 	  ++enu;
 	}
       }
