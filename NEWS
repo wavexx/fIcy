@@ -1,3 +1,7 @@
+fIcy 1.0.10:
+
+	* Added a title filtering/rewriting mechanism (-f).
+
 fIcy 1.0.9: Fri Dec 03 CET 2004
 
 	* Malicious .pls files could contain an option that would be

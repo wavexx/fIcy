@@ -81,6 +81,12 @@ fIcy options
 	-X <regex>	Do NOT save files whose title matches against this
 			extended regular expression. Same semantics as -x.
 
+	-f <file>	Filter titles through the specified sed script.
+			The raw title is passed to the script (doesn't include
+			any additional prefixes/suffixes). As the result
+			will be used internally, some limitations apply.
+			Read carefully the "Filtering" section.
+
 
 fResync options
 
@@ -190,8 +196,7 @@ Notes
 	song spans across three files (use -q to know which ones), that's how
 	to proceed:
 
-		cat 1.mp3 2.mp3 3.mp3 > temp.mp3
-		xmpgedit temp.mp3
+		cat 1.mp3 2.mp3 3.mp3 > temp.mp3 && xmpgedit temp.mp3
 
 	Do NOT resync the files if you're going to post-process them this way:
 	fResync would remove at least one boundary frame on each file, while
@@ -204,6 +209,40 @@ Notes
 	for each bug). The fIcy project is located at http://ficy.sf.net/
 	A general support mailing list is hosted on source-force here
 	http://sourceforge.net/mail/?group_id=104571
+
+
+Filtering
+
+	Most online radio stations tend to put banners in the title that will
+	be shown in the player, and eventually result in the filename. To
+	overcome to this (and more), fIcy offers the possibility to rewrite
+	each title through a normal sed script via the "-f" flag. A real sed
+	coprocess is used along the execution so all of sed's power is
+	available, but some limitations apply:
+
+	* sed must be GNU sed, or support both the -u -f flags (this limitation
+	may eventually be removed in the future).
+	* Each line of input should result in one output line, and ONE ONLY.
+	* Two consecutive identical titles will result in the second one
+	being ignored (thus NOT splitting the stream). Consider this rule,
+	as removing carefully the banner could result in a better separation.
+	* The resulting title will still apply for -xX as usual.
+
+
+Filtering examples
+
+	As an example, suppose your titles look like this:
+
+		Artist - Title (radiobanner)
+
+	You can write a sed script containing
+
+		s/ *(radiobanner)$//
+
+	to remove the trailing part. This facility can also be used to uniform
+	file names, invert Artist/Title positions and so on. Clever use of the
+	pattern space can also be used to merge albums. Refer to the sed(1)
+	manual for a complete list of commands you can use.
 
 
 Installation

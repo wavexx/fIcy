@@ -3,9 +3,6 @@ Features:
 	* fResync should have an option to check the entire file for errors
 	instead of checking only the extremes.
 
-	* fIcy should have an option to rewrite the filename (to strip out
-	banners and so on).
-
 Known bugs:
 
 	* fResync isn't 100% effective yet. CRC verification and
@@ -22,4 +19,4 @@ Internals:
 	* Split the ICY class into ICE/OGG subclasses, to support
 	seamless operation when using OGG streams.
 
-	* Too much code depends on the order of evaluation of expressions.
+	* Use a virtual pty to remove the need of GNU sed.
