@@ -29,6 +29,7 @@ sanitize_file(const string& src)
 
   while(it != src.end())
   {
+    // non-ascii data is preserved (assumed to be locale-specific)
     if(!isascii(*it) || (isprint(*it) && *it != '/'))
       r += *it;
     else
@@ -46,6 +47,9 @@ sanitize_esc(const string& src)
 {
   string r;
 
-  remove_copy_if(src.begin(), src.end(), r.begin(), iscntrl);
+  for(string::const_iterator it = src.begin(); it != src.end(); ++it)
+    if(!iscntrl(*it))
+      r += *it;
+
   return r;
 }
