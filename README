@@ -1,17 +1,14 @@
 General Description
 
 	fIcy is an icecast/shoutcast stream grabber for use under shell
-	environment.  Its goal is to cleanly and automatically rip a stream
-	into user customizable files.  It will work with any ICY compatible
+	environment. Its goal is to cleanly and automatically rip a stream
+	into user customisable files.  It will work with any ICY compatible
 	stream, allowing you to either to save the stream to disk or to pipe
 	the output to a media player, or even both.
 
-
-Usage
-
-	fIcy [options] <server [port [path]]|url>
-
-	Options available: [-dehimnptrqx] [-o <prefix>] [-s <suffix>]
+	The fIcy package includes the little utility fResync, which attempts
+	to truncate a badly cut MPEG file (such as the ones produced by fIcy)
+	to frame boundaries, to eliminate decoding warnings and noises.
 
 
 Files
@@ -25,7 +22,14 @@ Files
 	TODO		Missing/Planned improvements.
 
 
-Options
+Usage
+
+	fIcy [options] <server [port [path]]|url>
+
+	fResync [options] file
+
+
+fIcy options
 
 	-d		Do not dump the output to stdout.
 			Useful when only ripping.
@@ -65,11 +69,28 @@ Options
 			in combination with -m or -e.
 
 	-q <file>	Append file sequence list to file. This may be used to
-			rejoin splitted parts with an external tool.
+			rejoin splitted parts with an external tool. fResync
+			will use this file in the future.
 
 	-x <regex>	Save only files whose title (NOT filename) matches
 			against this extended regular expression.
 			Duping unaffected.
+
+
+fResync options
+
+	-s		Simulate the process. Print on the standard output
+			the starting sync offset and stream length, but don't
+			modify the source file.
+
+	-v		Verbose.
+
+	-n frames	Require/decode at least n valid consecutive frames to
+			validate the sync offset. Defaults to 6.
+
+	-m len		Maximum frame length. Defaults to 1597. fResync uses
+			this value to determine the maximal region of the file
+			to be checked.
 
 
 Examples
@@ -83,7 +104,7 @@ Examples
 
 		fIcy -s .mp3 -o ./ -md 123.123.123.123 8080 /path/to/stream
 	
-	Rip an .mp3 stream and plays it using mpg123, allowing mpg123
+	Rip an .mp3 stream and play it using mpg123, allowing mpg123
 	to be killed anytime:
 
 		fIcy -s .mp3 -o ./ -mp 1.2.3.4 8080 /path/to/stream | mpg123 -
@@ -104,6 +125,10 @@ Examples
 		fIcy -t http://example.com/radio | mpg123 -
 
 		fIcy -t mega.station | mpg123 -
+
+	Cleanup a ripped mp3 file:
+
+		fResync file.mp3
 
 
 Companion software:
@@ -129,12 +154,15 @@ Notes
 	The output files produced by fIcy may miss audio framing informations
 	and headers since the separation does not consider the audio data. For
 	this reason, your player may fail to reproduce the dump: this is
-	expected. You can use other tools such as mp3asm for this. The audio
-	quality is *not* diminished for the very same reason.
+	expected. fResync can be used to cleanup MPEG files.
 
-	For bugs, support, documentation or simply suggestions contact our
-	"Concept Developer": SethX <sethx@users.sf.net>.
-	The fIcy project is located at http://ficy.sf.net/
+	You can also use other tools such as mp3asm for cutting the file
+	in arbitrary positions without diminishing the quality.
+
+	For bugs, support, documentation or simply suggestions contact the main
+	developer: wave++ <wavexx@users.sf.net>. Our "Concept Developer": SethX
+	<sethx@users.sf.net> has been downsized to QA and testing (blame him
+	for each bug). The fIcy project is located at http://ficy.sf.net/
 
 
 Installation

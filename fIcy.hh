@@ -11,7 +11,7 @@
 #include <locale>
 
 // some defines
-#define FICY_VERSION "1.0.5beta"
+#define FICY_VERSION "1.0.5"
 
 
 // some constants
@@ -47,12 +47,13 @@ namespace fIcy
 
 
   // fResync defaults
-  const size_t frameLen = 1440;
+  const size_t frameLen = 1597; // (114 * 448000 / 32000 + 1)
   const size_t maxFrames = 6;
 
   const char fResyncHelp[] =
-    " [-sh] [-n frames] [-m len] file\n\n"
+    " [-shv] [-n frames] [-m len] file\n\n"
     "  -s\tSimulate only (print frame sync offsets: start and size)\n"
+    "  -v\tIncrement verbosity level\n"
     "  -n frames\tNumber of frames to check\n"
     "  -m len\tMaximum frame length\n\n";
 }

@@ -1,9 +1,17 @@
-SethX:
+Features:
 
-	* Add a time offset after which to change title, due to the
-	"soft" mixing in many streams.
+	* fResync should have an option to check the entire file for errors
+	instead of checking only the extremes.
 
-wave++:
+Known bugs:
+
+	* fResync isn't 100% effective yet. CRC verification and
+	"bit reservoir" handling is lacking. Will be fixed in future
+	release of fIcy.
+
+Internals:
+
+	* OGG support isn't there yet.
 
 	* Split the ICY class into ICE/OGG subclasses, to support
 	seamless operation when using OGG streams.

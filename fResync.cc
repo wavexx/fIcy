@@ -139,7 +139,8 @@ truncate(const char* file, const region_t& reg)
 bool
 search_sync(ifstream& fd, const params_t& params, region_t& reg)
 {
-  size_t mlen(params.framelen * params.maxframes);
+  // create the buffer as the double of the maximal space possibly needed
+  size_t mlen(params.framelen * params.maxframes * 2);
   auto_ptr<char> buf(new char[mlen]);
 
   // beginning
