@@ -207,7 +207,8 @@ int
 resync_buf(const params_t& params)
 {
   // open the file
-  ifstream fd(params.file, std::ios_base::in | std::ios_base::out);
+  ifstream fd(params.file, (params.simulate?
+	  std::ios_base::in: (std::ios_base::in | std::ios_base::out)));
   if(!fd)
   {
     err("cannot open %s for read/write", params.file);
@@ -276,7 +277,7 @@ resync_mmap(const params_t& params)
   {
     close(fd);
     err("cannot mmap %s", params.file);
-    return Exit::failure;
+    return Exit::fail;
   }
   
   // search the offsets
@@ -287,7 +288,7 @@ resync_mmap(const params_t& params)
   {
     msg("sync found at %lu for %lu bytes", reg.start, reg.size);
 
-    if(reg.start != 0 || reg.size != st.st_size)
+    if(reg.start != 0 || reg.size != static_cast<size_t>(st.st_size))
     {
       // non-zero offsets
       if(reg.start != 0)
