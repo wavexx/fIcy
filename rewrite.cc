@@ -93,9 +93,11 @@ Rewrite::operator()(string& buf)
 
   // read from the coprocess
   buf.clear();
-  for(c = 0; c != '\n'; buf += c)
+  for(;; buf += c)
   {
     if(read(in[0], &c, 1) < 0)
       throw runtime_error("cannot read from the coprocess");
+    if(c == '\n')
+      break;
   }
 }
