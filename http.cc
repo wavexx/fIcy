@@ -103,23 +103,17 @@ namespace Http
     string req;
     req = string(act) + " " + urlEncode(path) + " " +
       Proto::version + Proto::endl;
-    s->write(req.c_str(), req.size());
-
-    // host name
-    req = string("Host: ") + host + Proto::endl;
-    s->write(req.c_str(), req.size());
+    req += string("Host: ") + host + Proto::endl;
 
     // headers
     if(headers)
       for(Header::const_iterator it = headers->begin();
           it != headers->end(); ++it)
-      {
-        s->write(it->c_str(), it->size());
-        s->write(Proto::endl, Proto::endlSz);
-      }
+	req += *it + Proto::endl;
 
     // final newline
-    s->write(Proto::endl, Proto::endlSz);
+    req += Proto::endl;
+    s->write(req.c_str(), req.size());
 
     // fetch the answer headers
     readReply(*s, reply);
