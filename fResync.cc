@@ -28,6 +28,10 @@ using std::strtoul;
 
 #include <stdarg.h>
 #include <unistd.h>
+#include <string.h>
+#include <sys/mman.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 
 /*
@@ -38,6 +42,7 @@ struct params_t
   const char* file;
   size_t framelen;
   size_t maxframes;
+  bool buffered;
   bool simulate;
   bool help;
 };
@@ -48,9 +53,13 @@ parse_params(params_t& buf, int argc, char* const argv[])
 {
   // real values
   int arg;
-  while((arg = getopt(argc, argv, "n:m:svh")) != -1)
+  while((arg = getopt(argc, argv, "bn:m:svh")) != -1)
     switch(arg)
     {
+    case 'b':
+      buf.buffered = true;
+      break;
+
     case 'n':
       buf.maxframes = strtoul(optarg, NULL, 0);
       break;
@@ -92,6 +101,7 @@ init(params_t& buf, int argc, char* argv[])
 {
   // defaults
   prg = argv[0];
+  buf.buffered = false;
   buf.framelen = fIcy::frameLen;
   buf.maxframes = fIcy::maxFrames;
   verbose = buf.simulate = buf.help = false;
@@ -169,27 +179,38 @@ search_sync(ifstream& fd, const params_t& params, region_t& reg)
 }
 
 
-int
-main(int argc, char* argv[])
+bool
+search_sync(const char* buf, size_t len, const params_t& params, region_t& reg)
 {
-  // initialize
-  params_t params;
-  if(init(params, argc, argv))
-  {
-    err("bad parameters; see %s -h", prg);
-    return Exit::args;
-  }
-  if(params.help)
-  {
-    show_help();
-    return Exit::args;
-  }
+  // create the buffer as the double of the maximal space possibly needed
+  size_t mlen(params.framelen * params.maxframes * 2);
+  if(len < mlen)
+    return true;
 
+  // beginning
+  reg.start = mpeg::sync_forward(buf, mlen, params.maxframes);
+  if(reg.start == mlen)
+    return true;
+
+  // end
+  size_t pos(len - mlen);
+  size_t end(mpeg::sync_reverse(buf + pos, mlen, params.maxframes));
+  if(!end || (pos + end) <= reg.start)
+    return true;
+  reg.size = (pos + end) - reg.start;
+
+  return false;
+}
+
+
+int
+resync_buf(const params_t& params)
+{
   // open the file
-  ifstream fd(params.file);
+  ifstream fd(params.file, std::ios_base::in | std::ios_base::out);
   if(!fd)
   {
-    err("cannot open %s for reading", params.file);
+    err("cannot open %s for read/write", params.file);
     return Exit::fail;
   }
 
@@ -224,6 +245,90 @@ main(int argc, char* argv[])
   }
   else
     msg("no resync needed");
-  
+
   return Exit::success;
+}
+
+
+int
+resync_mmap(const params_t& params)
+{
+  // open the file
+  int fd = open(params.file, O_RDWR);
+  if(fd == -1)
+  {
+    err("cannot open %s for read/write", params.file);
+    return Exit::fail;
+  }
+
+  // file size
+  struct stat st;
+  if(fstat(fd, &st))
+  {
+    err("cannot stat %s", params.file);
+    return Exit::fail;
+  }
+
+  // mmap the file
+  char* addr = reinterpret_cast<char*>(mmap(NULL, st.st_size,
+	  (PROT_READ | PROT_WRITE), MAP_SHARED, fd, 0));
+  if(!addr)
+  {
+    close(fd);
+    err("cannot mmap %s", params.file);
+    return Exit::failure;
+  }
+  
+  // search the offsets
+  bool fail;
+  region_t reg;
+  if((fail = search_sync(addr, st.st_size, params, reg)))
+    err("cannot resync %s, try increasing frame size", params.file);
+  {
+    msg("sync found at %lu for %lu bytes", reg.start, reg.size);
+
+    if(reg.start != 0 || reg.size != st.st_size)
+    {
+      // non-zero offsets
+      if(reg.start != 0)
+      {
+	memmove(addr, addr + reg.start, reg.size);
+	reg.start = 0;
+      }
+      
+      // final truncation
+      if((fail = ftruncate(fd, reg.size)))
+	err("cannot truncate %s", params.file);
+    }
+    else
+      msg("no resync needed");
+  }
+
+  // free resources
+  munmap(addr, st.st_size);
+  close(fd);
+
+  return (fail? Exit::fail: Exit::success);
+}
+
+
+int
+main(int argc, char* argv[])
+{
+  // initialize
+  params_t params;
+  if(init(params, argc, argv))
+  {
+    err("bad parameters; see %s -h", prg);
+    return Exit::args;
+  }
+  if(params.help)
+  {
+    show_help();
+    return Exit::args;
+  }
+
+  return (params.buffered || params.simulate?
+      resync_buf(params):
+      resync_mmap(params));
 }

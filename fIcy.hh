@@ -53,6 +53,7 @@ namespace fIcy
 
   const char fResyncHelp[] =
     " [-shv] [-n frames] [-m len] file\n\n"
+    "  -b\t\tRevert to buffered mode (implicit with -s)\n"
     "  -s\t\tSimulate only (print frame sync offsets: start and size)\n"
     "  -v\t\tIncrement verbosity level\n"
     "  -n frames\tNumber of frames to check\n"

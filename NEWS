@@ -2,8 +2,10 @@ fIcy 1.0.9:
 
 	* Malicious .pls files could contain an option that would be
 	passed along to fIcy (harmless, but fixed).
-	* Fixed argument parsing in fPls (thank you linux, really!).
+	* Fixed argument parsing in fPls under GNU/glibc systems.
 	* Fixed documentation for fPls (-W was really -T).
+	* fResync now correctly refuses to operate on read-only files.
+	* Significative fResync optimisations.
 
 fIcy 1.0.8: Mon Nov 15 CET 2004
 

@@ -60,8 +60,6 @@ fIcy options
 
 	-s <suffix>	Use sfx as a suffix for new files.
 			Hint: the .mp3 extension is NOT implicit.
-			Hint: *any* extension is valid. fIcy is *not* limited
-			to mp3 files.
 
 	-t		Display song title [metadata] while ripping.
 
@@ -85,6 +83,12 @@ fIcy options
 
 
 fResync options
+
+	-b		By default fResync maps the entire file into memory
+			when operating. However this can create problems on
+			loaded systems with large files or when simulating.
+			This reverts to a buffered I/O mode. This flag is also
+			implicit when simulating.
 
 	-s		Simulate the process. Print on the standard output
 			the starting sync offset and stream length, but don't
@@ -161,10 +165,7 @@ Companion software:
 	bfr <http://www.glines.org:8000/software/buffer.html>:
 		Audio-oriented rebuffering tool. Ideal for lousy streams.
 
-	mp3check <http://sourceforge.net/projects/mp3check/>:
-		mp3 integrity checker.
-
-	mp3asm <http://sourceforge.net/projects/mp3asm/>:
+	mpgedit <http://www.mpgedit.org/>
 		Frame-level mp3 cutting tool.
 
 	Combining these in the right pipeline order is left as an exercise to
@@ -184,8 +185,18 @@ Notes
 	this reason, your player may fail to reproduce the dump: this is
 	expected. fResync can be used to cleanup MPEG files after processing.
 
-	You can also use other tools such as mp3asm for cutting the file
-	in arbitrary positions without diminishing the quality.
+	You can also use other tools such as mpgedit for cutting the file in
+	arbitrary positions without diminishing the quality. Assuming that your
+	song spans across three files (use -q to know which ones), that's how
+	to proceed:
+
+		cat 1.mp3 2.mp3 3.mp3 > temp.mp3
+		xmpgedit temp.mp3
+
+	Do NOT resync the files if you're going to post-process them this way:
+	fResync would remove at least one boundary frame on each file, while
+	other tools could also insert extra empty frames to silence the
+	decoder!
 
 	For bugs, support, documentation or simply suggestions contact the main
 	developer: wave++ <wavexx@users.sf.net>. Our "Concept Developer": SethX
