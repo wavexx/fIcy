@@ -1,0 +1,83 @@
+General Description
+
+	fIcy is a icecast/shoutcast stream grabber for use under shell
+	environment.  Its goal is to cleanly and automatically rip a stream
+	into user customisable files.  It will work with any ICY compatible
+	stream, allowing you to either to save the stream to disk or to pipe
+	the output to a media player, or even both.
+
+
+Usage
+
+	fIcy [options] <server> [port [path]]
+
+	Options available: [-dehimnpt] [-o <prefix>] [-s <suffix>]
+
+
+Files
+
+	These files can be found in the lastest release of fIcy
+
+	AUTHORS
+		People that have contributed to fIcy.
+	NEWS
+		Release changes.
+	COPYING
+		License. Please read carefully.
+	README
+		This file. Contains usage description.
+	TODO
+		Missing/Planned improvements.
+
+
+Options
+
+	-d		Do not dump the output to stdout.
+			Useful when only ripping.
+
+	-e              Enumerate number of ripped files when song metadata
+			changes. Uses -o as prefix.
+
+        -h              Displays help
+
+	-i              Ignore file creation errors (necessary when using -c).
+
+	-m              Use song title [metadata] when naming files. Uses -o as
+			prefix.
+
+	-n              If the file exists create new one with .n as suffix.
+
+	-p              When dumping and writing, continue even if SIGPIPE is
+			received.  Useful when you pipe the output to a media
+			player and want to kill it while not interrupting the
+			rip.
+
+	-o <file>	Dump the output to file.
+			Hint: to dump without a prefix use "./"
+
+	-s <suffix>	Use sfx as a suffix for new files
+			Hint: the .mp3 extension is NOT implicit.
+			Hint: *ANY* extension is valid. fIcy is NOT limited to
+			mp3 files.
+
+        -t              Display song title [metadata] while ripping.
+
+
+Examples:
+
+	fIcy -t 123.123.123.123 8080 | mpg123 -
+		Use fIcy to display ICY titles while playing.
+
+	fIcy -s .mp3 -o ./ -md 123.123.123.123 8080 /path/to/stream
+		rips a .mp3 stream using metadata as filename, with server:port
+		and /path .
+
+	fIcy -s .mp3 -o ./ -mp 123.123.123.123 8080 /path/to/stream | mpg123 -
+		rips a .mp3 stream and plays it using mpg123, allowing mpg123
+		to be killed
+
+
+DISCLAIMER:
+
+	We would like to remind you that saving public streams without paying
+	the rights is ILLEGAL unless explicitly stated.
