@@ -14,10 +14,12 @@ DEPS := Makedepend
 #if $(CXX) != "g++"
 # This will be overriden when using make of GNU make, so let's assume MIPSPro
 DGEN := -MDupdate $(DEPS)
+DUPD :=
 #else
 # Dependencies by side-effect using gcc still require a two-stage make, or
-# tweaking the compilation command (as we do). I want Jam...
+# tweaking the compilation command to get -MDupdate (as we do). I want Jam...
 DGEN = -MD -MF $*.d
+DUPD = cat *.d <&- > $(DEPS)
 #endif
 
 
@@ -25,7 +27,7 @@ DGEN = -MD -MF $*.d
 .SUFFIXES: .cc .o
 .cc.o:
 	$(CXX) $(DGEN) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
-	-@cat *.d <&- > $(DEPS)
+	-@$(DUPD)
 
 
 # targets
