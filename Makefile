@@ -12,14 +12,10 @@ FPLS_OBJECTS := fPls.o msg.o resolver.o http.o socket.o \
 # parameters
 DEPS := Makedepend
 #if $(CXX) != "g++"
-# This will be overriden when using make of GNU make, so let's assume MIPSPro
+# This will be overriden when using GNU make, so let's assume MIPSPro
 DGEN := -MDupdate $(DEPS)
-DUPD :=
 #else
-# Dependencies by side-effect using gcc still require a two-stage make, or
-# tweaking the compilation command to get -MDupdate (as we do). I want Jam...
-DGEN = -MD -MF $*.d
-DUPD = cat *.d <&- > $(DEPS)
+DGEN := -MD
 #endif
 CPPFLAGS += $(DGEN)
 
@@ -28,7 +24,6 @@ CPPFLAGS += $(DGEN)
 .SUFFIXES: .cc .o
 .cc.o:
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
-	-@$(DUPD)
 
 
 # targets
@@ -54,3 +49,4 @@ distclean: clean
 	rm -rf *~
 
 sinclude $(DEPS)
+sinclude *.d
