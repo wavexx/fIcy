@@ -10,22 +10,25 @@
 // system headers (for size_t)
 #include <locale>
 
+// some defines
+#define FICY_VERSION "1.0.2"
+
 
 // some constants
 namespace fIcy
 {
-  const char id[] = "$Id";
-  const char version[] = "1.0.1";
+  const char version[] = FICY_VERSION;
   const char copyright[] =
-    "Copyright(c) 2003 of wave++ (Yuri D'Elia) <wavexx@users.sf.net>\n";
-  const char userAgent[] = "User-agent: fIcy 1.0.1";
+    "Copyright(c) 2003-2004 of wave++ (Yuri D'Elia) <wavexx@users.sf.net>\n"
+    "Distributed under GNU LGPL (v2 or above) without ANY warranty.\n";
+  const char userAgent[] = "User-agent: fIcy " FICY_VERSION;
   const size_t bufSz(1024);
   
   // an embedded help string
   const char help[] =
     " [-demvtcinh] [-o file] [-s sfx] <server> [port [path]]\n\n"
     "  -d\tDo not dup the output to stdout\n"
-    "  -o file\tDump the outout to file (or use file as a prefix)\n"
+    "  -o file\tDump the output to file (or use file as a prefix)\n"
     "  -s sfx\tUse sfx as a suffix for new files\n"
     "  -e\tEnumerate files when song metadata changes. Use file as a prefix\n"
     "  -m\tUse song metadata when writing filenames. file used as a prefix\n"
@@ -34,6 +37,7 @@ namespace fIcy
     "  -c\tDo not clobber files (implicit with -n)\n"
     "  -i\tIgnore file creation errors (reccomended when using -c)\n"
     "  -n\tIf the file exists create a new file with .n appended\n"
+    "  -p\tWhen duping and writing, continue even if SIGPIPE is received\n"
     "  -h\tThis help (how cute!).\n\n";
 }
 
@@ -46,4 +50,3 @@ namespace Exit
 }
 
 #endif
-

@@ -1,24 +1,34 @@
+# Makefile for fIcy (for pmake or gmake)
+# Copyright(c) 2004 by wave++ (Yuri D'Elia) <wavexx@users.sf.net>
+
 # configuration
-TARGETS = fIcy
-FICY_OBJECTS = fIcy.o resolver.o socket.o http.o \
+TARGETS := fIcy
+FICY_OBJECTS := fIcy.o resolver.o socket.o http.o \
 	urlencode.o hdrparse.o icy.o sanitize.o
 
-COMPILEXX = $(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
-LINKXX = $(CXX) $(LDFLAGS) -o $@
+# parameters
+DEPS := Makedepend
+#if $(CXX) != "gcc"
+CPPFLAGS += -MDupdate $(DEPS)	# SGI MIPSPro
+#else
+CPPFLAGS += -MD -MF $(DEPS)	# GNU cc
+#endif
+
 
 # suffixes, rules
 .SUFFIXES: .cc .o
 .cc.o:
-	$(COMPILEXX)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
+
 
 # targets
 all: $(TARGETS)
 
-# executables
 fIcy: $(FICY_OBJECTS)
-	$(LINKXX) $(FICY_OBJECTS)
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $(FICY_OBJECTS)
 
-# fake rules
+
+# stubs
 .PHONY: all clean distclean
 clean:
 	rm -rf $(TARGETS) $(FICY_OBJECTS) ii_files core
@@ -26,3 +36,4 @@ clean:
 distclean: clean
 	rm -rf *~
 
+sinclude $(DEPS)

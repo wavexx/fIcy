@@ -1,6 +1,6 @@
 /*
  * icy - protocol functions and constants - implementation
- * Copyright(c) 2003 of wave++ (Yuri D'Elia)
+ * Copyright(c) 2003-2004 of wave++ (Yuri D'Elia) <wavexx@users.sf.net>
  * Distributed under GNU LGPL without ANY warranty.
  */
 
@@ -15,7 +15,7 @@ using std::cout;
 #include <stdexcept>
 
 // c system headers
-#include <string.h>
+#include <cstring>
 
 
 // implementation
@@ -52,7 +52,7 @@ namespace ICY
       if(dup)
       {
         cout.write(buf, p);
-        cout.flush();
+	cout.flush();
       }
 
       r += p;

@@ -1,6 +1,6 @@
 /*
  * fIcy - HTTP/1.0-ICY stream extractor/separator - implementation
- * Copyright(c) 2003 of wave++ (Yuri D'Elia)
+ * Copyright(c) 2003-2004 of wave++ (Yuri D'Elia) <wavexx@users.sf.net>
  * Distributed under GNU LGPL without ANY warranty.
  */
 
@@ -27,14 +27,16 @@ using std::ofstream;
 using std::auto_ptr;
 
 // c system headers
-#include <stdlib.h>
+#include <cstdlib>
 #include <stdarg.h>
+#include <signal.h>
 #include <unistd.h>
 
 
 // constants (urgh)
 const char* prg;
 bool verbose(false);
+bool dupStdout(true);
 
 
 // some functions
@@ -136,6 +138,27 @@ newNFWrap(string& file, const bool ign = false)
 }
 
 
+// SIGPIPE handler
+void
+sigPipe(const int)
+{
+  cerr << "broken pipe: disabling duping.\n";
+  dupStdout = false;
+}
+
+
+// signal installer
+void
+sigPipeInst()
+{
+  sigaction_t sa;
+  sa.sa_flags = SA_RESETHAND;
+  sigemptyset(&sa.sa_mask);
+  sa.sa_handler = sigPipe;
+  sigaction(SIGPIPE, &sa, NULL);
+}
+
+
 // implementation
 int
 main(int argc, char* const argv[])
@@ -143,7 +166,6 @@ main(int argc, char* const argv[])
   // option defaults
   prg = argv[0];
 
-  bool dupStdout(true);
   char* outFile(NULL);
   char* suffix(NULL);
   bool enuFiles(false);
@@ -152,6 +174,7 @@ main(int argc, char* const argv[])
   bool clobber(true);
   bool ignFErr(false);
   bool numEFiles(false);
+  bool instSignal(false);
 
   int arg;
   while((arg = getopt(argc, argv, "do:emvtcs:inh")) != -1)
@@ -197,6 +220,10 @@ main(int argc, char* const argv[])
       numEFiles = true;
       break;
 
+    case 'p':
+      instSignal = true;
+      break;
+
     case 'h':
       cout << prg << fIcy::help << prg << " v" << fIcy::version <<
         " is\n" << fIcy::copyright;
@@ -232,6 +259,10 @@ main(int argc, char* const argv[])
     err("trying to perform a do-nothing download");
     return Exit::args;
   }
+
+  // install the signal
+  if(instSignal && dupStdout)
+    sigPipeInst();
 
   try
   {
@@ -293,7 +324,9 @@ main(int argc, char* const argv[])
         msg("connection terminated");
         break;
       }
-
+      if(!(outFile || dupStdout))
+	break;
+      
       // read metadata
       if(reqMeta)
       {
@@ -349,4 +382,3 @@ main(int argc, char* const argv[])
 
   return Exit::success;
 }
-
