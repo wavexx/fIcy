@@ -293,9 +293,9 @@ main(int argc, char* argv[]) try
 	// update residual
 	if(params.maxTime)
 	{
-	  time_t d(time(NULL) - start);
+	  time_t d(time(NULL) - start + params.waitSecs);
 	  if(d >= resTime)
-	    break;
+	    return Exit::success;
 	  resTime -= d;
 	}
 
