@@ -196,9 +196,10 @@ main(int argc, char* argv[])
   region_t reg;
   if(search_sync(fd, params, reg))
   {
-    err("cannor resync %s, try increasing frame size", params.file);
+    err("cannot resync %s, try increasing frame size", params.file);
     return Exit::fail;
   }
+  msg("sync found at %lu for %lu bytes", reg.start, reg.size);
 
   // save file size
   fd.seekg(0, std::ios_base::end);
