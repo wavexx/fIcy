@@ -225,7 +225,7 @@ exec_fIcy(Params& params, const char* stream)
   }
 
   wait(&ret);
-  return WEXITSTATUS(ret);
+  return (WIFEXITED(ret)? WEXITSTATUS(ret): Exit::args);
 }
 
 
