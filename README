@@ -9,9 +9,9 @@ General Description
 
 Usage
 
-	fIcy [options] <server> [port [path]]
+	fIcy [options] <server [port [path]]|url>
 
-	Options available: [-dehimnpt] [-o <prefix>] [-s <suffix>]
+	Options available: [-dehimnptr] [-o <prefix>] [-s <suffix>]
 
 
 Files
@@ -60,7 +60,12 @@ Options
 			Hint: *ANY* extension is valid. fIcy is NOT limited to
 			mp3 files.
 
-        -t              Display song title [metadata] while ripping.
+	-t		Display song title [metadata] while ripping.
+
+        -r		Remove/don't save partial chunks. This will skip the
+			first chunk and remove the last one upon [graceful]
+			termination which are (supposedly) incomplete. To use
+			in combination with -m or -e.
 
 
 Examples:
@@ -75,6 +80,11 @@ Examples:
 	fIcy -s .mp3 -o ./ -mp 123.123.123.123 8080 /path/to/stream | mpg123 -
 		rips a .mp3 stream and plays it using mpg123, allowing mpg123
 		to be killed
+
+	fIcy -t icy://a.radio:8888/ | mpg123 -
+	fIcy -t http://something.net/radio | mpg123 -
+		URL parsing examples. Both icy and http are recognized as
+		valid protocols.
 
 
 DISCLAIMER:
