@@ -35,7 +35,10 @@ Options
 
 	-h		Help
 
-	-i		Ignore file creation errors (necessary when using -c).
+	-c		Do not clobber files.
+
+	-i		Do not clobber files but abort when trying to do so
+			(-c is implicit).
 
 	-m		Use song title [metadata] when naming files. Uses -o as
 			prefix.
@@ -82,9 +85,9 @@ Examples
 	URL parsing examples. Both "icy" and "http" are recognized as
 	valid protocols, as well as nothing:
 
-		fIcy -t icy://a.radio:8888/ | mpg123 -
+		fIcy -t icy://a.radio.invalid:8888/ | mpg123 -
 
-		fIcy -t http://something.net/radio | mpg123 -
+		fIcy -t http://example.com/radio | mpg123 -
 
 		fIcy -t mega.station | mpg123 -
 

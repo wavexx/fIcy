@@ -90,25 +90,22 @@ shwIcyHdr(const map<string, string>& headers, const char* search,
 // this helper function returns a new file opened for writing. errors during
 // open or creat are (eventually) thrown as runtime_errors.
 ofstream*
-newFWrap(const char* file, const bool clobber = true, const bool ign = false)
+newFWrap(const char* file, const bool clobber, const bool ign)
 {
-  if(!access(file, F_OK) && !clobber)
+  if(!clobber && !access(file, F_OK))
   {
     if(ign)
       return NULL;
     else
-      throw std::runtime_error(string("cannot clobber existing file: ") + file);
+      throw std::runtime_error(
+	  string("cannot clobber existing file: ") + file);
   }
 
   ofstream* out(new ofstream(file, std::ios_base::out));
   if(!*out)
   {
     delete out;
-
-    if(ign)
-      out = NULL;
-    else
-      throw std::runtime_error(string("cannot write `") + file + "'");
+    throw std::runtime_error(string("cannot write `") + file + "'");
   }
 
   return out;
@@ -118,7 +115,7 @@ newFWrap(const char* file, const bool clobber = true, const bool ign = false)
 // a wrapper to the wrapper: if a file exists retry with a new file with
 // an incremental number appended. changes file to the real name of the file
 ofstream*
-newNFWrap(string& file, const bool ign = false)
+newNFWrap(string& file, const bool ign)
 {
   ofstream* out(newFWrap(file.c_str(), false, true));
   if(!out)
@@ -237,7 +234,7 @@ main(int argc, char* const argv[])
   bool useMeta(false);
   bool showMeta(false);
   bool clobber(true);
-  bool ignFErr(false);
+  bool ignFErr(true);
   bool numEFiles(false);
   bool instSignal(false);
   bool rmPartial(false);
@@ -279,7 +276,8 @@ main(int argc, char* const argv[])
       break;
 
     case 'i':
-      ignFErr = true;
+      clobber = false;
+      ignFErr = false;
       break;
 
     case 'n':
@@ -411,7 +409,7 @@ main(int argc, char* const argv[])
     // initial file
     auto_ptr<std::ostream> out;
     if(outFile && !(enuFiles || useMeta))
-      out.reset(newFWrap(outFile, clobber));
+      out.reset(newFWrap(outFile, clobber, false));
     else
       // the first filename is unknown as the metadata block will
       // arrive in the next metaInt bytes

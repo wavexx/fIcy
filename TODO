@@ -5,10 +5,6 @@ SethX:
 
 wave++:
 
-	* When creation of a file fails for a bad path (probably a bad
-	prefix was specified) abort anyway. The prefix should lead to an
-	existent directory.
-
 	* Split the ICY class into ICE/OGG subclasses, to support
 	seamless operation when using OGG streams.
 
