@@ -125,13 +125,10 @@ namespace Http
   Socket*
   Http::get(const char* file, Reply& reply, const Header* headers)
   {
-    using std::auto_ptr;
-    auto_ptr<Socket> s(gen(Proto::get, file, reply, headers));
-
     // we used to close the write end here, as HTTP/1.0 requests really end
     // here and we're very happy to relase some resources. Unfortunately,
     // SHOUTcast > 1.9 servers simply interrupt the connection when receiving
-    // the notification. "We fixed all known bugs in 1.9".
-    return s.release();
+    // the notification. "We fixed all known bugs in 1.9". Aisee...
+    return gen(Proto::get, file, reply, headers);
   }
 }
