@@ -87,9 +87,10 @@ Examples
 	Same as above, but allows the player to be restarted later by using
 	a named fifo:
 
-		mknod fifo
-		fIcy -p ... > fifo
-		mpg123 fifo
+		$ mknod fifo
+		$ fIcy -p ... > fifo
+		$ mpg123 fifo
+		EOF
 
 	URL parsing examples. Both "icy" and "http" are recognised as
 	valid protocols, as well as nothing:
