@@ -23,6 +23,7 @@ using std::istringstream;
 
 
 // c system headers
+#include <netinet/in.h>
 #include <netdb.h>
 #include <string.h>
 
@@ -33,7 +34,7 @@ namespace Http
   Http::Http(const char* host, const int port)
   {
     this->host = strdup(host);
-    this->port = port? port: getSrvPort();
+    this->port = (port? port: getSrvPort());
     addr = resolve(host);
   }
 
@@ -52,7 +53,7 @@ namespace Http
       throw
         std::runtime_error("error while trying to identify http port number");
 
-    return se->s_port;
+    return ntohs(se->s_port);
   }
 
 
