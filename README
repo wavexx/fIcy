@@ -112,7 +112,7 @@ Examples
 	Same as above, but allows the player to be restarted later by using
 	a named fifo:
 
-		$ mknod fifo
+		$ mkfifo fifo
 		$ fIcy -p ... > fifo
 		$ mpg123 fifo
 		EOF
@@ -126,7 +126,7 @@ Examples
 
 		fIcy -t mega.station | mpg123 -
 
-	Cleanup a ripped mp3 file:
+	Cleanup a ripped and/or damaged mp3 file:
 
 		fResync file.mp3
 
