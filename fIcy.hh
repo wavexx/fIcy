@@ -11,7 +11,7 @@
 #include <locale>
 
 // some defines
-#define FICY_VERSION "1.0.9"
+#define FICY_VERSION "1.0.10beta"
 
 
 // some constants
@@ -27,15 +27,17 @@ namespace fIcy
   // fIcy defaults
   const char userAgent[] = "User-agent: fIcy " FICY_VERSION;
   const size_t bufSz = 1024;
+  const char sed[] = "sed";
   
   const char fIcyHelp[] =
-    " [-dosqxXemvtcinprh] <server [port [path]]|url>\n\n"
+    " [-dosqxXfemvtcinprh] <server [port [path]]|url>\n\n"
     "  -d\t\tDo not dup the output to stdout\n"
     "  -o file\tDump the output to file (or use file as a prefix)\n"
     "  -s sfx\tUse sfx as a suffix for new files\n"
     "  -q file\tAppend file sequence list to file (only when saving)\n"
     "  -x regex\tDump only titles matching regex\n"
     "  -X regex\tDo NOT dump titles matching regex\n"
+    "  -f file\tRewrite titles using the specified sed script\n"
     "  -e\t\tEnumerate files when song metadata changes. Use file as prefix\n"
     "  -m\t\tUse song metadata when writing filenames. file used as prefix\n"
     "  -v\t\tVerbose\n"

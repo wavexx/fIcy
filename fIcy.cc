@@ -11,6 +11,7 @@
 #include "hdrparse.hh"
 #include "sanitize.hh"
 #include "urlparse.hh"
+#include "rewrite.hh"
 #include "match.hh"
 #include "msg.hh"
 using std::string;
@@ -180,7 +181,7 @@ display_status(const string& title, const size_t num, const time_t last)
       hour << ((now - last) % 60) << "]\n";
   }
 
-  cerr << "playing #" << num << ": " << sanitize_esc(title) << std::flush;
+  cerr << "playing #" << num << ": " << title << std::flush;
   return now;
 }
 
@@ -207,6 +208,7 @@ main(int argc, char* const argv[]) try
 
   char* outFile(NULL);
   char* suffix(NULL);
+  char* sedFile(NULL);
   ofstream seq;
   bool enuFiles(false);
   bool useMeta(false);
@@ -219,7 +221,7 @@ main(int argc, char* const argv[]) try
   BMatch match;
 
   int arg;
-  while((arg = getopt(argc, argv, "do:emvtcs:inprhq:x:X:")) != -1)
+  while((arg = getopt(argc, argv, "do:emvtcs:inprhq:x:X:f:")) != -1)
     switch(arg)
     {
     case 'd':
@@ -288,6 +290,10 @@ main(int argc, char* const argv[]) try
       match.exclude(optarg);
       break;
 
+    case 'f':
+      sedFile = optarg;
+      break;
+
     case 'h':
       cout << prg << fIcy::fIcyHelp << prg << " v" << fIcy::version <<
         " is\n" << fIcy::copyright;
@@ -339,6 +345,10 @@ main(int argc, char* const argv[]) try
     err("trying to perform a do-nothing download");
     return Exit::args;
   }
+
+  // spawn the rewrite coprocess before installing signals
+  // TODO: we should probably mask the signal now
+  Rewrite rewrite(sedFile);
 
   // install the signals
   instSignal = instSignal && dupStdout;
@@ -435,11 +445,18 @@ main(int argc, char* const argv[]) try
       {
 	map<string, string>::const_iterator it(
 	    data.find(ICY::Proto::mTitle));
-	if((it != data.end()) && (it->second != lastTitle) &&
-	    (it->second.size() > 0))
+
+	// de-uglify
+	string title;
+	if(it != data.end())
 	{
-	  // de-uglify
-	  const string& title(it->second);
+	  // sanitize immediately, we don't want \n for sed
+	  title = sanitize_esc(it->second);
+	  rewrite(title);
+	}
+
+	if(title.size() && (title != lastTitle))
+	{
 	  string newFName;
 	  
 	  if(showMeta)

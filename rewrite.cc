@@ -59,7 +59,7 @@ Rewrite::Rewrite(const char* script)
       throw runtime_error("cannot remap descriptors");
 
     // execute the coprocess
-    execlp(fIcy::sed, fIcy::sed, "-u", "-f", script);
+    execlp(fIcy::sed, fIcy::sed, "-u", "-f", script, NULL);
     throw runtime_error(string("cannot execute ") + fIcy::sed);
   }
 }
