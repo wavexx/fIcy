@@ -131,7 +131,10 @@ sigTerm(const int sig)
     msg("removing incomplete last file: %s", lastFName);
     unlink(lastFName);
   }
-  exit((sig == SIGTERM? Exit::success: Exit::fail));
+
+  exit((sig == SIGTERM? Exit::success:
+	  (sig == SIGPIPE? Exit::args:
+	      Exit::fail)));
 }
 
 
