@@ -11,6 +11,7 @@
 #include "hdrparse.hh"
 #include "sanitize.hh"
 #include "urlparse.hh"
+#include "msg.hh"
 using std::string;
 using std::map;
 
@@ -39,44 +40,8 @@ using std::auto_ptr;
 
 
 // constants (urgh)
-const char* prg;
-bool verbose(false);
 bool dupStdout(true);
 char* lastFName(NULL);
-
-
-// some functions
-void
-err(const char* fmt, ...)
-{
-  va_list params;
-
-  fprintf(stderr, "%s: ", prg);
-
-  va_start(params, fmt);
-  vfprintf(stderr, fmt, params);
-  va_end(params);
-
-  fprintf(stderr, "\n");
-}
-
-
-void
-msg(const char* fmt, ...)
-{
-  if(verbose)
-  {
-    va_list params;
-
-    fprintf(stderr, "%s: ", prg);
-
-    va_start(params, fmt);
-    vfprintf(stderr, fmt, params);
-    va_end(params);
-
-    fprintf(stderr, "\n");
-  }
-}
 
 
 void
