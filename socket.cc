@@ -1,6 +1,6 @@
 /*
  * sockets - streams sockets - implementation
- * Copyright(c) 2003 of wave++ (Yuri D'Elia)
+ * Copyright(c) 2003-2004 of wave++ (Yuri D'Elia)
  * Distributed under GNU LGPL without ANY warranty.
  */
 
@@ -12,6 +12,7 @@
 #include <stdexcept>
 
 // c system headers
+#include <netinet/in.h>
 #include <unistd.h>
 #include <errno.h>
 

@@ -170,3 +170,11 @@ Installation
 	fIcy comes with a very simple Makefile that should work on any system
 	using gcc, or IRIX. GNU make or pmake is required. Documentation is
 	generated from these files using ohg.
+
+	If you need to use a different compiler (for example on OpenBSD), you
+	can call make as follows:
+
+	   CXX="eg++" make -e
+
+	instead of changing manually the Makefile. Please note that at least
+	gcc >= 3 is required to compile fIcy.
