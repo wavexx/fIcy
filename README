@@ -103,13 +103,13 @@ Examples
 
 Companion software:
 
-	bfr:	http://www.glines.org:8000/software/buffer.html
+	bfr <http://www.glines.org:8000/software/buffer.html>:
 		Audio-oriented rebuffering tool. Ideal for lousy streams.
 
-	mp3check:	http://sourceforge.net/projects/mp3check/
-			mp3 integrity checker.
+	mp3check <http://sourceforge.net/projects/mp3check/>:
+		mp3 integrity checker.
 
-	mp3asm:	http://sourceforge.net/projects/mp3asm/
+	mp3asm <http://sourceforge.net/projects/mp3asm/>:
 		Frame-level mp3 cutting tool.
 
 
@@ -124,7 +124,7 @@ Notes
 	The output files produced by fIcy may miss audio framing informations
 	and headers since the separation does not consider the audio data. For
 	this reason, your player may fail to reproduce the dump: this is
-	expected. You can use other tools such as mp3fix for this. The audio
+	expected. You can use other tools such as mp3asm for this. The audio
 	quality is *not* diminished for the very same reason.
 
 	For bugs, support, documentation or simply suggestions contact our
