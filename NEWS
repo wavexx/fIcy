@@ -1,4 +1,4 @@
-fIcy 1.0.8:
+fIcy 1.0.8: Mon Nov 15 CET 2004
 
 	* Bug in fResync truncation code.
 	* New utility: fPls: playlist handler.
