@@ -496,11 +496,13 @@ main(int argc, char* const argv[]) try
 	  
 	  // update the last filename pointer
 	  if(lastFName)
+	  {
+	    write_seq(seq, lastFName);
 	    free(lastFName);
+	  }
 	  if(out.get())
 	  {
 	    lastFName = strdup(newFName.c_str());
-	    write_seq(seq, lastFName);
 	    msg("file changed to: %s", lastFName);
 	  }
 	  else if(lastFName)
