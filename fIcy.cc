@@ -301,7 +301,7 @@ main(int argc, char* const argv[])
       break;
 
     case 'h':
-      cout << prg << fIcy::help << prg << " v" << fIcy::version <<
+      cout << prg << fIcy::fIcyHelp << prg << " v" << fIcy::version <<
         " is\n" << fIcy::copyright;
       return Exit::success;
 

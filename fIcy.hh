@@ -17,15 +17,18 @@
 // some constants
 namespace fIcy
 {
+  // common strings
   const char version[] = FICY_VERSION;
   const char copyright[] =
     "Copyright(c) 2003-2004 of wave++ (Yuri D'Elia) <wavexx@users.sf.net>\n"
     "Distributed under GNU LGPL (v2 or above) without ANY warranty.\n";
+
+
+  // fIcy defaults
   const char userAgent[] = "User-agent: fIcy " FICY_VERSION;
-  const size_t bufSz(1024);
+  const size_t bufSz = 1024;
   
-  // an embedded help string
-  const char help[] =
+  const char fIcyHelp[] =
     " [-dosqxemvtcinprh] <server [port [path]]|url>\n\n"
     "  -d\tDo not dup the output to stdout\n"
     "  -o file\tDump the output to file (or use file as a prefix)\n"
@@ -40,16 +43,26 @@ namespace fIcy
     "  -i\tAbort when clobbering is attempted (implies -c)\n"
     "  -n\tIf the file exists create a new file with .n appended\n"
     "  -p\tWhen duping consider writing errors as transient\n"
-    "  -r\tRemove partials. Keep only complete sequences\n"
-    "  -h\tThis help (how cute!)\n\n";
+    "  -r\tRemove partials. Keep only complete sequences\n\n";
+
+
+  // fResync defaults
+  const size_t frameLen = 1440;
+  const size_t maxFrames = 6;
+
+  const char fResyncHelp[] =
+    " [-sh] [-n frames] [-m len] file\n\n"
+    "  -s\tSimulate only (print frame sync offsets: start and size)\n"
+    "  -n frames\tNumber of frames to check\n"
+    "  -m len\tMaximum frame length\n\n";
 }
 
 
 namespace Exit
 {
-  const int success(0);
-  const int fail(1);
-  const int args(2);
+  const int success = 0;
+  const int fail = 1;
+  const int args = 2;
 }
 
 #endif
