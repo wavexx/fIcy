@@ -221,6 +221,19 @@ display_status(const string& title, const size_t num, const time_t last)
 }
 
 
+// update the sequence file
+void
+write_seq(ofstream& out, const char* file)
+{
+  if(out.rdbuf()->is_open())
+  {
+    out << file << std::endl;
+    if(!out)
+      throw std::runtime_error("cannot append to sequence file");
+  }
+}
+
+
 // implementation
 int
 main(int argc, char* const argv[])
@@ -230,6 +243,7 @@ main(int argc, char* const argv[])
 
   char* outFile(NULL);
   char* suffix(NULL);
+  ofstream seq;
   bool enuFiles(false);
   bool useMeta(false);
   bool showMeta(false);
@@ -240,7 +254,7 @@ main(int argc, char* const argv[])
   bool rmPartial(false);
 
   int arg;
-  while((arg = getopt(argc, argv, "do:emvtcs:inprh")) != -1)
+  while((arg = getopt(argc, argv, "do:emvtcs:inprhq:")) != -1)
     switch(arg)
     {
     case 'd':
@@ -290,6 +304,15 @@ main(int argc, char* const argv[])
 
     case 'r':
       rmPartial = true;
+      break;
+
+    case 'q':
+      seq.open(optarg, std::ios_base::out | std::ios_base::app);
+      if(!seq)
+      {
+	err("cannot open `%s' for appending", optarg);
+	return Exit::fail;
+      }
       break;
 
     case 'h':
@@ -466,6 +489,7 @@ main(int argc, char* const argv[])
               if(out.get())
 	      {
 		lastFName = strdup(newFName.c_str());
+		write_seq(seq, lastFName);
                 msg("file changed to: %s", lastFName);
 	      }
 	      else

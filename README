@@ -65,6 +65,9 @@ Options
 			termination which are (supposedly) incomplete. To use
 			in combination with -m or -e.
 
+	-q <file>	Append file sequence list to file. This may be used to
+			rejoin splitted parts with an external tool.
+
 
 Examples
 
@@ -103,7 +106,8 @@ Notes
 	The output files produced by fIcy may miss audio framing informations
 	and headers since the separation does not consider the audio data. For
 	this reason, your player may fail to reproduce the dump: this is
-	expected. You can use other tools such as mp3fix for this.
+	expected. You can use other tools such as mp3fix for this. The audio
+	quality is *not* diminished for the very same reason.
 
 	For bugs, support, documentation or simply suggestions contact our
 	"Concept Developer": SethX <sethx@users.sf.net>.

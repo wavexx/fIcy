@@ -11,7 +11,7 @@
 #include <locale>
 
 // some defines
-#define FICY_VERSION "1.0.4"
+#define FICY_VERSION "1.0.5beta"
 
 
 // some constants
@@ -30,12 +30,13 @@ namespace fIcy
     "  -d\tDo not dup the output to stdout\n"
     "  -o file\tDump the output to file (or use file as a prefix)\n"
     "  -s sfx\tUse sfx as a suffix for new files\n"
+    "  -q file\tAppend file sequence list to file (only when saving)\n"
     "  -e\tEnumerate files when song metadata changes. Use file as a prefix\n"
     "  -m\tUse song metadata when writing filenames. file used as a prefix\n"
     "  -v\tVerbose\n"
     "  -t\tDisplay metadata while downloading\n"
     "  -c\tDo not clobber files (implicit with -n)\n"
-    "  -i\tIgnore file creation errors (reccomended when using -c)\n"
+    "  -i\tAbort when clobbering is attempted (implies -c)\n"
     "  -n\tIf the file exists create a new file with .n appended\n"
     "  -p\tWhen duping and writing, continue even if SIGPIPE is received\n"
     "  -r\tRemove partials. Keep only complete sequences\n"
