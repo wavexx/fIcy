@@ -30,14 +30,16 @@ namespace fIcy
   const char sed[] = "sed";
   
   const char fIcyHelp[] =
-    " [-dosqxXfemvtcinprh] <server [port [path]]|url>\n\n"
+    " [-dosqxXIfFemvtcinprh] <server [port [path]]|url>\n\n"
     "  -d\t\tDo not dup the output to stdout\n"
     "  -o file\tDump the output to file (or use file as a prefix)\n"
     "  -s sfx\tUse sfx as a suffix for new files\n"
     "  -q file\tAppend file sequence list to file (only when saving)\n"
     "  -x regex\tDump only titles matching regex\n"
     "  -X regex\tDo NOT dump titles matching regex\n"
-    "  -f file\tRewrite titles using the specified sed script\n"
+    "  -I file\tLoad include/exclude regexs from file\n"
+    "  -f expr\tRewrite titles using the specified sed expression\n"
+    "  -F file\tRewrite titles using the specified sed script\n"
     "  -e\t\tEnumerate files when song metadata changes. Use file as prefix\n"
     "  -m\t\tUse song metadata when writing filenames. file used as prefix\n"
     "  -v\t\tVerbose\n"

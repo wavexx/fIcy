@@ -10,8 +10,15 @@ using std::string;
 using std::vector;
 
 // system headers
+#include <fstream>
+using std::ifstream;
+using std::getline;
+
 #include <stdexcept>
 using std::runtime_error;
+
+// c system headers
+#include <stdlib.h>
 
 
 // compile a regular expression with error checking
@@ -35,6 +42,34 @@ BMatch::compInsert(std::vector<regex_t>& v, const char* regex, int flags)
   regex_t buf;
   compile(buf, regex, flags);
   v.push_back(buf);
+}
+
+
+void
+BMatch::load(const char* file)
+{
+  ifstream in(file);
+  if(!in)
+    throw runtime_error(string("can't open: ") + file);
+
+  string line;
+  char buf[16];
+
+  for(size_t num = 1; getline(in, line); ++num)
+  {
+    if(!line.size() || line[0] == '#')
+      continue;
+
+    if(line[0] == '+')
+      include(line.substr(1).c_str());
+    else if(line[0] == '-')
+      exclude(line.substr(1).c_str());
+    else
+    {
+      snprintf(buf, sizeof(buf), ":%lu", num);
+      throw runtime_error(string("syntax error in ") + file + buf);
+    }
+  }
 }
 
 

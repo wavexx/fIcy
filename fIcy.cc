@@ -221,7 +221,7 @@ main(int argc, char* const argv[]) try
   BMatch match;
 
   int arg;
-  while((arg = getopt(argc, argv, "do:emvtcs:inprhq:x:X:f:")) != -1)
+  while((arg = getopt(argc, argv, "do:emvtcs:inprhq:x:X:I:f:")) != -1)
     switch(arg)
     {
     case 'd':
@@ -288,6 +288,10 @@ main(int argc, char* const argv[]) try
 
     case 'X':
       match.exclude(optarg);
+      break;
+
+    case 'I':
+      match.load(optarg);
       break;
 
     case 'f':

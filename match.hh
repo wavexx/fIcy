@@ -48,6 +48,11 @@ public:
     compInsert(excl, regex, flags);
   }
 
+
+  // load/append expressions from file
+  void
+  load(const char* file);
+
   // match a string against all regexes, according
   // to include/exclude expressions.
   bool
