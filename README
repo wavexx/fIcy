@@ -102,15 +102,15 @@ fResync options
 fPls options
 
 	-P path		Specify a different name or full path for the fIcy
-	   		executable (defaults to "fIcy").
+			executable (defaults to "fIcy").
 
 	-v		Verbose.
 
 	-R max		Specifies the maximal number of retries to do for
-	   		each stream upon connection/read failure.
+			each stream upon connection/read failure.
 
 	-L max		Specifies the maximal number of loops to do for
-	   		the entire playlist (-1 for infinite).
+			the entire playlist (-1 for infinite).
 
 	-W sec		Wait time (in seconds) to pause after each failure.
 
