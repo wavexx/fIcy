@@ -23,7 +23,7 @@ fIcy 0.0.0: late 2002
 
 	#!/bin/sh
 	netcat "$1" "$2" << EOF | sed -e "1,9d"
-	GET $1 HTTP/1.0
+	GET $3 HTTP/1.0
 	Host: $1:$2
 
 	EOF
