@@ -46,6 +46,7 @@ using std::auto_ptr;
 // constants (urgh)
 bool dupStdout(true);
 char* lastFName(NULL);
+bool rmPartial(false);
 
 
 void
@@ -123,14 +124,14 @@ sigPipe(const int)
 
 // termination handler
 void
-sigTerm(const int)
+sigTerm(const int sig)
 {
-  if(lastFName)
+  if(rmPartial && lastFName)
   {
     msg("removing incomplete last file: %s", lastFName);
     unlink(lastFName);
   }
-  exit(Exit::success);
+  exit((sig == SIGTERM? Exit::success: Exit::fail));
 }
 
 
@@ -217,13 +218,12 @@ main(int argc, char* const argv[]) try
   bool ignFErr(true);
   bool numEFiles(false);
   bool instSignal(false);
-  bool rmPartial(false);
   time_t maxTime(0);
   auto_ptr<Rewrite> rewrite;
   BMatch match;
 
   int arg;
-  while((arg = getopt(argc, argv, "do:emvtcs:inprhq:x:X:I:f:F:T:")) != -1)
+  while((arg = getopt(argc, argv, "do:emvtcs:inprhq:x:X:I:f:F:M:")) != -1)
     switch(arg)
     {
     case 'd':
@@ -304,7 +304,7 @@ main(int argc, char* const argv[]) try
       rewrite.reset(new Rewrite(optarg, Rewrite::file));
       break;
 
-    case 'T':
+    case 'M':
       maxTime = tmParse(optarg);
       break;
 
@@ -362,10 +362,10 @@ main(int argc, char* const argv[]) try
 
   // install the signals
   instSignal = (instSignal && dupStdout);
+  rmPartial = rmPartial && (enuFiles || useMeta);
+  sigTermInst(!(instSignal || rewrite.get()));
   if(instSignal)
     sigPipeInst();
-  if(rmPartial && (enuFiles || useMeta))
-    sigTermInst(!(instSignal || rewrite.get()));
 
   // resolve the hostname
   msg("connecting to (%s %d)", server.c_str(), port);
