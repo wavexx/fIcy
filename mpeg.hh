@@ -17,23 +17,6 @@ namespace mpeg
   // imports
   using std::size_t;
 
-  // frame header
-  struct frame_t
-  {
-    unsigned sync: 11;
-    unsigned version: 2;
-    unsigned layer: 2;
-    unsigned crc: 1;
-    unsigned rate: 4;
-    unsigned freq: 2;
-    unsigned pad: 1;
-    unsigned: 1;
-    unsigned mode: 2;
-    unsigned extension: 2;
-    unsigned copyright: 2;
-    unsigned emphasis: 2;
-  };
-
 
   // types
   enum version_t
@@ -58,6 +41,23 @@ namespace mpeg
     emph_5015 = 1,
     emph_reserved = 2,
     emph_ccitj17 = 3
+  };
+
+
+  // frame header
+  struct frame_t
+  {
+    bool sync;
+    version_t ver;
+    layer_t layer;
+    bool crc;
+    unsigned rate;
+    unsigned freq;
+    bool pad;
+    unsigned mode;
+    unsigned ext;
+    unsigned copy;
+    emph_t emph;
   };
 
 

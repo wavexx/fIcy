@@ -41,38 +41,46 @@ namespace mpeg
     size_t frmlen(sizeof(frame_t));
     if(len < frmlen)
       return 0;
-    
+
     // frame data
     frame_t frame;
-    memcpy(&frame, start, frmlen);
-    version_t version(static_cast<version_t>(frame.version));
-    layer_t layer(static_cast<layer_t>(frame.layer));
-    
+    uint32_t buf;
+
+    buf = (start[0] << 24) + (start[1] << 16) + (start[2] << 8) + start[3];
+    frame.sync = ((buf & 0xFFE00000) ^ 0xFFE00000);
+    frame.ver = static_cast<version_t>((buf >> 19) & 0x3);
+    frame.layer = static_cast<layer_t>((buf >> 17) & 0x3);
+    frame.crc = ((buf >> 15) & 0x1);
+    frame.rate = ((buf >> 14) & 0xF);
+    frame.freq = ((buf >> 10) & 0x3);
+    frame.pad = ((buf >> 8) & 0x1);
+    frame.mode = ((buf >> 6) & 0x3);
+    frame.ext = ((buf >> 4) & 0x3);
+    frame.copy = ((buf >> 2) & 0x3);
+    frame.emph = static_cast<emph_t>(buf & 0x3);
+
     // check for basic data
-    if((frame.sync != 0x7FF) ||
-	(version == version_invalid) ||
-	(layer == layer_reserved) ||
-	(frame.rate == bitrate_invalid) ||
-	(frame.freq == freq_invalid) ||
-	(frame.emphasis == emph_reserved))
+    if((!frame.sync) ||	(frame.ver == version_invalid) ||
+	(frame.layer == layer_reserved) || (frame.rate == bitrate_invalid) ||
+	(frame.freq == freq_invalid) ||	(frame.emph == emph_reserved))
       return 0;
-    
+
     // check for frequency/sampling rate values
-    int rate(mpeg::rate(version, layer, frame.rate));
-    int freq(mpeg::freq(version, layer, frame.freq));
+    int rate(mpeg::rate(frame.ver, frame.layer, frame.rate));
+    int freq(mpeg::freq(frame.ver, frame.layer, frame.freq));
     if(!rate || !freq)
       return 0;
-    
+
     // final frame length
     frmlen = ((frame.layer == layer1?
 		  ((12 * rate / freq + frame.pad) * 4):
 		  (144 * rate / freq + frame.pad)));
     if(len < frmlen)
       return 0;
-    
+
     // TODO: crc checking
     if(!frame.crc) {}
-    
+
     return frmlen;
   }
 
@@ -81,10 +89,10 @@ namespace mpeg
   check_frames(const char* const start, const size_t len, size_t n)
   {
     size_t pos(0);
+    size_t frmlen;
 
     while(n--)
     {
-      size_t frmlen;
       if(!(frmlen = check_frame(start + pos, len - pos)))
 	return 0;
       pos += frmlen;
@@ -123,7 +131,7 @@ namespace mpeg
 
     while(--end, len--)
     {
-      if(*end == c)
+      if(*end == static_cast<char>(c))
 	return end;
     }
 
