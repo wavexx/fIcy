@@ -92,7 +92,7 @@ newNFWrap(string& file, const bool ign)
     for(size_t n = 0; n != std::numeric_limits<size_t>::max(); ++n)
     {
       snprintf(buf, sizeof(buf), ".%lu", n);
-      if(out = newFWrap((file + buf).c_str(), false, true))
+      if((out = newFWrap((file + buf).c_str(), false, true)))
       {
         file += buf;
         break;
@@ -394,7 +394,7 @@ main(int argc, char* const argv[]) try
   }
   
   // start reading
-  size_t metaInt(reqMeta?
+  ssize_t metaInt(reqMeta?
       atol(pReply.find(ICY::Proto::metaint)->second.c_str()): fIcy::bufSz);
   ICY::Reader reader(*s, fIcy::bufSz);
   size_t enu(0);

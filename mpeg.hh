@@ -62,7 +62,7 @@ namespace mpeg
 
 
   // bitrate tables
-  const int bitrate_invalid = 0x0F;
+  const unsigned bitrate_invalid = 0x0F;
   extern const int bitrates[5][16];
 
   inline int
@@ -74,7 +74,7 @@ namespace mpeg
 
 
   // frequency tables
-  const int freq_invalid = 0x03;
+  const unsigned freq_invalid = 0x03;
   extern const int freqs[3][4];
 
   inline int

@@ -20,7 +20,7 @@ BMatch::compile(regex_t& data, const char* regex, int flags)
 {
   int res;
 
-  if(res = regcomp(&data, regex, flags | REG_NOSUB))
+  if((res = regcomp(&data, regex, flags | REG_NOSUB)))
   {
     char buf[128];
     regerror(res, &data, buf, sizeof(buf));

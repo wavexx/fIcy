@@ -57,7 +57,6 @@ public:
 
 
   const char* uri;
-  const char* path;
   char** fIcyParams;
   size_t paramPos;
   size_t maxRetries;
@@ -71,7 +70,7 @@ Params::Params(int argc, char* argv[])
 {
   // defaults
   prg = argv[0];
-  path = NULL;
+  char* path = "fIcy";
   maxRetries = fIcy::maxRetries;
   maxLoops = fIcy::maxLoops;
   waitSecs = fIcy::waitSecs;
@@ -116,7 +115,7 @@ Params::Params(int argc, char* argv[])
   {
     fIcyParams = new char*[argc + 3];
     paramPos = argc + 1;
-    fIcyParams[0] = (path? path: "fIcy");
+    fIcyParams[0] = path;
     fIcyParams[argc + 2] = NULL;
 
     for(int i = 1; i <= argc; ++i)
