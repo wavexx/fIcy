@@ -117,7 +117,7 @@ truncate(const char* file, const region_t& reg)
 {
   // check whether truncate can be used
   if(reg.start == 0)
-    return truncate(file, reg.start);
+    return truncate(file, reg.size);
 
   // re-open the input file and output file
   ifstream in(file);
