@@ -23,10 +23,6 @@ namespace ICY
     // particular HTTP header to be sent when requiring metadata
     const char reqMeta[] = "icy-metadata: 1";
 
-    // ICY reply
-    const char ok[] = "ICY 200 ";
-    const size_t okSz = sizeof(ok) / sizeof(*ok) - 1;
-
     // some parameters we parse
     const char notice1[] = "icy-notice1";
     const char notice2[] = "icy-notice2";
@@ -79,4 +75,3 @@ namespace ICY
 }
 
 #endif
-

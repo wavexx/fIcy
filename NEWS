@@ -1,3 +1,10 @@
+fIcy 1.0.4:
+
+	* ohg now included into the distribution.
+	* Better filename sanitization.
+	* Terminal output sanitization.
+	* Better error reporting. No more "unexpected ICY reply".
+
 fIcy 1.0.3: Fri Apr 09 CEST 2004
 
 	* Support for removing partial dumps.

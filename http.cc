@@ -15,6 +15,12 @@
 #include <stdexcept>
 #include <memory>
 #include <string>
+using std::string;
+using std::getline;
+
+#include <sstream>
+using std::istringstream;
+
 
 // c system headers
 #include <netdb.h>
@@ -50,9 +56,43 @@ namespace Http
   }
 
 
+  void
+  Http::readReply(Socket& s, Reply& reply)
+  {
+    char proto[Proto::hdrLen];
+    *proto = 0;
+
+    char buf[Proto::hdrLen];
+    size_t answLen;
+
+    // read all lines
+    while((answLen = s.gets(buf, Proto::hdrLen)) > Proto::endlSz)
+    {
+      if(reply.headers || !*proto)
+      {
+        // cut tailing newlines from the buffer
+        while(strchr(Proto::endl, buf[answLen - 1]))
+          buf[--answLen] = 0;
+
+	if(!*proto)
+	  memcpy(proto, buf, answLen);
+	else if(reply.headers)
+	  reply.headers->push_back(string(buf, answLen));
+      }
+    }
+
+    // parse the first protocol line
+    istringstream in(proto);
+    in >> reply.proto;
+    in >> reply.code;
+    in >> std::ws;
+    getline(in, reply.description);
+  }
+
+
   Socket*
-  Http::gen(const char* act, const char* path, const Header* headers,
-      Header* reply)
+  Http::gen(const char* act, const char* path,
+      Reply& reply, const Header* headers)
   {
     using std::auto_ptr;
     using std::string;
@@ -82,29 +122,17 @@ namespace Http
     s->write(Proto::endl, Proto::endlSz);
 
     // fetch the answer headers
-    char buf[Proto::hdrLen];
-    size_t answLen;
-    while((answLen = s->gets(buf, Proto::hdrLen)) > Proto::endlSz)
-    {
-      if(reply)
-      {
-        // cut tailing newlines from the buffer
-        while(strchr(Proto::endl, buf[answLen - 1]))
-          buf[--answLen] = 0;
-
-        reply->push_back(buf);
-      }
-    }
+    readReply(*s, reply);
 
     return s.release();
   }
 
 
   Socket*
-  Http::get(const char* file, const Header* headers, Header* reply)
+  Http::get(const char* file, Reply& reply, const Header* headers)
   {
     using std::auto_ptr;
-    auto_ptr<Socket> s(gen(Proto::get, file, headers, reply));
+    auto_ptr<Socket> s(gen(Proto::get, file, reply, headers));
 
     // close the write end
     s->close(SHUT_WR);
@@ -112,4 +140,3 @@ namespace Http
     return s.release();
   }
 }
-

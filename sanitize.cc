@@ -8,10 +8,6 @@
 #include "sanitize.hh"
 using std::string;
 
-// system headers
-#include <algorithm>
-using std::remove_copy_if;
-
 // c system headers
 #include <ctype.h>
 

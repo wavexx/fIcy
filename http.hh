@@ -20,19 +20,40 @@ namespace Http
 {
   namespace Proto
   {
+    // parameters
     const char proto[] = "http";
     const char protoTy[] = "tcp";
     const char version[] = "HTTP/1.0";
     const size_t hdrLen = 1024;
-    const char get[] = "GET";
-
     const char endl[] = "\r\n";
     const size_t endlSz = sizeof(endl) / sizeof(*endl) - 1;
+
+    // requests
+    const char get[] = "GET";
+
+    // answers
+    const int ok(200);
   }
 
 
   // some useful typedefs
   typedef std::vector<std::string> Header;
+
+  // HTTP transport reply
+  struct Reply
+  {
+    Reply(Header* headers = NULL)
+    : headers(headers)
+    {}
+
+    // necessary data
+    std::string proto;
+    int code;
+    std::string description;
+
+    // optional headers
+    Header* headers;
+  };
 
 
   // interface
@@ -46,12 +67,15 @@ namespace Http
     int
     getSrvPort();
 
+    void
+    readReply(Socket& s, Reply& reply);
+
 
   protected:
     // generic operations
     Socket*
-    gen(const char* act, const char* path, const Header* headers = NULL,
-        Header* reply = NULL);
+    gen(const char* act, const char* path, Reply& reply,
+	const Header* headers = NULL);
 
 
   public:
@@ -61,9 +85,8 @@ namespace Http
 
     // basic functionality
     Socket*
-    get(const char* file, const Header* headers = NULL, Header* reply = NULL);
+    get(const char* file, Reply& reply, const Header* headers = NULL);
   };
 }
 
 #endif
-

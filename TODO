@@ -1,4 +1,17 @@
 SethX:
 
-	* Add a time offset after witch to change title, due to the
+	* Add a time offset after which to change title, due to the
 	"soft" mixing in many streams.
+
+wave++:
+
+	* When creation of a file fails for a bad path (probably a bad
+	prefix was specified) abort anyway. The prefix should lead to an
+	existent directory.
+
+	* Split the ICY class into ICE/OGG subclasses, to support
+	seamless operation when using OGG streams.
+
+	* Change the semantics of -p (or add another flag), to make
+	duping both non-blocking and non-fatal instead of signal
+	based operations. This is more desiderable.

@@ -1,6 +1,6 @@
 General Description
 
-	fIcy is a icecast/shoutcast stream grabber for use under shell
+	fIcy is an icecast/shoutcast stream grabber for use under shell
 	environment.  Its goal is to cleanly and automatically rip a stream
 	into user customizable files.  It will work with any ICY compatible
 	stream, allowing you to either to save the stream to disk or to pipe
@@ -18,11 +18,11 @@ Files
 
 	These files can be found in the latest release of fIcy
 
-	AUTHORS	People that have contributed to fIcy.
-	NEWS	Release changes.
-	COPYING	License. Please read carefully.
-	README	This file. Contains usage description.
-	TODO	Missing/Planned improvements.
+	AUTHORS		People that have contributed to fIcy.
+	NEWS		Release changes.
+	COPYING		License. Please read carefully.
+	README		This file. Contains usage description.
+	TODO		Missing/Planned improvements.
 
 
 Options
@@ -42,7 +42,7 @@ Options
 
 	-n		If the file exists create new one with .n as suffix.
 
-	-p		When dumping and writing, continue even if SIGPIPE is
+	-p		When duping and writing, continue even if SIGPIPE is
 			received.  Useful when you pipe the output to a media
 			player and want to kill it while not interrupting the
 			rip.
@@ -102,5 +102,13 @@ Notes:
 	this reason, your player may fail to reproduce the dump: this is
 	expected. You can use other tools such as mp3fix for this.
 
-	Email for bugs, support, documentation or simply suggestions:
-	SethX <sethx@users.sf.net>.
+	For bugs, support, documentation or simply suggestions contact our
+	"Concept Developer": SethX <sethx@users.sf.net>.
+	The fIcy project is located at http://ficy.sf.net/
+
+
+Installation:
+
+	fIcy comes with a very simple Makefile that should work on any system
+	using gcc, or IRIX. GNU make or pmake is required. Documentation is
+	generated from these files using ohg.

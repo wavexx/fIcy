@@ -99,6 +99,12 @@ namespace ICY
       char* p(mBuf);
       char* n;
 
+      /*
+       * Now we parse the data. They're in the form name='value';name....
+       * Unfortunatly, looking at the ICEcast and AMPLE code I do not
+       * see any escape sequence for values containing "';" so I merely
+       * look for terminators. Needless to say this is UGLY.
+       */
       while(*p)
       {
         // variable name
@@ -122,4 +128,3 @@ namespace ICY
     return lenght;
   }
 }
-

@@ -202,6 +202,11 @@ hour(std::ostream& fd)
 }
 
 
+/*
+ * function naming scheme: yep. I'm again in a new coding style internal fight.
+ * But this time, I've been seriously tainted by functional/logical programming
+ * so be patient. When I'll come up with clear ideas, I will uniform the code.
+ */
 time_t
 display_status(const string& title, const size_t num, const time_t last)
 {
@@ -356,23 +361,33 @@ main(int argc, char* const argv[])
     Http::Http httpc(server.c_str(), port);
     
     // setup headers
-    Http::Header headers;
-    Http::Header reply;
+    Http::Header qHeaders;
+    Http::Header aHeaders;
+    Http::Reply reply(&aHeaders);
 
-    headers.push_back(fIcy::userAgent);
+    // query
+    qHeaders.push_back(fIcy::userAgent);
     if(reqMeta)
-      headers.push_back(ICY::Proto::reqMeta);
+      qHeaders.push_back(ICY::Proto::reqMeta);
 
     msg("requesting stream on (%s)", path.c_str());
-    auto_ptr<Socket> s(httpc.get(path.c_str(), &headers, &reply));
+    auto_ptr<Socket> s(httpc.get(path.c_str(), reply, &qHeaders));
 
     // validate the reply
-    map<string, string> pReply(Http::hdrParse(reply));
-    if(reqMeta && (pReply.find(ICY::Proto::metaint) == pReply.end()) &&
-        reply[0].compare(0, ICY::Proto::okSz, ICY::Proto::ok))
+    if(reply.code != Http::Proto::ok)
     {
-        err("unexpected ICY reply");
-        return Exit::fail;
+      err("unexpected reply: %d %s", reply.code,
+	  sanitize_esc(
+	      (reply.description.size()? reply.description: reply.proto)
+	      ).c_str());
+      return Exit::fail;
+    }
+
+    map<string, string> pReply(Http::hdrParse(aHeaders));
+    if(reqMeta && pReply.find(ICY::Proto::metaint) == pReply.end())
+    {
+      err("requested metadata, but got nothing.");
+      return Exit::fail;
     }
 
     // show some headers
