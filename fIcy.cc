@@ -32,12 +32,14 @@ using std::auto_ptr;
 #include <stdarg.h>
 #include <signal.h>
 #include <unistd.h>
+#include <string.h>
 
 
 // constants (urgh)
 const char* prg;
 bool verbose(false);
 bool dupStdout(true);
+char* lastFName(NULL);
 
 
 // some functions
@@ -151,7 +153,20 @@ sigPipe(const int)
 }
 
 
-// signal installer
+// termination handler
+void
+sigTerm(const int)
+{
+  if(lastFName)
+  {
+    msg("removing incomplete last file: %s", lastFName);
+    unlink(lastFName);
+  }
+  exit(Exit::success);
+}
+
+
+// signal installers
 void
 sigPipeInst()
 {
@@ -160,6 +175,17 @@ sigPipeInst()
   sigemptyset(&sa.sa_mask);
   sa.sa_handler = sigPipe;
   sigaction(SIGPIPE, &sa, NULL);
+}
+
+
+void
+sigTermInst(const bool handlePipe)
+{
+  signal(SIGTERM, sigTerm);
+  signal(SIGINT, sigTerm);
+  signal(SIGHUP, sigTerm);
+  if(handlePipe)
+    signal(SIGPIPE, sigTerm);
 }
 
 
@@ -286,9 +312,12 @@ main(int argc, char* const argv[])
     return Exit::args;
   }
 
-  // install the signal
-  if(instSignal && dupStdout)
+  // install the signals
+  instSignal = instSignal && dupStdout;
+  if(instSignal)
     sigPipeInst();
+  if(rmPartial && (enuFiles || useMeta))
+    sigTermInst(!instSignal);
 
   try
   {
@@ -364,9 +393,10 @@ main(int argc, char* const argv[])
           if(title != data.end() && title->second.size() > 0)
           {
             if(showMeta)
-              cerr << "current song: " << title->second << std::endl;
+              cerr << "playing #" << enu << ": " << title->second << std::endl;
 
-            if(enuFiles || useMeta)
+	    // skip the first filename generation when discarding partials
+            if((enuFiles || useMeta) && (enu || !rmPartial))
             {
               string newFName(outFile);
               if(enuFiles)
@@ -374,7 +404,6 @@ main(int argc, char* const argv[])
                 char buf[16];
                 snprintf(buf, sizeof(buf), (useMeta? "[%lu] ": "%lu"), enu);
                 newFName += buf;
-                ++enu;
               }
               if(useMeta)
                 newFName += sanitize(title->second);
@@ -387,9 +416,20 @@ main(int argc, char* const argv[])
               else
                 out.reset(newFWrap(newFName.c_str(), clobber, ignFErr));
 
+	      // update the last filename pointer
+	      if(lastFName)
+		free(lastFName);
               if(out.get())
-                msg("file changed to: %s", newFName.c_str());
+	      {
+		lastFName = strdup(newFName.c_str());
+                msg("file changed to: %s", lastFName);
+	      }
+	      else
+		lastFName = NULL;
             }
+
+	    // update stream number
+	    ++enu;
           }
         }
       }
