@@ -121,7 +121,11 @@ truncate(const char* file, const region_t& reg)
 
   // re-open the input file and output file
   ifstream in(file);
+  if(!in || unlink(file))
+    return true;
   ofstream out(file);
+  if(!out)
+    return true;
 
   // skip garbage and copy the stream
   in.seekg(reg.start);
@@ -188,13 +192,16 @@ main(int argc, char* argv[])
     return Exit::fail;
   }
 
-  // search the offsets and save file size
+  // search the offsets
   region_t reg;
   if(search_sync(fd, params, reg))
   {
     err("cannor resync %s, try increasing frame size", params.file);
     return Exit::fail;
   }
+
+  // save file size
+  fd.seekg(0, std::ios_base::end);
   size_t size(fd.tellg());
   fd.close();
 
@@ -207,7 +214,7 @@ main(int argc, char* argv[])
   else if(reg.start != 0 || reg.size != size)
   {
     // the file needs to be modified
-    if(truncate(params.file, reg.size))
+    if(truncate(params.file, reg))
     {
       err("cannot truncate %s", params.file);
       return Exit::fail;
