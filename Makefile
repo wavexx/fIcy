@@ -3,7 +3,7 @@
 
 # configuration
 TARGETS := fIcy fResync
-FICY_OBJECTS := fIcy.o resolver.o socket.o http.o msg.o \
+FICY_OBJECTS := fIcy.o resolver.o socket.o http.o msg.o match.o \
 	urlencode.o urlparse.o hdrparse.o icy.o sanitize.o
 FRESYNC_OBJECTS := fResync.o msg.o mpeg.o copy.o
 
