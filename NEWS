@@ -1,4 +1,4 @@
-fIcy 1.0.10:
+fIcy 1.0.10: Mon Dec 06 CET 2004
 
 	* Added a title filtering/rewriting mechanism (-fF).
 	* Include/exclude expressions can be loaded from a file now (-I).

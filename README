@@ -6,10 +6,11 @@ General Description
 	allowing you to either to save the stream to disk or to pipe the output
 	to a media player, or even both.
 
-	The fIcy package includes the little utility fResync, which attempts
-	to truncate a badly cut MPEG file (such as the ones produced by fIcy)
-	to frame boundaries, to eliminate decoding warnings and noises; and
-	fPls to handle playlists.
+	The fIcy package includes:
+
+	* fIcy itself, a stream separator/multiplexer,
+	* fResync, a fast MPEG-resyncing utility,
+	* fPls, a playlist frontend for fIcy.
 
 
 Files
@@ -181,7 +182,7 @@ Companion software:
 	bfr <http://www.glines.org:8000/software/buffer.html>:
 		Audio-oriented rebuffering tool. Ideal for lousy streams.
 
-	mpgedit <http://www.mpgedit.org/>
+	mpgedit <http://www.mpgedit.org/>:
 		Frame-level mp3 cutting tool.
 
 	Combining these in the right pipeline order is left as an exercise to
@@ -216,9 +217,10 @@ Notes
 	For bugs, support, documentation or simply suggestions contact the main
 	developer: wave++ <wavexx@users.sf.net>. Our "Concept Developer": SethX
 	<sethx@users.sf.net> has been downsized to QA and testing (blame him
-	for each bug). The fIcy project is located at http://ficy.sf.net/
-	A general support mailing list is hosted on source-force here
-	http://sourceforge.net/mail/?group_id=104571
+	for each bug). The fIcy project is located at http://ficy.sf.net/ A
+	general support mailing list is hosted on source-force here
+	http://sourceforge.net/mail/?group_id=104571 (low traffic, mostly beta
+	and release announcements).
 
 
 Filtering
@@ -238,7 +240,7 @@ Filtering
 	as removing carefully the banner could result in a better separation.
 	* The resulting title will still apply for -xXI as usual.
 	* Please note that the *title* is filtered, not the filename (which may
-	still have some characters removed/modified). Use -v to see what is
+	still have some characters removed/modified). Use -tv to see what is
 	actually sent to the filter.
 
 
@@ -266,7 +268,7 @@ Installation
 
 	fIcy comes with a very simple Makefile that should work on any system
 	using gcc, or IRIX. GNU make or pmake is required. Documentation is
-	generated from these files using ohg.
+	generated from these files using "ohg".
 
 	If you need to use a different compiler (for example on OpenBSD), you
 	can call make as follows:
@@ -281,4 +283,5 @@ Installation
 
 		cp fIcy fPls fResync /usr/local/bin
 
-	Also note that, for "fPls" to work, fIcy must be already installed.
+	Also note that, for "fPls" to work, fIcy must be already installed or
+	a full fIcy path must be specified with -P.
