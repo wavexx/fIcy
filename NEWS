@@ -1,6 +1,8 @@
 fIcy 1.0.10:
 
-	* Added a title filtering/rewriting mechanism (-f).
+	* Added a title filtering/rewriting mechanism (-fF).
+	* Include/exclude expressions can be loaded from a file now (-I).
+	* Fixed other endianess problems affecting the URL parser.
 
 fIcy 1.0.9: Fri Dec 03 CET 2004
 

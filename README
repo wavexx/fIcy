@@ -1,14 +1,15 @@
 General Description
 
-	fIcy is an icecast/shoutcast stream grabber for use under shell
-	environment. Its goal is to cleanly and automatically rip a stream
-	into user customisable files.  It will work with any ICY compatible
-	stream, allowing you to either to save the stream to disk or to pipe
-	the output to a media player, or even both.
+	fIcy is an icecast/shoutcast stream grabber suite for use under shell
+	environment. Its goal is to cleanly and automatically rip a stream into
+	user customisable files. It will work with any ICY compatible stream,
+	allowing you to either to save the stream to disk or to pipe the output
+	to a media player, or even both.
 
 	The fIcy package includes the little utility fResync, which attempts
 	to truncate a badly cut MPEG file (such as the ones produced by fIcy)
-	to frame boundaries, to eliminate decoding warnings and noises.
+	to frame boundaries, to eliminate decoding warnings and noises; and
+	fPls to handle playlists.
 
 
 Files
@@ -19,7 +20,7 @@ Files
 	NEWS		Release changes.
 	COPYING		License. Please read carefully.
 	README		This file. Contains usage description.
-	TODO		Missing/Planned improvements.
+	TODO		Known bugs, missing/planned improvements.
 
 
 Usage
@@ -81,11 +82,19 @@ fIcy options
 	-X <regex>	Do NOT save files whose title matches against this
 			extended regular expression. Same semantics as -x.
 
-	-f <file>	Filter titles through the specified sed script.
-			The raw title is passed to the script (doesn't include
-			any additional prefixes/suffixes). As the result
-			will be used internally, some limitations apply.
+	-I <file>	Load include/exclude REs from file. Each line must
+			be prefixed with + or - to indicate whether it's a
+			positive or negative expression (-xX).
+
+	-f <expr>	Filter titles through the specified sed expression.
+			The raw title is passed to the expression (doesn't
+			include	any additional prefixes/suffixes). As the
+			result will be used internally, some limitations apply.
 			Read carefully the "Filtering" section.
+
+	-F <file>	Filter titles through the specified sed script.
+			Same semantics as -f, but the expressions are loaded
+			from a file instead. Conflicts with -f.
 
 
 fResync options
@@ -108,6 +117,7 @@ fResync options
 	-m len		Maximum frame length. Defaults to 1597. fResync uses
 			this value to determine the maximal region of the file
 			to be checked.
+
 
 fPls options
 
@@ -216,17 +226,20 @@ Filtering
 	Most online radio stations tend to put banners in the title that will
 	be shown in the player, and eventually result in the filename. To
 	overcome to this (and more), fIcy offers the possibility to rewrite
-	each title through a normal sed script via the "-f" flag. A real sed
+	each title through a normal sed script via the "-fF" flags. A real sed
 	coprocess is used along the execution so all of sed's power is
 	available, but some limitations apply:
 
-	* sed must be GNU sed, or support both the -u -f flags (this limitation
+	* sed must be GNU sed, or support the -u flag (this limitation
 	may eventually be removed in the future).
 	* Each line of input should result in one output line, and ONE ONLY.
 	* Two consecutive identical titles will result in the second one
 	being ignored (thus NOT splitting the stream). Consider this rule,
 	as removing carefully the banner could result in a better separation.
-	* The resulting title will still apply for -xX as usual.
+	* The resulting title will still apply for -xXI as usual.
+	* Please note that the *title* is filtered, not the filename (which may
+	still have some characters removed/modified). Use -v to see what is
+	actually sent to the filter.
 
 
 Filtering examples
@@ -235,14 +248,18 @@ Filtering examples
 
 		Artist - Title (radiobanner)
 
-	You can write a sed script containing
+	You can write a sed expression or script containing:
 
-		s/ *(radiobanner)$//
+		s/ (radiobanner)$//
 
 	to remove the trailing part. This facility can also be used to uniform
 	file names, invert Artist/Title positions and so on. Clever use of the
-	pattern space can also be used to merge albums. Refer to the sed(1)
-	manual for a complete list of commands you can use.
+	pattern space can also be used to merge albums. sed alone can be used
+	to debug expressions, eg:
+
+		echo "test title" | sed -e 'expr'
+
+	Refer to the sed(1) manual for a complete list of commands you can use.
 
 
 Installation

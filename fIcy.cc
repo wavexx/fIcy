@@ -208,7 +208,6 @@ main(int argc, char* const argv[]) try
 
   char* outFile(NULL);
   char* suffix(NULL);
-  char* sedFile(NULL);
   ofstream seq;
   bool enuFiles(false);
   bool useMeta(false);
@@ -218,10 +217,11 @@ main(int argc, char* const argv[]) try
   bool numEFiles(false);
   bool instSignal(false);
   bool rmPartial(false);
+  auto_ptr<Rewrite> rewrite;
   BMatch match;
 
   int arg;
-  while((arg = getopt(argc, argv, "do:emvtcs:inprhq:x:X:I:f:")) != -1)
+  while((arg = getopt(argc, argv, "do:emvtcs:inprhq:x:X:I:f:F:")) != -1)
     switch(arg)
     {
     case 'd':
@@ -295,7 +295,11 @@ main(int argc, char* const argv[]) try
       break;
 
     case 'f':
-      sedFile = optarg;
+      rewrite = new Rewrite(optarg, Rewrite::expr);
+      break;
+
+    case 'F':
+      rewrite = new Rewrite(optarg, Rewrite::file);
       break;
 
     case 'h':
@@ -350,16 +354,12 @@ main(int argc, char* const argv[]) try
     return Exit::args;
   }
 
-  // spawn the rewrite coprocess before installing signals
-  // TODO: we should probably mask the signal now instead!
-  Rewrite rewrite(sedFile);
-
   // install the signals
   instSignal = (instSignal && dupStdout);
   if(instSignal)
     sigPipeInst();
   if(rmPartial && (enuFiles || useMeta))
-    sigTermInst(!(instSignal || sedFile));
+    sigTermInst(!(instSignal || rewrite.get()));
 
   // resolve the hostname
   msg("connecting to (%s %d)", server.c_str(), port);
@@ -456,7 +456,8 @@ main(int argc, char* const argv[]) try
 	{
 	  // sanitize immediately, we don't want \n for sed
 	  title = sanitize_esc(it->second);
-	  rewrite(title);
+	  if(rewrite.get())
+	    (*rewrite)(title);
 	}
 
 	if(title.size() && (title != lastTitle))

@@ -12,6 +12,8 @@ Known bugs:
 	* fResync will deliberately remove any form of ID3v1 or v2 tag if
 	run on a "sane" file.
 
+	* There's no HDD fIcy can't fill.
+
 Internals:
 
 	* OGG support isn't there yet.
