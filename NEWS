@@ -5,7 +5,7 @@ fIcy 1.0.9:
 	* Fixed argument parsing in fPls under GNU/glibc systems.
 	* Fixed documentation for fPls (-W was really -T).
 	* fResync now correctly refuses to operate on read-only files.
-	* Significative fResync optimisations.
+	* Fixed fResync endianess problems.
 
 fIcy 1.0.8: Mon Nov 15 CET 2004
 
