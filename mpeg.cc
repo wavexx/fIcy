@@ -38,8 +38,7 @@ namespace mpeg
   check_frame(const char* const start, const size_t len)
   {
     // final frame length
-    size_t frmlen(sizeof(frame_t));
-    if(len < frmlen)
+    if(len < 4)
       return 0;
 
     // frame data
@@ -47,13 +46,13 @@ namespace mpeg
     uint32_t buf;
 
     buf = (start[0] << 24) + (start[1] << 16) + (start[2] << 8) + start[3];
-    frame.sync = ((buf & 0xFFE00000) ^ 0xFFE00000);
+    frame.sync = !((buf & 0xFEE00000) ^ 0xFEE00000);
     frame.ver = static_cast<version_t>((buf >> 19) & 0x3);
     frame.layer = static_cast<layer_t>((buf >> 17) & 0x3);
-    frame.crc = ((buf >> 15) & 0x1);
-    frame.rate = ((buf >> 14) & 0xF);
+    frame.crc = (buf & 0x10000);
+    frame.rate = ((buf >> 12) & 0xF);
     frame.freq = ((buf >> 10) & 0x3);
-    frame.pad = ((buf >> 8) & 0x1);
+    frame.pad = (buf & 0x200);
     frame.mode = ((buf >> 6) & 0x3);
     frame.ext = ((buf >> 4) & 0x3);
     frame.copy = ((buf >> 2) & 0x3);
@@ -72,9 +71,9 @@ namespace mpeg
       return 0;
 
     // final frame length
-    frmlen = ((frame.layer == layer1?
-		  ((12 * rate / freq + frame.pad) * 4):
-		  (144 * rate / freq + frame.pad)));
+    size_t frmlen((frame.layer == layer1)?
+	((12 * rate / freq + frame.pad) * 4):
+	(144 * rate / freq + frame.pad));
     if(len < frmlen)
       return 0;
 
