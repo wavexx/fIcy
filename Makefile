@@ -12,17 +12,20 @@ FPLS_OBJECTS := fPls.o msg.o resolver.o http.o socket.o \
 # parameters
 DEPS := Makedepend
 #if $(CXX) != "g++"
-DGEN := -MDupdate $(DEPS)	# SGI MIPSPro
+# This will be overriden when using make of GNU make, so let's assume MIPSPro
+DGEN := -MDupdate $(DEPS)
 #else
-DGEN := -MD -MF $(DEPS)		# GNU cc (this is broken!)
+# Dependencies by side-effect using gcc still require a two-stage make, or
+# tweaking the compilation command (as we do). I want Jam...
+DGEN = -MD -MF $*.d
 #endif
-CPPFLAGS += $(DGEN)
 
 
 # suffixes, rules
 .SUFFIXES: .cc .o
 .cc.o:
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
+	$(CXX) $(DGEN) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
+	-@cat *.d <&- > $(DEPS)
 
 
 # targets
@@ -42,7 +45,7 @@ fPls: $(FPLS_OBJECTS)
 .PHONY: all clean distclean
 clean:
 	rm -rf $(TARGETS) $(FICY_OBJECTS) $(FRESYNC_OBJECTS) \
-		 $(FPLS_OBJECTS) ii_files core $(DEPS)
+		 $(FPLS_OBJECTS) ii_files core $(DEPS) *.d
 
 distclean: clean
 	rm -rf *~
