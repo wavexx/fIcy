@@ -2,6 +2,8 @@ fIcy 1.0.9:
 
 	* Malicious .pls files could contain an option that would be
 	passed along to fIcy (harmless, but fixed).
+	* Fixed argument parsing in fPls (thank you linux, really!).
+	* Fixed documentation for fPls (-W was really -T).
 
 fIcy 1.0.8: Mon Nov 15 CET 2004
 

@@ -78,7 +78,10 @@ Params::Params(int argc, char* argv[])
 
   // real values
   int arg;
-  while((arg = getopt(argc, argv, "P:R:L:T:vh")) != -1)
+
+  // let's again put a bit of SHAME... that FSC**BEEP GNU extensions.
+  // WHY _NOT_ BEING POSIXLY_CORRECT BY DEFAULT EH? oooh, "features"! I see.
+  while((arg = getopt(argc, argv, "+P:R:L:T:vh")) != -1)
     switch(arg)
     {
     case 'P':
@@ -193,15 +196,10 @@ load_list(string& buf, const char* uri)
     msg("loading playlist from (%s %d)", server.c_str(), port);
     load_file(buf, server, port, path);
   }
-  else if(!proto.size() || proto == "file")
+  else if(!proto.size())
   {
-    if(proto.size())
-      path = (path == "/"? server: server + path);
-    else
-      path = uri;
-
-    msg("loading playlist from %s", path.c_str());
-    load_file(buf, path.c_str());
+    msg("loading playlist from %s", uri);
+    load_file(buf, uri);
   }
 }
 

@@ -112,7 +112,7 @@ fPls options
 	-L max		Specifies the maximal number of loops to do for
 			the entire playlist (-1 for infinite).
 
-	-W sec		Wait time (in seconds) to pause after each failure.
+	-T sec		Wait time (in seconds) to pause after each failure.
 
 
 Examples
