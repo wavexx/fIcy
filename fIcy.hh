@@ -26,7 +26,7 @@ namespace fIcy
   
   // an embedded help string
   const char help[] =
-    " [-demvtcinprh] [-o file] [-s sfx] <server [port [path]]|url>\n\n"
+    " [-dosqxemvtcinprh] <server [port [path]]|url>\n\n"
     "  -d\tDo not dup the output to stdout\n"
     "  -o file\tDump the output to file (or use file as a prefix)\n"
     "  -s sfx\tUse sfx as a suffix for new files\n"
