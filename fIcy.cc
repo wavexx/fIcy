@@ -295,11 +295,11 @@ main(int argc, char* const argv[]) try
       break;
 
     case 'f':
-      rewrite = new Rewrite(optarg, Rewrite::expr);
+      rewrite.reset(new Rewrite(optarg, Rewrite::expr));
       break;
 
     case 'F':
-      rewrite = new Rewrite(optarg, Rewrite::file);
+      rewrite.reset(new Rewrite(optarg, Rewrite::file));
       break;
 
     case 'h':
