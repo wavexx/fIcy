@@ -285,6 +285,7 @@ resync_mmap(const params_t& params)
   region_t reg;
   if((fail = search_sync(addr, st.st_size, params, reg)))
     err("cannot resync %s, try increasing frame size", params.file);
+  else
   {
     msg("sync found at %lu for %lu bytes", reg.start, reg.size);
 
