@@ -182,7 +182,7 @@ main(int argc, char* argv[])
   if(params.help)
   {
     show_help();
-    return Exit::success;
+    return Exit::args;
   }
 
   // open the file

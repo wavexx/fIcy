@@ -244,7 +244,7 @@ main(int argc, char* argv[]) try
   if(params.help)
   {
     show_help();
-    return Exit::success;
+    return Exit::args;
   }
 
   // fetch and parse the playlist

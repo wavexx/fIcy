@@ -291,7 +291,6 @@ main(int argc, char* const argv[]) try
     case 'h':
       cout << prg << fIcy::fIcyHelp << prg << " v" << fIcy::version <<
         " is\n" << fIcy::copyright;
-      return Exit::success;
 
     default:
       return Exit::args;
