@@ -11,7 +11,7 @@
 #include <locale>
 
 // some defines
-#define FICY_VERSION "1.0.10"
+#define FICY_VERSION "1.0.11beta"
 
 
 // some constants
@@ -30,7 +30,7 @@ namespace fIcy
   const char sed[] = "sed";
   
   const char fIcyHelp[] =
-    " [-dosqxXIfFemvtcinprh] <server [port [path]]|url>\n\n"
+    " [-dosqxXIfFMemvtcinprh] <server [port [path]]|url>\n\n"
     "  -d\t\tDo not dup the output to stdout\n"
     "  -o file\tDump the output to file (or use file as a prefix)\n"
     "  -s sfx\tUse sfx as a suffix for new files\n"
@@ -40,7 +40,7 @@ namespace fIcy
     "  -I file\tLoad include/exclude regexs from file\n"
     "  -f expr\tRewrite titles using the specified sed expression\n"
     "  -F file\tRewrite titles using the specified sed script\n"
-    "  -T time\tMaximum playing time\n"
+    "  -M time\tMaximum playing time\n"
     "  -e\t\tEnumerate files when song metadata changes. Use file as prefix\n"
     "  -m\t\tUse song metadata when writing filenames. file used as prefix\n"
     "  -v\t\tVerbose\n"
@@ -71,12 +71,13 @@ namespace fIcy
   const size_t waitSecs = 15;
 
   const char fPlsHelp[] =
-    " [-PRLTvh] <file|url> [fIcy options]\n\n"
+    " [-PRLTMvh] <file|url> [fIcy options]\n\n"
     "  -v\t\tVerbose\n"
     "  -P path\tSpecify fIcy executable name/path\n"
     "  -R max\tMax per-stream retries\n"
     "  -L max\tMax playlist loops\n"
-    "  -T time\tWait the specified time after each failure\n\n";
+    "  -T time\tWait the specified time after each failure\n"
+    "  -M time\tMaximum cumulative playing time\n\n";
 }
 
 

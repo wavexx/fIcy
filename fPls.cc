@@ -36,8 +36,10 @@ using std::strtoul;
 using std::strtol;
 
 #include <stdarg.h>
+#include <stdio.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <time.h>
 #include <errno.h>
 
 
@@ -59,10 +61,12 @@ public:
 
   const char* uri;
   char** fIcyParams;
-  size_t paramPos;
+  size_t urlPos;
+  size_t timePos;
   size_t maxRetries;
   long maxLoops;
-  size_t waitSecs;
+  time_t waitSecs;
+  time_t maxTime;
   bool help;
 };
 
@@ -75,6 +79,7 @@ Params::Params(int argc, char* argv[])
   maxRetries = fIcy::maxRetries;
   maxLoops = fIcy::maxLoops;
   waitSecs = fIcy::waitSecs;
+  maxTime = 0;
   verbose = help = false;
 
   // real values
@@ -82,7 +87,7 @@ Params::Params(int argc, char* argv[])
 
   // let's again put a bit of SHAME... that FSC**BEEP GNU extensions.
   // WHY _NOT_ BEING POSIXLY_CORRECT BY DEFAULT EH? oooh, "features"! I see.
-  while((arg = getopt(argc, argv, "+P:R:L:T:vh")) != -1)
+  while((arg = getopt(argc, argv, "+P:R:L:T:M:vh")) != -1)
     switch(arg)
     {
     case 'P':
@@ -101,6 +106,10 @@ Params::Params(int argc, char* argv[])
       waitSecs = tmParse(optarg);
       break;
 
+    case 'M':
+      maxTime = tmParse(optarg);
+      break;
+
     case 'h':
       help = true;
       break;
@@ -117,11 +126,13 @@ Params::Params(int argc, char* argv[])
   // fIcy parameters
   if(--argc >= 0)
   {
-    fIcyParams = new char*[argc + 4];
+    fIcyParams = new char*[argc + 6];
     fIcyParams[0] = path;
-    fIcyParams[argc + 1] = "--";
-    paramPos = argc + 2;
-    fIcyParams[argc + 3] = NULL;
+    fIcyParams[argc + 1] = "-M";
+    timePos = argc + 2;
+    fIcyParams[argc + 3] = "--";
+    urlPos = argc + 4;
+    fIcyParams[argc + 5] = NULL;
 
     for(int i = 1; i <= argc; ++i)
       fIcyParams[i] = argv[optind++];
@@ -165,7 +176,7 @@ void
 load_file(string& out, const string server, const int port, const string path)
 {
   Http::Http httpc(server.c_str(), port);
-    
+
   // setup headers
   Http::Header qHeaders;
   Http::Reply reply;
@@ -207,10 +218,13 @@ load_list(string& buf, const char* uri)
 
 // exec fIcy and return the exit code
 int
-exec_fIcy(Params& params, const char* stream)
+exec_fIcy(Params& params, const time_t maxTime, const char* stream)
 {
   char** args = params.fIcyParams;
-  args[params.paramPos] = const_cast<char*>(stream);
+  char buf[16];
+  snprintf(buf, sizeof(buf), "%lu", maxTime);
+  args[params.timePos] = const_cast<char*>(buf);
+  args[params.urlPos] = const_cast<char*>(stream);
   int ret;
 
   switch(fork())
@@ -256,6 +270,9 @@ main(int argc, char* argv[]) try
   }
   msg("loaded %d elements", playlist.size());
 
+  // residual playing time
+  time_t resTime(params.maxTime);
+
   // main loop
   for(size_t loop = 0; static_cast<long>(loop) != params.maxLoops; ++loop)
   {
@@ -264,12 +281,23 @@ main(int argc, char* argv[]) try
     {
       for(size_t retry = 0; retry != params.maxRetries; ++retry)
       {
+	time_t start(time(NULL));
+
 	msg("stream %s, retry %d of loop %d", it->c_str(), retry + 1, loop + 1);
-	int ret = exec_fIcy(params, it->c_str());
+	int ret = exec_fIcy(params, resTime, it->c_str());
 	if(ret == Exit::args)
 	  return Exit::fail;
 	else if(ret == Exit::success)
 	  break;
+
+	// update residual
+	if(params.maxTime)
+	{
+	  time_t d(time(NULL) - start);
+	  if(d >= resTime)
+	    break;
+	  resTime -= d;
+	}
 
 	// temporary failure, wait a bit
 	sleep(params.waitSecs);
