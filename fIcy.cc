@@ -33,6 +33,7 @@ using std::auto_ptr;
 #include <signal.h>
 #include <unistd.h>
 #include <string.h>
+#include <time.h>
 
 
 // constants (urgh)
@@ -186,6 +187,35 @@ sigTermInst(const bool handlePipe)
   signal(SIGHUP, sigTerm);
   if(handlePipe)
     signal(SIGPIPE, sigTerm);
+}
+
+
+// current song status
+std::ostream&
+hour(std::ostream& fd)
+{
+  fd.setf(std::ios_base::right);
+  fd.width(2);
+  fd.fill('0');
+
+  return fd;
+}
+
+
+time_t
+displayStatus(const string& title, const size_t num, const time_t last)
+{
+  time_t now(time(NULL));
+
+  if(last)
+  {
+    // show the song duration
+    cerr << " [" << hour << ((now - last) / 60) << ":" <<
+      hour << ((now - last) % 60) << "]\n";
+  }
+
+  cerr << "playing #" << num << ": " << title << std::flush;
+  return now;
 }
 
 
@@ -361,6 +391,7 @@ main(int argc, char* const argv[])
         atol(pReply.find(ICY::Proto::metaint)->second.c_str()): fIcy::bufSz);
     ICY::Reader reader(*s, fIcy::bufSz);
     size_t enu(0);
+    time_t tStamp(0);
 
     // initial file
     auto_ptr<std::ostream> out;
@@ -393,7 +424,7 @@ main(int argc, char* const argv[])
           if(title != data.end() && title->second.size() > 0)
           {
             if(showMeta)
-              cerr << "playing #" << enu << ": " << title->second << std::endl;
+	      tStamp = displayStatus(title->second, enu, tStamp);
 
 	    // skip the first filename generation when discarding partials
             if((enuFiles || useMeta) && (enu || !rmPartial))
