@@ -1,24 +1,28 @@
-Features:
+Features
 
 	* fResync should have an option to check the entire file for errors
-	instead of checking only the extremes.
+	  instead of checking only the extremes.
 
-Known bugs:
+
+Known bugs
 
 	* fResync isn't 100% effective yet. CRC verification and
-	"bit reservoir" handling is lacking. Will be fixed in future
-	release of fIcy.
+	  "bit reservoir" handling is lacking. Will be fixed in future
+	  release of fIcy.
 
 	* fResync will deliberately remove any form of ID3v1 or v2 tag if
-	run on a "sane" file.
+	  run on a "sane" file.
 
 	* There's no HDD fIcy can't fill.
 
-Internals:
+
+Internals
 
 	* OGG support isn't there yet.
 
+
 	* Split the ICY class into ICE/OGG subclasses, to support
-	seamless operation when using OGG streams.
+	  seamless operation when using OGG streams.
 
 	* Use a virtual pty to remove the need of GNU sed.
+

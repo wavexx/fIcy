@@ -1,287 +1,336 @@
+===============================================
+fIcy: an icecast/shoutcast stream grabber suite
+===============================================
+
+.. contents::
+
+
 General Description
+-------------------
 
-	fIcy is an icecast/shoutcast stream grabber suite for use under shell
-	environment. Its goal is to cleanly and automatically rip a stream into
-	user customisable files. It will work with any ICY compatible stream,
-	allowing you to either to save the stream to disk or to pipe the output
-	to a media player, or even both.
+fIcy is an icecast/shoutcast stream grabber suite for use under shell
+environment. Its goal is to cleanly and automatically rip a stream into user
+customisable files. It will work with any ICY compatible stream, allowing you
+to either to save the stream to disk or to pipe the output to a media player,
+or even both.
 
-	The fIcy package includes:
+The fIcy package includes:
 
-	* fIcy itself, a stream separator/multiplexer,
-	* fResync, a fast MPEG-resyncing utility,
-	* fPls, a playlist frontend for fIcy.
+* fIcy itself, a stream separator/multiplexer,
+
+* fResync, a fast MPEG-resyncing utility,
+
+* fPls, a playlist frontend for fIcy.
 
 
 Files
+-----
 
-	These files can be found in the latest release of fIcy
+These files can be found in the latest release of fIcy
 
-	AUTHORS		People that have contributed to fIcy.
-	NEWS		Release changes.
-	COPYING		License. Please read carefully.
-	README		This file. Contains usage description.
-	TODO		Known bugs, missing/planned improvements.
+`AUTHORS <AUTHORS>`_:
+	People that have contributed to fIcy.
+
+`NEWS <NEWS>`_:
+	Release changes.
+
+`COPYING <http://www.gnu.org/licenses/lgpl.html>`_:
+	License. Please read carefully.
+
+`README <README>`_:
+	This file. Contains usage description.
+
+`TODO <TODO>`_:
+	Known bugs, missing/planned improvements.
+
+`FAQ <FAQ>`_:
+	Frequently asked questions.
 
 
 Usage
+-----
 
-	fIcy [options] <server [port [path]]|url>
+Synopsis::
 
-	fPls [options] <file|url> [fIcy options]
+  fIcy [options] <server [port [path]]|url>
 
-	fResync [options] file
+  fPls [options] <file|url> [fIcy options]
+
+  fResync [options] file
 
 
 fIcy options
+------------
 
-	-d		Do not dump the output to stdout.
-			Useful when only ripping.
+  -d		Do not dump the output to stdout.
+		Useful when only ripping.
 
-	-e		Enumerate number of ripped files when song metadata
-			changes. Uses -o as prefix.
+  -e		Enumerate number of ripped files when song metadata
+		changes. Uses -o as prefix.
 
-	-h		Help
+  -h		Help
 
-	-c		Do not clobber files.
+  -c		Do not clobber files.
 
-	-i		Do not clobber files but abort when trying to do so
-			(-c is implicit).
+  -i		Do not clobber files but abort when trying to do so
+		(-c is implicit).
 
-	-m		Use song title [metadata] when naming files. Uses -o as
-			prefix.
+  -m		Use song title [metadata] when naming files. Uses -o as
+		prefix.
 
-	-n		If the file exists create new one with .n as suffix.
+  -n		If the file exists create new one with .n as suffix.
 
-	-p		When duping consider writing errors as transient.
-			Useful when you pipe the output to a media player and
-			want to kill it while not interrupting the rip.
+  -p		When dumping to stdout consider writing errors as transient.
+		Useful when you pipe the output to a media player and
+		want to kill it while not interrupting the rip.
 
-	-o <file>	Dump the output to file.
-			Hint: to dump without a prefix use "./"
+  -o file	Dump the output to file.
+		Hint: to dump without a prefix use "./"
 
-	-s <suffix>	Use sfx as a suffix for new files.
-			Hint: the .mp3 extension is NOT implicit.
+  -s suffix	Use sfx as a suffix for new files.
+		Hint: the .mp3 extension is NOT implicit.
 
-	-t		Display song title [metadata] while ripping.
+  -t		Display song title [metadata] while ripping.
 
-	-r		Remove/don't save partial chunks. This will skip the
-			first chunk and remove the last one upon
-			termination which are (supposedly) incomplete. To use
-			in combination with -m or -e.
+  -r		Remove/don't save partial chunks. This will skip the
+		first chunk and remove the last one upon
+		termination which are (supposedly) incomplete. To use
+		in combination with -m or -e.
 
-	-q <file>	Append file sequence list to file. This may be used to
-			rejoin splitted parts with an external tool. fResync
-			will use this file in the future.
+  -q file	Append file sequence list to file. This may be used to
+		rejoin splitted parts with an external tool. fResync
+		will use this file in the future.
 
-	-x <regex>	Save only files whose title (NOT filename) matches
-			against this (or one of these) extended regular
-			expressions. Multiple -x can be specified on the
-			command line to form OR conditions. Duping unaffected.
-			Can be combined with -X.
+  -x regex	Save only files whose title (NOT filename) matches
+		against this (or one of these) extended regular
+		expressions. Multiple -x can be specified on the
+		command line to form OR conditions. Duplication unaffected.
+		Can be combined with -X.
 
-	-X <regex>	Do NOT save files whose title matches against this
-			extended regular expression. Same semantics as -x.
+  -X regex	Do NOT save files whose title matches against this
+		extended regular expression. Same semantics as -x.
 
-	-I <file>	Load include/exclude REs from file. Each line must
-			be prefixed with + or - to indicate whether it's a
-			positive or negative expression (-xX).
+  -I file	Load include/exclude REs from file. Each line must
+		be prefixed with + or - to indicate whether it's a
+		positive or negative expression (-xX).
 
-	-f <expr>	Filter titles through the specified sed expression.
-			The raw title is passed to the expression (doesn't
-			include	any additional prefixes/suffixes). As the
-			result will be used internally, some limitations apply.
-			Read carefully the "Filtering" section.
+  -f expr	Filter titles through the specified sed expression.
+		The raw title is passed to the expression (doesn't
+		include	any additional prefixes/suffixes). As the
+		result will be used internally, some limitations apply.
+		Read carefully the Filtering_ section.
 
-	-F <file>	Filter titles through the specified sed script.
-			Same semantics as -f, but the expressions are loaded
-			from a file instead. Conflicts with -f.
+  -F file	Filter titles through the specified sed script.
+		Same semantics as -f, but the expressions are loaded
+		from a file instead. Conflicts with -f.
+
+  -M time	Maximum recording time. See Notes_.
 
 
 fResync options
+---------------
 
-	-b		By default fResync maps the entire file into memory
-			when operating. However this can create problems on
-			loaded systems with large files or when simulating.
-			This reverts to a buffered I/O mode. This flag is also
-			implicit when simulating.
+  -b		By default fResync maps the entire file into memory
+		when operating. However this can create problems on
+		loaded systems with large files or when simulating.
+		This reverts to a buffered I/O mode. This flag is also
+		implicit when simulating.
 
-	-s		Simulate the process. Print on the standard output
-			the starting sync offset and stream length, but don't
-			modify the source file.
+  -s		Simulate the process. Print on the standard output
+		the starting sync offset and stream length, but don't
+		modify the source file.
 
-	-v		Verbose.
+  -v		Verbose.
 
-	-n frames	Require/decode at least n valid consecutive frames to
-			validate the sync offset. Defaults to 6.
+  -n frames	Require/decode at least n valid consecutive frames to
+		validate the sync offset. Defaults to 6.
 
-	-m len		Maximum frame length. Defaults to 1597. fResync uses
-			this value to determine the maximal region of the file
-			to be checked.
+  -m len	Maximum frame length. Defaults to 1597. fResync uses
+		this value to determine the maximal region of the file
+		to be checked.
 
 
 fPls options
+------------
 
-	-P path		Specify a different name or full path for the fIcy
-			executable (defaults to "fIcy").
+  -P path	Specify a different name or full path for the fIcy
+		executable (defaults to "fIcy").
 
-	-v		Verbose.
+  -v		Verbose.
 
-	-R max		Specifies the maximal number of retries to do for
-			each stream upon connection/read failure.
+  -R max	Specifies the maximal number of retries to do for
+		each stream upon connection/read failure.
 
-	-L max		Specifies the maximal number of loops to do for
-			the entire playlist (-1 for infinite).
+  -L max	Specifies the maximal number of loops to do for
+		the entire playlist (-1 for infinite).
 
-	-T sec		Wait time (in seconds) to pause after each failure.
+  -T time	Wait time to pause after each failure.
+
+  -M time	Maximum recording time. See Notes_.
 
 
 Examples
+--------
 
-	Use fIcy to display ICY titles while playing:
+Use fIcy to display ICY titles while playing::
 
-		fIcy -t 123.123.123.123 8080 | mpg123 -
+	fIcy -t 123.123.123.123 8080 | mpg123 -
 
-	Rip an .mp3 stream using metadata as filename, with server:port
-	and /path:
+Rip an .mp3 stream using metadata as filename, with server:port and /path::
 
-		fIcy -s .mp3 -o ./ -md 123.123.123.123 8080 /path/to/stream
+	fIcy -s .mp3 -o ./ -md 123.123.123.123 8080 /path/to/stream
 	
-	Rip an .mp3 stream and play it using mpg123, allowing mpg123
-	to be killed anytime:
+Rip an .mp3 stream and play it using mpg123, allowing mpg123 to be killed
+anytime::
 
-		fIcy -s .mp3 -o ./ -mp 1.2.3.4 8080 /path/to/stream | mpg123 -
+	fIcy -s .mp3 -o ./ -mp 1.2.3.4 8080 /path/to/stream | mpg123 -
 
-	Same as above, but allows the player to be restarted later by using
-	a named fifo (note that you can later open "fifo" with any player):
+Same as above, but allows the player to be restarted later by using a named
+fifo (note that you can later open "fifo" with any player)::
 
-		$ mkfifo fifo
-		$ fIcy -p ... > fifo
-		$ mpg123 fifo
-		EOF
+	$ mkfifo fifo
+	$ fIcy -p ... > fifo
+	$ mpg123 fifo
 
-	URL parsing examples. Both "icy" and "http" are recognised as
-	valid protocols, as well as nothing:
+URL parsing examples. Both "icy" and "http" are recognised as valid protocols,
+as well as nothing::
 
-		fIcy -t icy://a.radio.invalid:8888/ | mpg123 -
+	fIcy -t icy://a.radio.invalid:8888/ | mpg123 -
 
-		fIcy -t http://example.com/radio | mpg123 -
+	fIcy -t http://example.com/radio | mpg123 -
 
-	Rip a station using a playlist instead of direct connection to the
-	stream, supporting failures and multiple fall-back streams:
+Rip a station using a playlist instead of direct connection to the stream,
+supporting failures and multiple fall-back streams::
 
-		fPls -L-1 http://netradio.invalid/listen.pls -s.mp3 -o./ -cmrd
+	fPls -L-1 http://netradio.invalid/listen.pls -s.mp3 -o./ -cmrd
 
-	Cleanup a ripped and/or damaged mp3 file:
+Cleanup a ripped and/or damaged mp3 file::
 
-		fResync file.mp3
+	fResync file.mp3
 
 
-Companion software:
+Companion software
+------------------
 
-	bfr <http://www.glines.org:8000/software/buffer.html>:
-		Audio-oriented rebuffering tool. Ideal for lousy streams.
+`bfr <http://www.glines.org:8000/software/buffer.html>`_:
 
-	mpgedit <http://www.mpgedit.org/>:
-		Frame-level mp3 cutting tool.
+	Audio-oriented rebuffering tool. Ideal for lousy streams.
 
-	Combining these in the right pipeline order is left as an exercise to
-	the user.
+`mpgedit <http://www.mpgedit.org/>`_:
+
+	Frame-level mp3 cutting tool.
+
+Combining these in the right pipeline order is left as an exercise to the user.
 
 
 DISCLAIMER
+----------
 
-	We would like to remind you that saving public streams without paying
-	the rights is *ILLEGAL* unless explicitly stated.
+We would like to remind you that saving public streams without paying the
+rights is *ILLEGAL* unless explicitly stated.
 
 
 Notes
+-----
 
-	The output files produced by fIcy may miss audio framing informations
-	and headers since the separation does not consider the audio data. For
-	this reason, your player may fail to reproduce the dump: this is
-	expected. fResync can be used to cleanup MPEG files after processing.
+The output files produced by fIcy may miss audio framing informations and
+headers since the separation does not consider the audio data. For this reason,
+your player may fail to reproduce the dump: this is expected. fResync can be
+used to cleanup MPEG files after processing.
 
-	You can also use other tools such as mpgedit for cutting the file in
-	arbitrary positions without diminishing the quality. Assuming that your
-	song spans across three files (use -q to know which ones), that's how
-	to proceed:
+You can also use other tools such as mpgedit for cutting the file in arbitrary
+positions without diminishing the quality. Assuming that your song spans across
+three files (use -q to know which ones), that's how to proceed::
 
-		cat 1.mp3 2.mp3 3.mp3 > temp.mp3 && xmpgedit temp.mp3
+	cat 1.mp3 2.mp3 3.mp3 > temp.mp3 && xmpgedit temp.mp3
 
-	Do NOT resync the files if you're going to post-process them this way:
-	fResync would remove at least one boundary frame on each file, while
-	other tools could also insert extra empty frames to silence the
-	decoder!
+Do *not* resync the files if you're going to post-process them this way:
+fResync would remove at least one boundary frame on each file, while other
+tools could also insert extra empty frames to silence the decoder!
 
-	For bugs, support, documentation or simply suggestions contact the main
-	developer: wave++ <wavexx@users.sf.net>. Our "Concept Developer": SethX
-	<sethx@users.sf.net> has been downsized to QA and testing (blame him
-	for each bug). The fIcy project is located at http://ficy.sf.net/ A
-	general support mailing list is hosted on source-force here
-	http://sourceforge.net/mail/?group_id=104571 (low traffic, mostly beta
-	and release announcements).
+The -M flag supported by both fIcy and fPls accepts a time specification in
+seconds, `HH:MM` or `N minutes/hours/days`. Time starts just after the
+connection has been established, but without counting further delays. Also
+beware that -M specified in fPls means `cumulative recording time`, while -M
+specified in fIcy means `single stream recording time`.
+
+For bugs, support, documentation or simply suggestions contact the main
+developer: wave++ <wavexx@users.sf.net>. Our "Concept Developer": SethX
+<sethx@users.sf.net> has been downsized to QA and testing (blame him for each
+bug). The fIcy project is located at <http://ficy.sf.net/>. A general support
+mailing list is hosted on sourceforge_ (low traffic, mostly beta and release
+announcements).
+
+.. _sourceforge: http://sourceforge.net/mail/?group_id=104571
 
 
 Filtering
+---------
 
-	Most online radio stations tend to put banners in the title that will
-	be shown in the player, and eventually result in the filename. To
-	overcome to this (and more), fIcy offers the possibility to rewrite
-	each title through a normal sed script via the "-fF" flags. A real sed
-	coprocess is used along the execution so all of sed's power is
-	available, but some limitations apply:
+Most online radio stations tend to put banners in the title that will be shown
+in the player, and eventually result in the filename. To overcome to this (and
+more), fIcy offers the possibility to rewrite each title through a normal sed
+script via the "-fF" flags. A real sed coprocess is used along the execution so
+all of sed's power is available, but some limitations apply:
 
-	* sed must be GNU sed, or support the -u flag (this limitation
-	may eventually be removed in the future).
-	* Each line of input should result in one output line, and ONE ONLY.
-	* Two consecutive identical titles will result in the second one
-	being ignored (thus NOT splitting the stream). Consider this rule,
-	as removing carefully the banner could result in a better separation.
-	* The resulting title will still apply for -xXI as usual.
-	* Please note that the *title* is filtered, not the filename (which may
-	still have some characters removed/modified). Use -tv to see what is
-	actually sent to the filter.
+* sed must be GNU sed, or support the -u flag (this limitation
+  may eventually be removed in the future).
+
+* Each line of input should result in one output line, and ONE ONLY.
+
+* Two consecutive identical titles will result in the second one
+  being ignored (thus NOT splitting the stream). Consider this rule,
+  as removing carefully the banner could result in a better separation.
+
+* The resulting title will still apply for -xXI as usual.
+
+* Please note that the *title* is filtered, not the filename (which may
+  still have some characters removed/modified). Use -tv to see what is
+  actually sent to the filter.
 
 
 Filtering examples
+------------------
 
-	As an example, suppose your titles look like this:
+As an example, suppose your titles look like this::
 
-		Artist - Title (radiobanner)
+	Artist - Title (radiobanner)
 
-	You can write a sed expression or script containing:
+You can write a sed expression or script containing::
 
-		s/ (radiobanner)$//
+	s/ (radiobanner)$//
 
-	to remove the trailing part. This facility can also be used to uniform
-	file names, invert Artist/Title positions and so on. Clever use of the
-	pattern space can also be used to merge albums. sed alone can be used
-	to debug expressions, eg:
+to remove the trailing part. This facility can also be used to uniform file
+names, invert Artist/Title positions and so on. Clever use of the pattern space
+can also be used to merge albums. sed alone can be used to debug expressions,
+eg::
 
-		echo "test title" | sed -e 'expr'
+	echo "test title" | sed -e 'expr'
 
-	Refer to the sed(1) manual for a complete list of commands you can use.
+Refer to the sed(1) manual for a complete list of commands you can use.
 
 
 Installation
+------------
 
-	fIcy comes with a very simple Makefile that should work on any system
-	using gcc, or IRIX. GNU make or pmake is required. Documentation is
-	generated from these files using "ohg".
+fIcy comes with a very simple Makefile that should work on any system using
+gcc, or IRIX. GNU make or pmake is required. Documentation is generated from
+these files using rst2html_ (slower, but better than ohg).
 
-	If you need to use a different compiler (for example on OpenBSD), you
-	can call make as follows:
+If you need to use a different compiler (for example on OpenBSD), you can call
+make as follows::
 
-		CXX="eg++" make -e
+	CXX="eg++" make -e
 
-	instead of changing manually the Makefile. Please note that, when using
-	gcc, at least g++ >= 3 is required to compile fIcy.
+instead of changing manually the Makefile. Please note that, when using gcc, at
+least g++ >= 3 is required to compile fIcy.
 
-	There's no "make install" target. Instead you should copy the generated
-	executables into the final path, usually doing:
+There's no "make install" target. Instead you should copy the generated
+executables into the final path, usually doing:
 
-		cp fIcy fPls fResync /usr/local/bin
+	cp fIcy fPls fResync /usr/local/bin
 
-	Also note that, for "fPls" to work, fIcy must be already installed or
-	a full fIcy path must be specified with -P.
+Also note that, for "fPls" to work, fIcy must be already installed (be in
+"PATH") or a full fIcy path must be specified with -P.
+
+.. _rst2html: http://docutils.sourceforge.net/

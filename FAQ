@@ -1,0 +1,95 @@
+Does fIcy preserve the full quality of the stream?
+
+	Yes, as explained in the README, there's no data loss.
+
+
+Why not separate tracks on silence points?
+
+	Short answer: nonsense.
+
+	Long answer: silence detection would require full data decoding, would
+	require reliable metaint positions and indeed would require real
+	silence between tracks. When cross-fading/mixing is used, silence
+	detection is just a waste of computing resource. On streams where
+	silence between tracks *does* exist, metadata alone will do the work
+	almost as well. Where metaint positions are useless, silence detection
+	would be useless as well. We believe separation done that way is a lost
+	war from the beginning.
+
+
+Why not write MPEG tracks on frame boundaries directly?
+
+	In a future release along with OGG support.
+
+
+Can you insert id3/v2 tags in the files automagically?
+
+	Several tools already exists for this. If you're really sure about
+	adding tags, you may want to resync the files first.
+
+
+How can I resync-and-tag files automatically as they're written?
+
+	If you're really sure, you can do this by using the file produced by
+	-q. A poor-man's solution could look like this::
+
+	  $ fIcy -q foo ... &
+	  $ tail -f foo | (while read file; do fResync "$file"; [your \
+	    tagging command here]; done) &
+
+
+Is there any plan for a Windows port?
+
+	No. Don't ask for it.
+
+
+How I can write to a single enormous file?
+
+	Use the -o flag alone, without -m or -e::
+
+	  fIcy -o file ...
+
+
+How I can append to a single file?
+
+	You can use the standard output instead of a named file::
+
+	  fIcy ... >> file
+
+	Note that appending a rip onto another will not result in a "blended"
+	rip. You can still use fResync on file (there's no penality on running
+	fResync on large files whatsoever) to remove some noise.
+
+
+fIcy aborts with "requested metadata, but got nothing"
+
+	The stream runs without metadata (ie titles). No separation can take
+	place. You can still write huge file chunks without the -me flags.
+
+
+How I can prevent fIcy to rip my station?
+
+	Short answer: you can't.
+
+	Long answer: if your streaming server supports this, you can block on
+	the user-agent. fIcy uses "fIcy [version]" by default and offers no way
+	of changing it dynamically. Consider however that any user with a
+	minimal amount of brain will be able to change it anyway. A more
+	realistic solution is to disable metadata (ie titles) on your stream,
+	but even then it won't prevent people for saving it on large chunks,
+	and/or use ANY other software like winamp, xmms, wget, telnet, netcat,
+	curl (or even your browser of choice).
+
+
+I really want to prevent people to rip my stream!
+
+	Broadcast with an antenna. Costs less, and please consider AM!
+
+
+Unanswered question?
+
+	Check in the `mailing list archives`_, or subscribe_ to get support.
+	Hopefully your question will appear here in the next release.
+
+	.. _mailing list archives: http://sourceforge.net/mailarchive/forum.php?forum_id=42822
+	.. _subscribe: http://lists.sourceforge.net/lists/listinfo/ficy-users
