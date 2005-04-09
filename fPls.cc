@@ -205,7 +205,7 @@ load_list(string& buf, const char* uri)
   urlParse(proto, server, port, path, uri);
   if(proto.size() && proto == "http")
   {
-    msg("loading playlist from (%s %d)", server.c_str(), port);
+    msg("loading playlist from (%s %d %s)", server.c_str(), port, path.c_str());
     load_file(buf, server, port, path);
   }
   else if(!proto.size())
