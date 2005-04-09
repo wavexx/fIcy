@@ -129,6 +129,9 @@ fIcy options
 
   -M time	Maximum recording time. See Notes_.
 
+  -L num	Redirect follow limit. Defaults to 1. 0 disables
+		redirection entirely.
+
 
 fResync options
 ---------------
@@ -318,7 +321,7 @@ Installation
 
 fIcy comes with a very simple Makefile that should work on any system using
 gcc, or IRIX. GNU make or pmake is required. Documentation is generated from
-these files using rst2html_ (slower, but better than ohg).
+these files using rst2html_.
 
 If you need to use a different compiler (for example on OpenBSD), you can call
 make as follows::

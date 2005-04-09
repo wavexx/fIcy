@@ -43,10 +43,13 @@ using std::auto_ptr;
 #include <time.h>
 
 
-// constants (urgh)
-bool dupStdout(true);
-char* lastFName(NULL);
-bool rmPartial(false);
+// globals (urgh)
+namespace
+{
+  bool dupStdout(true);
+  char* lastFName(NULL);
+  bool rmPartial(false);
+}
 
 
 void
@@ -204,6 +207,74 @@ write_seq(ofstream& out, const char* file)
 }
 
 
+string
+itos(const int i)
+{
+  char buf[16];
+  snprintf(buf, sizeof(buf), "%d", i);
+  return string(buf);
+}
+
+
+Socket*
+connectFl(map<string, string>& pReply, const string& url,
+    const Http::Header qHeaders, size_t limit)
+{
+  // parse the supplied url
+  string proto;
+  string server;
+  int port;
+  string path;
+
+  urlParse(proto, server, port, path, url);
+  if(!proto.size())
+    proto = "http";
+  else if(proto != "http" && proto != "icy")
+    throw runtime_error(string("unknown protocol ") + proto);
+
+  // connection loop
+  auto_ptr<Socket> s;
+  for(;; --limit)
+  {
+    msg("connecting to (%s %d)", server.c_str(), port);
+    Http::Http httpc(server.c_str(), port);
+
+    msg("requesting stream on (%s)", path.c_str());
+    Http::Header aHeaders;
+    Http::Reply reply(&aHeaders);
+    s.reset(httpc.get(path.c_str(), reply, &qHeaders));
+
+    // validate the reply code
+    if(reply.code != Http::Proto::ok &&
+	reply.code != Http::Proto::found &&
+	reply.code != Http::Proto::other)
+      throw runtime_error(string("unexpected reply: ") +
+	  itos(reply.code) + " " + sanitize_esc((reply.description.size()?
+		  reply.description: reply.proto)).c_str());
+
+    // parse the headers
+    pReply = Http::hdrParse(aHeaders);
+    if(reply.code == Http::Proto::ok)
+      break;
+
+    // recursion
+    if(!limit)
+      throw runtime_error(string("hit redirect follow limit"));
+
+    map<string, string>::iterator url = pReply.find(Http::Proto::location);
+    if(url == pReply.end())
+      throw runtime_error("redirection didn't contain an url");
+
+    string newProto;
+    urlParse(newProto, server, port, path, url->second);
+    if(newProto != proto)
+      throw runtime_error(string("protocol changes are not allowed"));
+  }
+
+  return s.release();
+}
+
+
 // implementation
 int
 main(int argc, char* const argv[]) try
@@ -211,22 +282,23 @@ main(int argc, char* const argv[]) try
   // option defaults
   prg = argv[0];
 
-  char* outFile(NULL);
-  char* suffix(NULL);
+  char* outFile = NULL;
+  char* suffix = NULL;
   ofstream seq;
-  bool enuFiles(false);
-  bool useMeta(false);
-  bool showMeta(false);
-  bool clobber(true);
-  bool ignFErr(true);
-  bool numEFiles(false);
-  bool instSignal(false);
-  time_t maxTime(0);
+  bool enuFiles = false;
+  bool useMeta = false;
+  bool showMeta = false;
+  bool clobber = true;
+  bool ignFErr = true;
+  bool numEFiles = false;
+  bool instSignal = false;
+  time_t maxTime = 0;
+  size_t maxFollow = fIcy::maxFollow;
   auto_ptr<Rewrite> rewrite;
   BMatch match;
 
   int arg;
-  while((arg = getopt(argc, argv, "do:emvtcs:inprhq:x:X:I:f:F:M:")) != -1)
+  while((arg = getopt(argc, argv, "do:emvtcs:inprhq:x:X:I:f:F:M:L:")) != -1)
     switch(arg)
     {
     case 'd':
@@ -311,6 +383,10 @@ main(int argc, char* const argv[]) try
       maxTime = tmParse(optarg);
       break;
 
+    case 'L':
+      maxFollow = atol(optarg);
+      break;
+
     case 'h':
       cout << prg << fIcy::fIcyHelp << prg << " v" << fIcy::version <<
         " is\n" << fIcy::copyright;
@@ -327,24 +403,14 @@ main(int argc, char* const argv[]) try
   }
 
   // connection parameters
-  string proto;
-  string server;
-  int port;
-  string path;
+  string url = argv[optind++];
   if(argc > 1)
   {
-    server = argv[optind++];
-    port = atoi(argv[optind++]);
-    path = (argc == 3? argv[optind++]: "/");
-  }
-  else
-  {
-    urlParse(proto, server, port, path, argv[optind++]);
-    if(proto.size() && proto != "http" && proto != "icy")
-    {
-      err("unknown protocol \"%s\"", proto.c_str());
-      return Exit::args;
-    }
+    // 1.0.4 compatibility
+    url += ":";
+    url += atoi(argv[optind++]);
+    if(argc == 3)
+      url += argv[optind++];
   }
 
   // check for parameters consistency
@@ -370,34 +436,15 @@ main(int argc, char* const argv[]) try
   if(instSignal)
     sigPipeInst();
 
-  // resolve the hostname
-  msg("connecting to (%s %d)", server.c_str(), port);
-  Http::Http httpc(server.c_str(), port);
-    
   // setup headers
   Http::Header qHeaders;
-  Http::Header aHeaders;
-  Http::Reply reply(&aHeaders);
-  
-  // query
   qHeaders.push_back(fIcy::userAgent);
   if(reqMeta)
     qHeaders.push_back(ICY::Proto::reqMeta);
-  
-  msg("requesting stream on (%s)", path.c_str());
-  auto_ptr<Socket> s(httpc.get(path.c_str(), reply, &qHeaders));
 
-  // validate the reply
-  if(reply.code != Http::Proto::ok)
-  {
-    err("unexpected reply: %d %s", reply.code,
-	sanitize_esc(
-	    (reply.description.size()? reply.description: reply.proto)
-	    ).c_str());
-    return Exit::fail;
-  }
-  
-  map<string, string> pReply(Http::hdrParse(aHeaders));
+  // establish the connection
+  map<string, string> pReply;
+  auto_ptr<Socket> s(connectFl(pReply, url, qHeaders, maxFollow));
   if(reqMeta && pReply.find(ICY::Proto::metaint) == pReply.end())
   {
     err("requested metadata, but got nothing.");

@@ -1,6 +1,6 @@
 /*
  * icy - protocol functions and constants
- * Copyright(c) 2003-2004 of wave++ (Yuri D'Elia)
+ * Copyright(c) 2003-2005 of wave++ (Yuri D'Elia)
  * Distributed under GNU LGPL without ANY warranty.
  */
 
@@ -33,8 +33,8 @@ namespace ICY
     const char metaint[] = "icy-metaint";
 
     // metadata constants
-    const size_t metaSz(1024);
-    const size_t metaMul(16);
+    const size_t metaSz = 1024;
+    const size_t metaMul = 16;
 
     // song title metatada
     const char mTitle[] = "StreamTitle";

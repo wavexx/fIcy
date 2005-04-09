@@ -1,6 +1,6 @@
 /*
  * HTTP/1.0 for streams sockets
- * Copyright(c) 2003-2004 of wave++ (Yuri D'Elia)
+ * Copyright(c) 2003-2005 of wave++ (Yuri D'Elia)
  * Distributed under GNU LGPL without ANY warranty.
  */
 
@@ -32,7 +32,12 @@ namespace Http
     const char get[] = "GET";
 
     // answers
-    const int ok(200);
+    const int ok = 200;
+    const int found = 302;
+    const int other = 303;
+
+    // headers we parse
+    const char location[] = "Location";
   }
 
 
