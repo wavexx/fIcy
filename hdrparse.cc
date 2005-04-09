@@ -1,6 +1,6 @@
 /*
  * hdrParse - parse HTTP headers - implementation
- * Copyright(c) 2003 of wave++ (Yuri D'Elia)
+ * Copyright(c) 2005 of wave++ (Yuri D'Elia)
  * Distributed under GNU LGPL without ANY warranty.
  */
 
@@ -21,8 +21,12 @@ namespace Http
     for(Header::const_iterator it = hdr.begin(); it != hdr.end(); ++it)
     {
       string::size_type p(it->find(':'));
-      if(p != string::npos)
-        m.insert(std::make_pair(it->substr(0, p), it->substr(p + 1)));
+      if(p == string::npos || (p + 1) > it->size())
+	continue;
+
+      // non-compliant strings without whitespace are handled
+      short spc = ((p + 2) < it->size() && (*it)[p + 1] == ' '? 2: 1);
+      m.insert(std::make_pair(it->substr(0, p), it->substr(p + spc)));
     }
 
     return m;
