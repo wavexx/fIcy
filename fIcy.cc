@@ -62,18 +62,12 @@ shwIcyHdr(const map<string, string>& headers, const char* search,
 }
 
 
-// this helper function returns a new file opened for writing. errors during
-// open or creat are (eventually) thrown as runtime_errors.
+// this helper function returns a new file opened for writing.
 ofstream*
-newFWrap(const char* file, const bool clobber, const bool ign)
+newFWrap(const char* file, const bool clobber)
 {
   if(!clobber && !access(file, F_OK))
-  {
-    if(ign)
-      return NULL;
-    else
-      throw runtime_error(string("cannot clobber existing file: ") + file);
-  }
+    return NULL;
 
   ofstream* out(new ofstream(file, std::ios_base::out));
   if(!*out)
@@ -89,23 +83,23 @@ newFWrap(const char* file, const bool clobber, const bool ign)
 // a wrapper to the wrapper: if a file exists retry with a new file with
 // an incremental number appended. changes file to the real name of the file
 ofstream*
-newNFWrap(string& file, const bool ign)
+newNFWrap(string& file)
 {
-  ofstream* out(newFWrap(file.c_str(), false, true));
+  ofstream* out(newFWrap(file.c_str(), false));
   if(!out)
   {
     char buf[16];
     for(size_t n = 0; n != std::numeric_limits<size_t>::max(); ++n)
     {
       snprintf(buf, sizeof(buf), ".%lu", n);
-      if((out = newFWrap((file + buf).c_str(), false, true)))
+      if((out = newFWrap((file + buf).c_str(), false)))
       {
         file += buf;
         break;
       }
     }
 
-    if(!(out || ign))
+    if(!out)
       throw runtime_error(string("no free files for `") + file + "'");
   }
 
@@ -289,7 +283,6 @@ main(int argc, char* const argv[]) try
   bool useMeta = false;
   bool showMeta = false;
   bool clobber = true;
-  bool ignFErr = true;
   bool numEFiles = false;
   bool instSignal = false;
   time_t maxTime = 0;
@@ -331,11 +324,6 @@ main(int argc, char* const argv[]) try
 
     case 's':
       suffix = optarg;
-      break;
-
-    case 'i':
-      clobber = false;
-      ignFErr = false;
       break;
 
     case 'n':
@@ -480,7 +468,7 @@ main(int argc, char* const argv[]) try
   // initial file
   auto_ptr<std::ostream> out;
   if(outFile && !(enuFiles || useMeta))
-    out.reset(newFWrap(outFile, clobber, false));
+    out.reset(newFWrap(outFile, clobber));
   else
     // the first filename is unknown as the metadata block will
     // arrive in the next metaInt bytes
@@ -550,9 +538,9 @@ main(int argc, char* const argv[]) try
 	    
 	    // open the new file
 	    if(numEFiles)
-	      out.reset(newNFWrap(newFName, ignFErr));
+	      out.reset(newNFWrap(newFName));
 	    else
-	      out.reset(newFWrap(newFName.c_str(), clobber, ignFErr));
+	      out.reset(newFWrap(newFName.c_str(), clobber));
 	  }
 	  else
 	    out.reset();

@@ -11,7 +11,7 @@
 #include <locale>
 
 // some defines
-#define FICY_VERSION "1.0.12beta"
+#define FICY_VERSION "1.0.12"
 
 
 // some constants
@@ -31,7 +31,7 @@ namespace fIcy
   const size_t maxFollow = 1;
   
   const char fIcyHelp[] =
-    " [-dosqxXIfFMLemvtcinprh] <server [port [path]]|url>\n\n"
+    " [-dosqxXIfFMLemvtcnprh] <server [port [path]]|url>\n\n"
     "  -d\t\tDo not dup the output to stdout\n"
     "  -o file\tDump the output to file (or use file as a prefix)\n"
     "  -s sfx\tUse sfx as a suffix for new files\n"
@@ -48,7 +48,6 @@ namespace fIcy
     "  -v\t\tVerbose\n"
     "  -t\t\tDisplay metadata while downloading\n"
     "  -c\t\tDo not clobber files (implicit with -n)\n"
-    "  -i\t\tAbort when clobbering is attempted (implies -c)\n"
     "  -n\t\tIf the file exists create a new file with .n appended\n"
     "  -p\t\tWhen duping consider writing errors as transient\n"
     "  -r\t\tRemove partials. Keep only complete sequences\n\n";

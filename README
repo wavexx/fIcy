@@ -75,9 +75,6 @@ fIcy options
 
   -c		Do not clobber files.
 
-  -i		Do not clobber files but abort when trying to do so
-		(-c is implicit).
-
   -m		Use song title [metadata] when naming files. Uses -o as
 		prefix.
 
