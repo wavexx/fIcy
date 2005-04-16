@@ -126,7 +126,7 @@ fIcy options
 
   -M time	Maximum recording time. See Notes_.
 
-  -L num	Redirect follow limit. Defaults to 1. 0 disables
+  -l num	Redirect follow limit. Defaults to 1. 0 disables
 		redirection entirely.
 
 
@@ -171,6 +171,9 @@ fPls options
 
   -M time	Maximum recording time. See Notes_.
 
+  -l num	Redirect follow limit. Same as fIcy's when loading a
+		playlist via http.
+
 
 Examples
 --------
@@ -195,10 +198,8 @@ fifo (note that you can later open "fifo" with any player)::
 	$ fIcy -p ... > fifo
 	$ mpg123 fifo
 
-URL parsing examples. Both "icy" and "http" are recognised as valid protocols,
-as well as nothing::
-
-	fIcy -t icy://a.radio.invalid:8888/ | mpg123 -
+URL parsing examples. Only "http" is recognised as a valid protocol,
+but can be omitted on the command line::
 
 	fIcy -t http://example.com/radio | mpg123 -
 

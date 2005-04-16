@@ -7,12 +7,12 @@
 // local headers
 #include "fIcy.hh"
 #include "msg.hh"
-#include "http.hh"
-#include "urlparse.hh"
+#include "htfollow.hh"
 #include "plsparse.hh"
 #include "tmparse.hh"
 using std::string;
 using std::list;
+using std::map;
 
 // system headers
 #include <fstream>
@@ -67,6 +67,7 @@ public:
   long maxLoops;
   time_t waitSecs;
   time_t maxTime;
+  size_t maxFollow;
   bool help;
 };
 
@@ -80,6 +81,7 @@ Params::Params(int argc, char* argv[])
   maxLoops = fIcy::maxLoops;
   waitSecs = fIcy::waitSecs;
   maxTime = 0;
+  maxFollow = fIcy::maxFollow;
   verbose = help = false;
 
   // real values
@@ -87,7 +89,7 @@ Params::Params(int argc, char* argv[])
 
   // let's again put a bit of SHAME... that FSC**BEEP GNU extensions.
   // WHY _NOT_ BEING POSIXLY_CORRECT BY DEFAULT EH? oooh, "features"! I see.
-  while((arg = getopt(argc, argv, "+P:R:L:T:M:vh")) != -1)
+  while((arg = getopt(argc, argv, "+P:R:L:T:M:l:vh")) != -1)
     switch(arg)
     {
     case 'P':
@@ -108,6 +110,10 @@ Params::Params(int argc, char* argv[])
 
     case 'M':
       maxTime = tmParse(optarg);
+      break;
+
+    case 'l':
+      maxFollow = strtol(optarg, NULL, 0);
       break;
 
     case 'h':
@@ -173,17 +179,15 @@ load_file(string& out, const char* file)
 
 
 void
-load_file(string& out, const string server, const int port, const string path)
+load_file(string& out, const URL& url, const size_t maxFollow)
 {
-  Http::Http httpc(server.c_str(), port);
-
   // setup headers
   Http::Header qHeaders;
-  Http::Reply reply;
-  
-  // query
   qHeaders.push_back(fIcy::userAgent);
-  auto_ptr<Socket> s(httpc.get(path.c_str(), reply, &qHeaders));
+  
+  // connection
+  map<string, string> pReply;
+  auto_ptr<Socket> s(htFollow(pReply, url, qHeaders, maxFollow));
 
   // load the file
   char buf[fIcy::bufSz];
@@ -195,24 +199,19 @@ load_file(string& out, const string server, const int port, const string path)
 
 
 void
-load_list(string& buf, const char* uri)
+load_list(string& buf, const char* uri, const size_t maxFollow)
 {
-  string proto;
-  string server;
-  int port;
-  string path;
+  URL url(uri);
 
-  urlParse(proto, server, port, path, uri);
-  if(proto.size() && proto == "http")
-  {
-    msg("loading playlist from (%s %d %s)", server.c_str(), port, path.c_str());
-    load_file(buf, server, port, path);
-  }
-  else if(!proto.size())
+  if(url.proto == "http")
+    load_file(buf, url, maxFollow);
+  else if(!url.proto.size())
   {
     msg("loading playlist from %s", uri);
     load_file(buf, uri);
   }
+  else
+    throw runtime_error(string("unknown protocol ") + url.proto);
 }
 
 
@@ -264,7 +263,7 @@ main(int argc, char* argv[]) try
   list<string> playlist;
   {
     string buf;
-    load_list(buf, params.uri);
+    load_list(buf, params.uri, params.maxFollow);
     istringstream stream(buf);
     plsParse(playlist, stream);
   }

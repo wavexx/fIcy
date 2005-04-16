@@ -1,6 +1,6 @@
 fIcy 1.0.12:
 
-	* Redirection handling was implemented (see new -L control flag).
+	* Redirection handling was implemented (see new -l control flag).
 
 	* Abort-on-clobber was dropped (-i).
 

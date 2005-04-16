@@ -1,6 +1,6 @@
 /*
  * urlParse - parse an url in proto/server/port/path components - impl.
- * Copyright(c) 2004 of wave++ (Yuri D'Elia)
+ * Copyright(c) 2004-2005 of wave++ (Yuri D'Elia)
  * Distributed under GNU LGPL without ANY warranty.
  *
  * Supported URLs are in the form: [proto://]server[:port][/path]

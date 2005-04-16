@@ -7,10 +7,8 @@
 // local headers
 #include "fIcy.hh"
 #include "icy.hh"
-#include "http.hh"
-#include "hdrparse.hh"
+#include "htfollow.hh"
 #include "sanitize.hh"
-#include "urlparse.hh"
 #include "tmparse.hh"
 #include "rewrite.hh"
 #include "match.hh"
@@ -201,74 +199,6 @@ write_seq(ofstream& out, const char* file)
 }
 
 
-string
-itos(const int i)
-{
-  char buf[16];
-  snprintf(buf, sizeof(buf), "%d", i);
-  return string(buf);
-}
-
-
-Socket*
-connectFl(map<string, string>& pReply, const string& url,
-    const Http::Header qHeaders, size_t limit)
-{
-  // parse the supplied url
-  string proto;
-  string server;
-  int port;
-  string path;
-
-  urlParse(proto, server, port, path, url);
-  if(!proto.size())
-    proto = "http";
-  else if(proto != "http" && proto != "icy")
-    throw runtime_error(string("unknown protocol ") + proto);
-
-  // connection loop
-  auto_ptr<Socket> s;
-  for(;; --limit)
-  {
-    msg("connecting to (%s %d)", server.c_str(), port);
-    Http::Http httpc(server.c_str(), port);
-
-    msg("requesting stream on (%s)", path.c_str());
-    Http::Header aHeaders;
-    Http::Reply reply(&aHeaders);
-    s.reset(httpc.get(path.c_str(), reply, &qHeaders));
-
-    // validate the reply code
-    if(reply.code != Http::Proto::ok &&
-	reply.code != Http::Proto::found &&
-	reply.code != Http::Proto::other)
-      throw runtime_error(string("unexpected reply: ") +
-	  itos(reply.code) + " " + sanitize_esc((reply.description.size()?
-		  reply.description: reply.proto)).c_str());
-
-    // parse the headers
-    pReply = Http::hdrParse(aHeaders);
-    if(reply.code == Http::Proto::ok)
-      break;
-
-    // recursion
-    if(!limit)
-      throw runtime_error(string("hit redirect follow limit"));
-
-    map<string, string>::iterator url = pReply.find(Http::Proto::location);
-    if(url == pReply.end())
-      throw runtime_error("redirection didn't contain an url");
-
-    string newProto;
-    urlParse(newProto, server, port, path, url->second);
-    if(newProto != proto)
-      throw runtime_error(string("protocol changes are not allowed"));
-  }
-
-  return s.release();
-}
-
-
 // implementation
 int
 main(int argc, char* const argv[]) try
@@ -291,7 +221,7 @@ main(int argc, char* const argv[]) try
   BMatch match;
 
   int arg;
-  while((arg = getopt(argc, argv, "do:emvtcs:inprhq:x:X:I:f:F:M:L:")) != -1)
+  while((arg = getopt(argc, argv, "do:emvtcs:inprhq:x:X:I:f:F:M:l:")) != -1)
     switch(arg)
     {
     case 'd':
@@ -371,7 +301,7 @@ main(int argc, char* const argv[]) try
       maxTime = tmParse(optarg);
       break;
 
-    case 'L':
+    case 'l':
       maxFollow = atol(optarg);
       break;
 
@@ -391,14 +321,23 @@ main(int argc, char* const argv[]) try
   }
 
   // connection parameters
-  string url = argv[optind++];
-  if(argc > 1)
+  URL url;
+  if(argc == 1)
+  {
+    // avoid the need of the protocol on the command line
+    url = argv[optind++];
+    if(!url.proto.size())
+      url.proto = "http";
+    else if(url.proto != "http")
+      throw runtime_error(string("unknown protocol ") + url.proto);
+  }
+  else
   {
     // 1.0.4 compatibility
-    url += ":";
-    url += atoi(argv[optind++]);
-    if(argc == 3)
-      url += argv[optind++];
+    url.proto = "http";
+    url.server = argv[optind++];
+    url.port = atoi(argv[optind++]);
+    url.path = (argc == 3? argv[optind++]: "/");
   }
 
   // check for parameters consistency
@@ -432,7 +371,7 @@ main(int argc, char* const argv[]) try
 
   // establish the connection
   map<string, string> pReply;
-  auto_ptr<Socket> s(connectFl(pReply, url, qHeaders, maxFollow));
+  auto_ptr<Socket> s(htFollow(pReply, url, qHeaders, maxFollow));
   if(reqMeta && pReply.find(ICY::Proto::metaint) == pReply.end())
   {
     err("requested metadata, but got nothing.");

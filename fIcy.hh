@@ -31,7 +31,7 @@ namespace fIcy
   const size_t maxFollow = 1;
   
   const char fIcyHelp[] =
-    " [-dosqxXIfFMLemvtcnprh] <server [port [path]]|url>\n\n"
+    " [-dosqxXIfFMlemvtcnprh] <server [port [path]]|url>\n\n"
     "  -d\t\tDo not dup the output to stdout\n"
     "  -o file\tDump the output to file (or use file as a prefix)\n"
     "  -s sfx\tUse sfx as a suffix for new files\n"
@@ -42,7 +42,7 @@ namespace fIcy
     "  -f expr\tRewrite titles using the specified sed expression\n"
     "  -F file\tRewrite titles using the specified sed script\n"
     "  -M time\tMaximum playing time\n"
-    "  -L num\tRedirect follow limit\n"
+    "  -l num\tRedirect follow limit\n"
     "  -e\t\tEnumerate files when song metadata changes. Use file as prefix\n"
     "  -m\t\tUse song metadata when writing filenames. file used as prefix\n"
     "  -v\t\tVerbose\n"
@@ -72,13 +72,14 @@ namespace fIcy
   const size_t waitSecs = 15;
 
   const char fPlsHelp[] =
-    " [-PRLTMvh] <file|url> [fIcy options]\n\n"
+    " [-PRLTMlvh] <file|url> [fIcy options]\n\n"
     "  -v\t\tVerbose\n"
     "  -P path\tSpecify fIcy executable name/path\n"
     "  -R max\tMax per-stream retries\n"
     "  -L max\tMax playlist loops\n"
     "  -T time\tWait the specified time after each failure\n"
-    "  -M time\tMaximum cumulative playing time\n\n";
+    "  -M time\tMaximum cumulative playing time\n"
+    "  -l num\tRedirect follow limit\n\n";
 }
 
 

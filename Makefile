@@ -3,16 +3,20 @@
 
 # configuration
 TARGETS := fIcy fResync fPls
-FICY_OBJECTS := fIcy.o resolver.o socket.o http.o msg.o match.o tmparse.o \
-	urlencode.o urlparse.o hdrparse.o icy.o sanitize.o rewrite.o
-FRESYNC_OBJECTS := fResync.o msg.o mpeg.o copy.o
-FPLS_OBJECTS := fPls.o msg.o resolver.o http.o socket.o \
-	urlencode.o urlparse.o plsparse.o tmparse.o
+FICY_OBJECTS := msg.o resolver.o socket.o http.o tmparse.o urlencode.o \
+	urlparse.o hdrparse.o sanitize.o htfollow.o \
+	match.o icy.o rewrite.o fIcy.o 
+FRESYNC_OBJECTS := msg.o mpeg.o copy.o fResync.o
+FPLS_OBJECTS := msg.o resolver.o socket.o http.o tmparse.o urlencode.o \
+	urlparse.o hdrparse.o sanitize.o htfollow.o \
+	plsparse.o fPls.o
 
 # parameters
 DEPS := Makedepend
 #if $(CXX) != "g++"
-# This will be overriden when using GNU make, so let's assume MIPSPro
+# This will be overriden when using GNU make, so let's assume MIPSPro.
+# .ORDER is needed to avoid linking in parallel with -prelink
+.ORDER: $(TARGETS)
 DGEN := -MDupdate $(DEPS)
 #else
 DGEN := -MD
