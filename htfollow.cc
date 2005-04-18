@@ -40,10 +40,10 @@ htFollow(map<string, string>& pReply, const URL& url,
   auto_ptr<Socket> s;
   for(;; --limit)
   {
-    msg("connecting to (%s %d)", buf.server.c_str(), buf.port);
-    Http::Http httpc(buf.server.c_str(), buf.port);
+    msg("connecting to (%s %d)", sanitize_esc(buf.server).c_str(), buf.port);
+    Http::Http httpc(sanitize_esc(buf.server).c_str(), buf.port);
 
-    msg("requesting data on (%s)", buf.path.c_str());
+    msg("requesting data on (%s)", sanitize_esc(buf.path).c_str());
     Http::Header aHeaders;
     Http::Reply reply(&aHeaders);
     s.reset(httpc.get(buf.path.c_str(), reply, &qHeaders));
