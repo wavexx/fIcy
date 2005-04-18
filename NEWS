@@ -1,8 +1,8 @@
-fIcy 1.0.12:
+fIcy 1.0.12: Mon Apr 18 CEST 2005
 
-	* Redirection handling was implemented (see new -l control flag).
+	* HTTP redirection handling was implemented.
 
-	* Abort-on-clobber was dropped (-i).
+	* Support for abort-on-clobber (-i) was dropped.
 
 
 fIcy 1.0.11: Fri Feb 11 CET 2005
