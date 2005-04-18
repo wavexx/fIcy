@@ -221,7 +221,7 @@ main(int argc, char* const argv[]) try
   BMatch match;
 
   int arg;
-  while((arg = getopt(argc, argv, "do:emvtcs:inprhq:x:X:I:f:F:M:l:")) != -1)
+  while((arg = getopt(argc, argv, "do:emvtcs:nprhq:x:X:I:f:F:M:l:")) != -1)
     switch(arg)
     {
     case 'd':
