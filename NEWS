@@ -1,3 +1,8 @@
+fIcy 1.0.13:
+
+	* Relaxed the playlist parser (fixes behaviour on "fancy" playlists)
+
+
 fIcy 1.0.12: Mon Apr 18 CEST 2005
 
 	* HTTP redirection handling was implemented.

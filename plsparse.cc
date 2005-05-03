@@ -1,6 +1,6 @@
 /*
  * plsParse - M3U/EXTM3U/PLS/PLSv2 playlist parser/s - implementation
- * Copyright(c) 2004 of wave++ (Yuri D'Elia)
+ * Copyright(c) 2004-2005 of wave++ (Yuri D'Elia)
  * Distributed under GNU LGPL without ANY warranty.
  */
 
@@ -15,17 +15,45 @@ using std::list;
 using std::runtime_error;
 
 
-// real a line ignoring ms-dos crud, whatever the platform
+// read a line ignoring ms-dos crud and spaces, whatever the platform
 istream&
 getRealLine(istream& fd, string& buf)
 {
   istream& ret(getline(fd, buf));
-  if(ret && buf[buf.size() - 1] == '\r')
-    buf.resize(buf.size() - 1);
+  string::size_type pos;
+
+  pos = buf.find_first_not_of(" \t");
+  if(pos != string::npos && pos)
+    buf = buf.substr(pos);
+
+  pos = buf.find_last_not_of(" \r\t");
+  if(pos != string::npos)
+    buf.resize(pos + 1);
 
   return ret;
 }
 
+// like getRealLine, but strips INI comments too
+istream&
+getIniLine(istream& fd, string& buf)
+{
+  istream& ret(getline(fd, buf));
+  string::size_type pos;
+
+  pos = buf.find_first_not_of(" \t");
+  if(pos != string::npos && pos)
+    buf = buf.substr(pos);
+
+  pos = buf.find(';');
+  if(pos != string::npos)
+    buf.resize(pos);
+
+  pos = buf.find_last_not_of(" \r\t");
+  if(pos != string::npos)
+    buf.resize(pos + 1);
+
+  return ret;
+}
 
 void
 m3uParse(std::list<std::string>& list, std::istream& fd)
@@ -65,7 +93,7 @@ plsv2Parse(std::list<std::string>& list, std::istream& fd)
   if(buf != "[playlist]")
     throw runtime_error("not a plsv2 file");
 
-  while(getRealLine(fd, buf))
+  while(getIniLine(fd, buf))
   {
     // section changes (not permitted!)
     if(!buf.compare(0, 1, "["))
