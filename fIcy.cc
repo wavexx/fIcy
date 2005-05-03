@@ -209,8 +209,8 @@ main(int argc, char* const argv[]) try
   char* outFile = NULL;
   char* suffix = NULL;
   ofstream seq;
-  bool enuFiles = false;
-  bool useMeta = false;
+  bool enumFiles = false;
+  bool nameFiles = false;
   bool showMeta = false;
   bool clobber = true;
   bool numEFiles = false;
@@ -233,11 +233,11 @@ main(int argc, char* const argv[]) try
       break;
 
     case 'e':
-      enuFiles = true;
+      enumFiles = true;
       break;
 
     case 'm':
-      useMeta = true;
+      nameFiles = true;
       break;
 
     case 'v':
@@ -341,11 +341,13 @@ main(int argc, char* const argv[]) try
   }
 
   // check for parameters consistency
-  // enuFiles and useMeta requires a prefix
-  bool reqMeta(enuFiles || useMeta || showMeta);
-  if((useMeta || enuFiles) && !outFile)
+  bool useMeta(enumFiles || nameFiles || !match.empty());
+  bool reqMeta(useMeta || showMeta);
+
+  // enumFiles and nameFiles requires a prefix
+  if(useMeta && !outFile)
   {
-    err("a prefix is required (see -o) when writing multiple files");
+    err("a prefix is required (see -o) when writing files");
     return Exit::args;
   }
 
@@ -358,7 +360,7 @@ main(int argc, char* const argv[]) try
 
   // install the signals
   instSignal = (instSignal && dupStdout);
-  rmPartial = rmPartial && (enuFiles || useMeta);
+  rmPartial = (rmPartial && useMeta);
   sigTermInst(!(instSignal || rewrite.get()));
   if(instSignal)
     sigPipeInst();
@@ -406,7 +408,7 @@ main(int argc, char* const argv[]) try
   
   // initial file
   auto_ptr<std::ostream> out;
-  if(outFile && !(enuFiles || useMeta))
+  if(outFile && !useMeta)
     out.reset(newFWrap(outFile, clobber));
   else
     // the first filename is unknown as the metadata block will
@@ -459,18 +461,17 @@ main(int argc, char* const argv[]) try
 	  
 	  // skip the first filename generation when discarding partials
 	  // or when the title doesn't match
-	  if((enuFiles || useMeta) && (enu || !rmPartial) &&
-	      match(title.c_str()))
+	  if(useMeta && (enu || !rmPartial) && match(title.c_str()))
 	  {
 	    newFName = outFile;
 
-	    if(enuFiles)
+	    if(enumFiles)
 	    {
 	      char buf[16];
-	      snprintf(buf, sizeof(buf), (useMeta? "[%lu] ": "%lu"), enu);
+	      snprintf(buf, sizeof(buf), (nameFiles? "[%lu] ": "%lu"), enu);
 	      newFName += buf;
 	    }
-	    if(useMeta)
+	    if(nameFiles)
 	      newFName += sanitize_file(title);
 	    if(suffix)
 	      newFName += suffix;

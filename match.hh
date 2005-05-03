@@ -1,6 +1,6 @@
 /*
  * match - match/filter a string according regex rules
- * Copyright(c) 2004 of wave++ (Yuri D'Elia)
+ * Copyright(c) 2004-2005 of wave++ (Yuri D'Elia)
  * Distributed under GNU LGPL without ANY warranty.
  */
 
@@ -46,6 +46,13 @@ public:
   exclude(const char* regex, int flags = REG_EXTENDED)
   {
     compInsert(excl, regex, flags);
+  }
+
+
+  bool
+  empty() const
+  {
+    return (incl.empty() && excl.empty());
   }
 
 

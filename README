@@ -12,7 +12,8 @@ fIcy is an icecast/shoutcast stream grabber suite for use under shell
 environment. Its goal is to cleanly and automatically rip a stream into user
 customisable files. It will work with any ICY compatible stream, allowing you
 to either to save the stream to disk or to pipe the output to a media player,
-or even both.
+or even both. fIcy, among other uses, is ideal for batch/unattended recording
+of radio programs and stream debugging.
 
 The fIcy package includes:
 
@@ -180,33 +181,28 @@ Examples
 
 Use fIcy to display ICY titles while playing::
 
-	fIcy -t 123.123.123.123 8080 | mpg123 -
+	fPls http://example.com:8080/listen.pls -t | mpg123 -
 
-Rip an .mp3 stream using metadata as filename, with server:port and /path::
+Rip a station until stopped::
+
+	fPls -L-1 http://netradio.invalid/listen.pls -s.mp3 -o./ -cmrd
+
+Connect directly to the stream with server:port and /path::
 
 	fIcy -s .mp3 -o ./ -md 123.123.123.123 8080 /path/to/stream
 	
-Rip an .mp3 stream and play it using mpg123, allowing mpg123 to be killed
-anytime::
-
-	fIcy -s .mp3 -o ./ -mp 1.2.3.4 8080 /path/to/stream | mpg123 -
-
-Same as above, but allows the player to be restarted later by using a named
-fifo (note that you can later open "fifo" with any player)::
+Rip an .mp3 stream while playing, but allows the player to be restarted later
+by using a named fifo (note that you can re/open "fifo" with any player)::
 
 	$ mkfifo fifo
 	$ fIcy -p ... > fifo
 	$ mpg123 fifo
 
-URL parsing examples. Only "http" is recognised as a valid protocol,
-but can be omitted on the command line::
+Record your favourite program "XYZ" usually on-air between 16:30-17:00::
 
-	fIcy -t http://example.com/radio | mpg123 -
-
-Rip a station using a playlist instead of direct connection to the stream,
-supporting failures and multiple fall-back streams::
-
-	fPls -L-1 http://netradio.invalid/listen.pls -s.mp3 -o./ -cmrd
+	at 16:30
+	fPls -M 30m http://example.com/listen.pls -o program.mp3 -x XYZ
+	^D
 
 Cleanup a ripped and/or damaged mp3 file::
 
@@ -255,8 +251,10 @@ tools could also insert extra empty frames to silence the decoder!
 The -M flag supported by both fIcy and fPls accepts a time specification in
 seconds, `HH:MM` or `N minutes/hours/days`. Time starts just after the
 connection has been established, but without counting further delays. Also
-beware that -M specified in fPls means `cumulative recording time`, while -M
-specified in fIcy means `single stream recording time`.
+beware that -M specified in fPls means `cumulative recording time` (time
+cumulates across retries/timeouts), while -M specified in fIcy means `single
+stream recording time` (recording stops at the first error or when the
+specified time has elapsed).
 
 For bugs, support, documentation or simply suggestions contact the main
 developer: wave++ <wavexx@users.sf.net>. Our "Concept Developer": SethX
