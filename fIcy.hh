@@ -32,7 +32,7 @@ namespace fIcy
   
   const char fIcyHelp[] =
     " [-dosqxXIfFMlemvtcnprh] <server [port [path]]|url>\n\n"
-    "  -d\t\tDo not dup the output to stdout\n"
+    "  -d\t\tDo not dump the output to stdout\n"
     "  -o file\tDump the output to file (or use file as a prefix)\n"
     "  -s sfx\tUse sfx as a suffix for new files\n"
     "  -q file\tAppend file sequence list to file (only when saving)\n"
@@ -49,7 +49,7 @@ namespace fIcy
     "  -t\t\tDisplay metadata while downloading\n"
     "  -c\t\tDo not clobber files (implicit with -n)\n"
     "  -n\t\tIf the file exists create a new file with .n appended\n"
-    "  -p\t\tWhen duping consider writing errors as transient\n"
+    "  -p\t\tWhen dumping consider writing errors as transient\n"
     "  -r\t\tRemove partials. Keep only complete sequences\n\n";
 
 
@@ -79,7 +79,8 @@ namespace fIcy
     "  -L max\tMax playlist loops\n"
     "  -T time\tWait the specified time after each failure\n"
     "  -M time\tMaximum cumulative playing time\n"
-    "  -l num\tRedirect follow limit\n\n";
+    "  -l num\tRedirect follow limit\n"
+    "  -d file\tRun as a daemon, redirecting messages to file\n\n";
 }
 
 
