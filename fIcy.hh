@@ -72,7 +72,7 @@ namespace fIcy
   const size_t waitSecs = 15;
 
   const char fPlsHelp[] =
-    " [-PRLTMlvh] <file|url> [fIcy options]\n\n"
+    " [-PRLTMldvh] <file|url> [fIcy options]\n\n"
     "  -v\t\tVerbose\n"
     "  -P path\tSpecify fIcy executable name/path\n"
     "  -R max\tMax per-stream retries\n"
