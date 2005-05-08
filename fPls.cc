@@ -269,7 +269,7 @@ daemonize(const char* logFile)
 
   // daemonize
 #ifdef __sgi
-  if(_daemonize(_DF_NOCLOSE, fd, -1, -1) == -1)
+  if(_daemonize(0, fd, -1, -1) == -1)
 #else
   if(daemon(0, 0) == -1)
 #endif
