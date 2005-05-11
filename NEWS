@@ -1,6 +1,11 @@
-fIcy 1.0.13:
+fIcy 1.0.13: Wed May 11 CEST 2005
 
-	* Relaxed the playlist parser (fixes behaviour on "fancy" playlists)
+	* Relaxed the playlist parser (fixes behaviour on "fancy" playlists).
+
+	* -xXI can now be used with -o alone (dump matching title/s on
+	  the specified file without rewriting).
+
+	* Added fPls daemon support.
 
 
 fIcy 1.0.12: Mon Apr 18 CEST 2005
