@@ -21,15 +21,15 @@ namespace Http
   namespace Proto
   {
     // parameters
-    const char proto[] = "http";
-    const char protoTy[] = "tcp";
-    const char version[] = "HTTP/1.0";
+    const extern char* proto;
+    const extern char* protoTy;
+    const extern char* version;
     const size_t hdrLen = 1024;
-    const char endl[] = "\r\n";
-    const size_t endlSz = sizeof(endl) / sizeof(*endl) - 1;
+    const extern char* endl;
+    const size_t endlSz = 2;
 
     // requests
-    const char get[] = "GET";
+    const extern char* get;
 
     // answers
     const int ok = 200;
@@ -37,7 +37,7 @@ namespace Http
     const int other = 303;
 
     // headers we parse
-    const char location[] = "Location";
+    const extern char* location;
   }
 
 

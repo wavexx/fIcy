@@ -31,6 +31,18 @@ using std::istringstream;
 // implementation
 namespace Http
 {
+  namespace Proto
+  {
+    // definitions
+    const char* proto = "http";
+    const char* protoTy = "tcp";
+    const char* version = "HTTP/1.0";
+    const char* endl = "\r\n";
+    const char* get = "GET";
+    const char* location = "Location";
+  }
+
+
   Http::Http(const char* host, const int port)
   {
     this->host = strdup(host);

@@ -21,6 +21,27 @@ using std::cout;
 // implementation
 namespace ICY
 {
+  namespace Proto
+  {
+    // global definitions
+    const char* reqMeta = "icy-metadata: 1";
+    const char* notice1 = "icy-notice1";
+    const char* notice2 = "icy-notice2";
+    const char* title = "icy-name";
+    const char* genre = "icy-genre";
+    const char* url = "icy-url";
+    const char* br = "icy-br";
+    const char* metaint = "icy-metaint";
+    const char* mTitle = "StreamTitle";
+
+    // local constants
+    const char vaStart[] = "='";
+    const size_t vaStartSz = sizeof(vaStart) / sizeof(*vaStart) - 1;
+    const char vaEnd[] = "';";
+    const size_t vaEndSz = sizeof(vaEnd) / sizeof(*vaEnd) - 1;
+  }
+
+
   Reader::Reader(Socket& in, const size_t bufSz, const size_t metaSz)
   : in(in), bufSz(bufSz), mBufSz(metaSz)
   {

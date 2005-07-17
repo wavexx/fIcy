@@ -21,29 +21,23 @@ namespace ICY
   namespace Proto
   {
     // particular HTTP header to be sent when requiring metadata
-    const char reqMeta[] = "icy-metadata: 1";
+    const extern char* reqMeta;
 
     // some parameters we parse
-    const char notice1[] = "icy-notice1";
-    const char notice2[] = "icy-notice2";
-    const char title[] = "icy-name";
-    const char genre[] = "icy-genre";
-    const char url[] = "icy-url";
-    const char br[] = "icy-br";
-    const char metaint[] = "icy-metaint";
+    const extern char* notice1;
+    const extern char* notice2;
+    const extern char* title;
+    const extern char* genre;
+    const extern char* url;
+    const extern char* br;
+    const extern char* metaint;
 
     // metadata constants
     const size_t metaSz = 1024;
     const size_t metaMul = 16;
 
     // song title metatada
-    const char mTitle[] = "StreamTitle";
-
-    // variable parameters
-    const char vaStart[] = "='";
-    const size_t vaStartSz = sizeof(vaStart) / sizeof(*vaStart) - 1;
-    const char vaEnd[] = "';";
-    const size_t vaEndSz = sizeof(vaEnd) / sizeof(*vaEnd) - 1;
+    const extern char* mTitle;
   }
 
   
