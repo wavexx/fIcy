@@ -4,11 +4,11 @@
 # configuration
 TARGETS := fIcy fResync fPls
 FICY_OBJECTS := msg.o resolver.o socket.o http.o tmparse.o urlencode.o \
-	urlparse.o hdrparse.o sanitize.o htfollow.o \
+	base64.o urlparse.o hdrparse.o sanitize.o htfollow.o authparse.o \
 	match.o icy.o rewrite.o fIcy.o 
 FRESYNC_OBJECTS := msg.o mpeg.o copy.o fResync.o
 FPLS_OBJECTS := msg.o resolver.o socket.o http.o tmparse.o urlencode.o \
-	urlparse.o hdrparse.o sanitize.o htfollow.o \
+	base64.o urlparse.o hdrparse.o sanitize.o htfollow.o authparse.o \
 	plsparse.o fPls.o
 
 # parameters

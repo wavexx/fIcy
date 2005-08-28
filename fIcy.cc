@@ -10,6 +10,7 @@
 #include "htfollow.hh"
 #include "sanitize.hh"
 #include "tmparse.hh"
+#include "authparse.hh"
 #include "rewrite.hh"
 #include "match.hh"
 #include "msg.hh"
@@ -208,6 +209,7 @@ main(int argc, char* const argv[]) try
 
   char* outFile = NULL;
   char* suffix = NULL;
+  char* auth = NULL;
   ofstream seq;
   bool enumFiles = false;
   bool nameFiles = false;
@@ -221,7 +223,7 @@ main(int argc, char* const argv[]) try
   BMatch match;
 
   int arg;
-  while((arg = getopt(argc, argv, "do:emvtcs:nprhq:x:X:I:f:F:M:l:")) != -1)
+  while((arg = getopt(argc, argv, "do:emvtcs:nprhq:x:X:I:f:F:M:l:a:")) != -1)
     switch(arg)
     {
     case 'd':
@@ -305,6 +307,10 @@ main(int argc, char* const argv[]) try
       maxFollow = atol(optarg);
       break;
 
+    case 'a':
+      auth = optarg;
+      break;
+
     case 'h':
       cout << prg << fIcy::fIcyHelp << prg << " v" << fIcy::version <<
         " is\n" << fIcy::copyright;
@@ -370,6 +376,14 @@ main(int argc, char* const argv[]) try
   qHeaders.push_back(fIcy::userAgent);
   if(reqMeta)
     qHeaders.push_back(ICY::Proto::reqMeta);
+
+  // authorization
+  if(auth)
+  {
+    Http::Auth authData;
+    authParse(authData, auth);
+    qHeaders.push_back(authData.basicHeader());
+  }
 
   // establish the connection
   map<string, string> pReply;

@@ -11,7 +11,7 @@
 #include <locale>
 
 // some defines
-#define FICY_VERSION "1.0.13"
+#define FICY_VERSION "1.0.14beta"
 
 
 // some constants
@@ -42,6 +42,7 @@ namespace fIcy
     "  -f expr\tRewrite titles using the specified sed expression\n"
     "  -F file\tRewrite titles using the specified sed script\n"
     "  -M time\tMaximum playing time\n"
+    "  -a file\tProvide HTTP credentials (user:pass file)\n"
     "  -l num\tRedirect follow limit\n"
     "  -e\t\tEnumerate files when song metadata changes. Use file as prefix\n"
     "  -m\t\tUse song metadata when writing filenames. file used as prefix\n"
@@ -80,6 +81,7 @@ namespace fIcy
     "  -T time\tWait the specified time after each failure\n"
     "  -M time\tMaximum cumulative playing time\n"
     "  -l num\tRedirect follow limit\n"
+    "  -a file\tProvide HTTP credentials (user:pass file)\n"
     "  -d file\tRun as a daemon, redirecting messages to file\n\n";
 }
 

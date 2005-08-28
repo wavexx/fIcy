@@ -30,6 +30,8 @@ namespace Http
 
     // requests
     const extern char* get;
+    const extern char* authorization;
+    const extern char* basic;
 
     // answers
     const int ok = 200;
@@ -58,6 +60,15 @@ namespace Http
 
     // optional headers
     Header* headers;
+  };
+
+  struct Auth
+  {
+    std::string user;
+    std::string pass;
+
+    std::string
+    basicHeader() const;
   };
 
 

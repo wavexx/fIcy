@@ -10,6 +10,7 @@
 // local headers
 #include "resolver.hh"
 #include "urlencode.hh"
+#include "base64.hh"
 
 // system headers
 #include <stdexcept>
@@ -39,7 +40,17 @@ namespace Http
     const char* version = "HTTP/1.0";
     const char* endl = "\r\n";
     const char* get = "GET";
+    const char* authorization = "Authorization";
+    const char* basic = "Basic";
     const char* location = "Location";
+  }
+
+
+  std::string
+  Auth::basicHeader() const
+  {
+    return (string(Proto::authorization) + ": " + Proto::basic + " " +
+	base64Encode(user + ":" + pass));
   }
 
 
@@ -108,7 +119,6 @@ namespace Http
       Reply& reply, const Header* headers)
   {
     using std::auto_ptr;
-    using std::string;
 
     auto_ptr<Socket> s(new Socket(addr, port));
 
