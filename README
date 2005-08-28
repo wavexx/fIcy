@@ -178,7 +178,7 @@ fPls options
 
   -a file	Read authentication credentials from file. Same as fIcy's when
 		loading a playlist via http. The credentials are automatically
-		forwared to fIcy, but you can override them when needed.
+		forwarded to fIcy, but you can override them when needed.
 
   -l num	Redirect follow limit. Same as fIcy's when loading a
 		playlist via http.
@@ -245,7 +245,7 @@ rights is *ILLEGAL* unless explicitly stated.
 Notes
 -----
 
-The output files produced by fIcy may miss audio framing informations and
+The output files produced by fIcy may miss audio framing information and
 headers since the separation does not consider the audio data. For this reason,
 your player 'may' (but should not) fail to reproduce the dump or output some
 initial noise: this is expected. fResync can be used to cleanup MPEG files
@@ -265,7 +265,7 @@ The -M flag supported by both fIcy and fPls accepts a time specification in
 seconds, `HH:MM` or `N minutes/hours/days`. Time starts just after the
 connection has been established, but without counting further delays. Also
 beware that -M specified in fPls means `cumulative recording time` (time
-cumulates across retries/timeouts), while -M specified in fIcy means `single
+accumulates across retries/timeouts), while -M specified in fIcy means `single
 stream recording time` (recording stops at the first error or when the
 specified time has elapsed).
 
