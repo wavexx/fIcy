@@ -31,7 +31,7 @@ namespace fIcy
   const size_t maxFollow = 1;
   
   const char fIcyHelp[] =
-    " [-dosqxXIfFMlemvtcnprh] <server [port [path]]|url>\n\n"
+    " [-dosqxXIfFMalemvtcnprh] <server [port [path]]|url>\n\n"
     "  -d\t\tDo not dump the output to stdout\n"
     "  -o file\tDump the output to file (or use file as a prefix)\n"
     "  -s sfx\tUse sfx as a suffix for new files\n"
@@ -73,7 +73,7 @@ namespace fIcy
   const size_t waitSecs = 15;
 
   const char fPlsHelp[] =
-    " [-PRLTMldvh] <file|url> [fIcy options]\n\n"
+    " [-PRLTMaldvh] <file|url> [fIcy options]\n\n"
     "  -v\t\tVerbose\n"
     "  -P path\tSpecify fIcy executable name/path\n"
     "  -R max\tMax per-stream retries\n"

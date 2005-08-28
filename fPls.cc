@@ -10,6 +10,7 @@
 #include "htfollow.hh"
 #include "plsparse.hh"
 #include "tmparse.hh"
+#include "authparse.hh"
 using std::string;
 using std::list;
 using std::map;
@@ -70,6 +71,8 @@ public:
   time_t maxTime;
   size_t maxFollow;
   char* daemonize;
+  char* auth;
+  Http::Auth authData;
   bool help;
 };
 
@@ -86,13 +89,14 @@ Params::Params(int argc, char* argv[])
   maxFollow = fIcy::maxFollow;
   verbose = help = false;
   daemonize = NULL;
+  auth = NULL;
 
   // real values
   int arg;
 
   // let's again put a bit of SHAME... that FSC**BEEP GNU extensions.
   // WHY _NOT_ BEING POSIXLY_CORRECT BY DEFAULT EH? oooh, "features"! I see.
-  while((arg = getopt(argc, argv, "+P:R:L:T:M:l:d:vh")) != -1)
+  while((arg = getopt(argc, argv, "+P:R:L:T:M:l:d:a:vh")) != -1)
     switch(arg)
     {
     case 'P':
@@ -127,10 +131,18 @@ Params::Params(int argc, char* argv[])
       help = true;
       break;
 
+    case 'a':
+      auth = optarg;
+      break;
+
     case 'v':
       verbose = true;
       break;
     }
+
+  // fetch authentication tokens immediately to avoid further requests
+  if(auth)
+    authParse(authData, auth);
 
   // playlist
   argc -= optind;
@@ -139,10 +151,22 @@ Params::Params(int argc, char* argv[])
   // fIcy parameters
   if(--argc >= 0)
   {
-    fIcyParams = new char*[argc + 7];
+    fIcyParams = new char*[argc + 9];
     fIcyParams[0] = path;
-    arg = argc + 1;
+    arg = 1;
 
+    // parameters we allow to override
+    if(auth)
+    {
+      fIcyParams[arg++] = "-a";
+      fIcyParams[arg++] = auth;
+    }
+
+    // forwarded parameters
+    for(int i = 1; i <= argc; ++i)
+      fIcyParams[arg++] = argv[optind++];
+
+    // imposed parameters
     fIcyParams[arg++] = "-M";
     timePos = arg++;
 
@@ -153,9 +177,6 @@ Params::Params(int argc, char* argv[])
     urlPos = arg++;
 
     fIcyParams[arg++] = NULL;
-
-    for(int i = 1; i <= argc; ++i)
-      fIcyParams[i] = argv[optind++];
   }
   else
     fIcyParams = NULL;
@@ -193,11 +214,14 @@ load_file(string& out, const char* file)
 
 
 void
-load_file(string& out, const URL& url, const size_t maxFollow)
+load_file(string& out, const URL& url,
+    const size_t maxFollow, const Http::Auth* auth)
 {
   // setup headers
   Http::Header qHeaders;
   qHeaders.push_back(fIcy::userAgent);
+  if(auth)
+    qHeaders.push_back(auth->basicHeader());
   
   // connection
   map<string, string> pReply;
@@ -213,12 +237,13 @@ load_file(string& out, const URL& url, const size_t maxFollow)
 
 
 void
-load_list(string& buf, const char* uri, const size_t maxFollow)
+load_list(string& buf, const char* uri,
+    const size_t maxFollow, const Http::Auth* auth)
 {
   URL url(uri);
 
   if(url.proto == "http")
-    load_file(buf, url, maxFollow);
+    load_file(buf, url, maxFollow, auth);
   else if(!url.proto.size())
   {
     msg("loading playlist from %s", uri);
@@ -301,7 +326,8 @@ main(int argc, char* argv[]) try
   list<string> playlist;
   {
     string buf;
-    load_list(buf, params.uri, params.maxFollow);
+    load_list(buf, params.uri, params.maxFollow,
+	(params.auth? &params.authData: NULL));
     istringstream stream(buf);
     plsParse(playlist, stream);
   }
