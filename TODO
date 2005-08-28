@@ -18,10 +18,5 @@ Known bugs
 
 Internals
 
-	* OGG support isn't there yet.
-
-	* Split the ICY class into ICE/OGG subclasses, to support
-	  seamless operation when using OGG streams.
-
 	* Use a virtual pty to remove the need of GNU sed.
 

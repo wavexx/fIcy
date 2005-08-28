@@ -3,6 +3,15 @@ Does fIcy preserve the full quality of the stream?
 	Yes, as explained in the README, there's no data loss.
 
 
+Which audio formats fIcy supports?
+
+	fIcy itself is not limited to any audio format, only to the transport
+	used. For this reason fIcy can work transparently on MPEG1/Layer3,
+	MPEG2/4 ADTS audio streams (usually called MP3/MP4 AAC). OGG is
+	supported but, as titles are encoded in the OGG stream itself, track
+	separation doesn't work.
+
+
 Why not separate tracks on silence points?
 
 	Short answer: nonsense.
@@ -19,7 +28,7 @@ Why not separate tracks on silence points?
 
 Why not write MPEG tracks on frame boundaries directly?
 
-	In a future release along with OGG support.
+	In a future release.
 
 
 Can you insert id3/v2 tags in the files automagically?

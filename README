@@ -10,10 +10,10 @@ General Description
 
 fIcy is an icecast/shoutcast stream grabber suite for use under shell
 environment. Its goal is to cleanly and automatically rip a stream into user
-customisable files. It will work with any ICY compatible stream, allowing you
-to either to save the stream to disk or to pipe the output to a media player,
-or even both. fIcy, among other uses, is ideal for batch/unattended recording
-of radio programs and stream debugging.
+customisable files. It will work with ICY compatible streams, allowing you to
+either to save the stream to disk or to pipe the output to a media player, or
+even both. fIcy, among other uses, is ideal for batch/unattended recording of
+radio programs and stream debugging.
 
 The fIcy package includes:
 
@@ -89,7 +89,7 @@ fIcy options
 		Hint: to dump without a prefix use "./"
 
   -s suffix	Use sfx as a suffix for new files.
-		Hint: the .mp3 extension is NOT implicit.
+		Hint: the .mp3/.m4a extension is NOT implicit.
 
   -t		Display song title [metadata] while ripping.
 
@@ -239,8 +239,9 @@ Notes
 
 The output files produced by fIcy may miss audio framing informations and
 headers since the separation does not consider the audio data. For this reason,
-your player may fail to reproduce the dump: this is expected. fResync can be
-used to cleanup MPEG files after processing.
+your player 'may' (but should not) fail to reproduce the dump or output some
+initial noise: this is expected. fResync can be used to cleanup MPEG files
+after processing.
 
 You can also use other tools such as mpgedit for cutting the file in arbitrary
 positions without diminishing the quality. Assuming that your song spans across
