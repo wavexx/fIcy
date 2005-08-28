@@ -127,6 +127,9 @@ fIcy options
 
   -M time	Maximum recording time. See Notes_.
 
+  -i time	Maximum network idle time. Stops recording after the specified
+		amount of time is passed without network activity.
+
   -a file	Read authentication credentials from file (the file must
 		contain a line of the form user:password). Note that only the
 		Basic HTTP authentication scheme is supported.

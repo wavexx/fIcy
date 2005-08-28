@@ -218,12 +218,13 @@ main(int argc, char* const argv[]) try
   bool numEFiles = false;
   bool instSignal = false;
   time_t maxTime = 0;
+  time_t idleTime = 0;
   size_t maxFollow = fIcy::maxFollow;
   auto_ptr<Rewrite> rewrite;
   BMatch match;
 
   int arg;
-  while((arg = getopt(argc, argv, "do:emvtcs:nprhq:x:X:I:f:F:M:l:a:")) != -1)
+  while((arg = getopt(argc, argv, "do:emvtcs:nprhq:x:X:I:f:F:M:l:a:i:")) != -1)
     switch(arg)
     {
     case 'd':
@@ -305,6 +306,10 @@ main(int argc, char* const argv[]) try
 
     case 'l':
       maxFollow = atol(optarg);
+      break;
+
+    case 'i':
+      idleTime = tmParse(optarg);
       break;
 
     case 'a':
@@ -415,7 +420,7 @@ main(int argc, char* const argv[]) try
   // start reading
   ssize_t metaInt(reqMeta?
       atol(pReply.find(ICY::Proto::metaint)->second.c_str()): fIcy::bufSz);
-  ICY::Reader reader(*s, fIcy::bufSz);
+  ICY::Reader reader(*s, fIcy::bufSz, idleTime);
   size_t enu(0);
   time_t tStamp(0);
   string lastTitle;

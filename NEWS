@@ -1,3 +1,10 @@
+fIcy 1.0.14:
+
+	* Basic HTTP authentication support was implemented (-a).
+
+	* Idle network timeout support was implemented (-i).
+
+
 fIcy 1.0.13: Wed May 11 CEST 2005
 
 	* Relaxed the playlist parser (fixes behaviour on "fancy" playlists).

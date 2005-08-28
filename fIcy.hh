@@ -31,7 +31,7 @@ namespace fIcy
   const size_t maxFollow = 1;
   
   const char fIcyHelp[] =
-    " [-dosqxXIfFMalemvtcnprh] <server [port [path]]|url>\n\n"
+    " [-dosqxXIfFMialemvtcnprh] <server [port [path]]|url>\n\n"
     "  -d\t\tDo not dump the output to stdout\n"
     "  -o file\tDump the output to file (or use file as a prefix)\n"
     "  -s sfx\tUse sfx as a suffix for new files\n"
@@ -42,6 +42,7 @@ namespace fIcy
     "  -f expr\tRewrite titles using the specified sed expression\n"
     "  -F file\tRewrite titles using the specified sed script\n"
     "  -M time\tMaximum playing time\n"
+    "  -i time\tMaximum network idle time\n"
     "  -a file\tProvide HTTP credentials (user:pass file)\n"
     "  -l num\tRedirect follow limit\n"
     "  -e\t\tEnumerate files when song metadata changes. Use file as prefix\n"

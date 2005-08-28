@@ -10,6 +10,7 @@
 // c system headers
 #include <arpa/inet.h>
 #include <sys/socket.h>
+#include <sys/time.h>
 
 // not all systems define sock_t
 #ifndef sock_t
@@ -53,10 +54,11 @@ public:
   close(const int how = 0);
 
   ssize_t
-  read(char* buffer, const size_t lenght);
+  read(char* buffer, const size_t lenght, const timeval* timeout = NULL);
 
   ssize_t
-  gets(char* buffer, const size_t lenght, const char term = '\n');
+  gets(char* buffer, const size_t lenght,
+      const char term = '\n', const timeval* timeout = NULL);
 
   ssize_t
   write(const char* buffer, const size_t lenght);

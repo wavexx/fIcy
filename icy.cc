@@ -42,11 +42,21 @@ namespace ICY
   }
 
 
-  Reader::Reader(Socket& in, const size_t bufSz, const size_t metaSz)
+  Reader::Reader(Socket& in, const size_t bufSz,
+      const time_t timeout, const size_t metaSz)
   : in(in), bufSz(bufSz), mBufSz(metaSz)
   {
     buf = new char[bufSz];
     mBuf = new char[mBufSz];
+
+    if(timeout)
+    {
+      this->timeout = new timeval;
+      this->timeout->tv_sec = timeout;
+      this->timeout->tv_usec = 0;
+    }
+    else
+      this->timeout = NULL;
   }
 
 
@@ -54,6 +64,8 @@ namespace ICY
   {
     delete []buf;
     delete []mBuf;
+    if(timeout)
+      delete timeout;
   }
 
 
@@ -64,7 +76,7 @@ namespace ICY
     
     while(r != size)
     {
-      ssize_t p(in.read(buf, (bufSz + r > size)? size - r: bufSz));
+      ssize_t p(in.read(buf, (bufSz + r > size)? size - r: bufSz, timeout));
       if(!p)
         break;
 
@@ -93,7 +105,7 @@ namespace ICY
   {
     // read the first byte containing the lenght
     char b;
-    if(!in.read(&b, sizeof(b)))
+    if(!in.read(&b, sizeof(b), timeout))
       throw std::runtime_error("connection terminated prematurely");
 
     size_t lenght(b * Proto::metaMul);
@@ -106,7 +118,7 @@ namespace ICY
       size_t r(0);
       while(r != lenght)
       {
-        ssize_t b(in.read(mBuf + r, lenght - r));
+        ssize_t b(in.read(mBuf + r, lenght - r, timeout));
         if(!b)
           throw std::runtime_error("connection terminated prematurely");
 

@@ -79,9 +79,25 @@ Socket::close(const int how)
 
 
 ssize_t
-Socket::read(char* buffer, const size_t lenght)
+Socket::read(char* buffer, const size_t lenght, const timeval* timeout)
 {
-  ssize_t b(::recv(fd, buffer, lenght, 0));
+  if(timeout)
+  {
+    // reinitialize for linux
+    timeval t = *timeout;
+
+    fd_set fdSet;
+    FD_ZERO(&fdSet);
+    FD_SET(fd, &fdSet);
+  
+    int rt = select(fd + 1, &fdSet, NULL, NULL, &t);
+    if(rt < 0)
+      throw std::runtime_error(strerror(errno));
+    if(!rt)
+      throw std::runtime_error("select timeout");
+  }
+  
+  ssize_t b = ::recv(fd, buffer, lenght, 0);
   if(b == -1)
     throw std::runtime_error(strerror(errno));
 
@@ -90,7 +106,8 @@ Socket::read(char* buffer, const size_t lenght)
 
 
 ssize_t
-Socket::gets(char* buffer, const size_t lenght, const char term)
+Socket::gets(char* buffer, const size_t lenght,
+    const char term, const timeval* timeout)
 {
   // gets works under a non-buffered stream, so it's particularly slow
   char* w(buffer);
@@ -99,7 +116,7 @@ Socket::gets(char* buffer, const size_t lenght, const char term)
 
   while(pos != lenght)
   {
-    if(read(&b, 1) != 1)
+    if(read(&b, 1, timeout) != 1)
       break;
     
     *w++ = b;

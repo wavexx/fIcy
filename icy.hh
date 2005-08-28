@@ -15,6 +15,9 @@
 #include <map>
 #include <string>
 
+// c system headers
+#include <time.h>
+
 
 namespace ICY
 {
@@ -49,10 +52,11 @@ namespace ICY
     char* mBuf;
     size_t bufSz;
     size_t mBufSz;
+    timeval* timeout;
 
 
   public:
-    Reader(Socket& in, const size_t bufSz,
+    Reader(Socket& in, const size_t bufSz, const time_t timeout = 0,
         const size_t metaSz = Proto::metaSz);
     ~Reader();
 
