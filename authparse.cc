@@ -27,8 +27,12 @@ authParse(Http::Auth& out, const char* file)
     throw runtime_error(string("cannot read credentials from ") + file);
 
   string::size_type userEnd(buf.find(':'));
+  if(userEnd == string::npos)
+    throw runtime_error("user:password separator ':' not found");
+
   out.user = buf.substr(0, userEnd);
   if(!out.user.size())
     throw runtime_error("bad user token");
+
   out.pass = buf.substr(userEnd + 1);
 }

@@ -58,9 +58,18 @@ Synopsis::
 
   fIcy [options] <server [port [path]]|url>
 
+	The main program. Takes directly a stream url and dumps the tracks on
+	the specified file/s and standard output, depending on the settings.
+
   fPls [options] <file|url> [fIcy options]
 
+	Playlist manager. Reads a playlist (local or remote) and manages
+	fIcy retries/timeouts/errors, forwarding the specified flags.
+
   fResync [options] file
+
+	MPEG resyncing utility. Re-aligns head frame headers on dumped or
+	broken files.
 
 
 fIcy options
