@@ -7,9 +7,9 @@ Which audio formats fIcy supports?
 
 	fIcy itself is not limited to any audio format, only to the transport
 	used. For this reason fIcy can work transparently on MPEG1/Layer3,
-	MPEG2/4 ADTS audio streams (usually called MP3/MP4 AAC). OGG is
+	MPEG2/4 audio streams (usually called MP3/MP2/MP4 AAC). OGG is
 	supported but, as titles are encoded in the OGG stream itself, track
-	separation doesn't work.
+	separation doesn't work. fResync only understands MPEG1 files.
 
 
 Why not separate tracks on silence points?
@@ -34,7 +34,7 @@ Why not write MPEG tracks on frame boundaries directly?
 Can you insert id3/v2 tags in the files automagically?
 
 	Several tools already exists for this. If you're really sure about
-	adding tags, you may want to resync the files first.
+	adding tags, you may want to resync the files first as well.
 
 
 How can I resync-and-tag files automatically as they're written?
@@ -66,8 +66,7 @@ How I can append to a single file?
 	  fIcy ... >> file
 
 	Note that appending a rip onto another will not result in a "blended"
-	rip. You can still use fResync on file (there's no penality on running
-	fResync on large files whatsoever) to remove some noise.
+	rip, and it isn't guaranteed to be playable.
 
 
 fIcy aborts with "requested metadata, but got nothing"

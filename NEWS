@@ -6,6 +6,8 @@ fIcy 1.0.14:
 
 	* Enumeration starting number can now be specified or autodetected (-E).
 
+	* fResync was unable to sync small files in mmap mode.
+
 
 fIcy 1.0.13: Wed May 11 CEST 2005
 

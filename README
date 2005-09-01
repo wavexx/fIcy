@@ -69,7 +69,8 @@ Synopsis::
   fResync [options] file
 
 	MPEG resyncing utility. Re-aligns head frame headers on dumped or
-	broken files.
+	broken files. Usually needed for embedded hardware decoders or
+	editing software.
 
 
 fIcy options

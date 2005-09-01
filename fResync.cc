@@ -185,7 +185,7 @@ search_sync(const char* buf, size_t len, const params_t& params, region_t& reg)
   // create the buffer as the double of the maximal space possibly needed
   size_t mlen(params.framelen * params.maxframes * 2);
   if(len < mlen)
-    return true;
+    mlen = len;
 
   // beginning
   reg.start = mpeg::sync_forward(buf, mlen, params.maxframes);
