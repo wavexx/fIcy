@@ -46,6 +46,7 @@ namespace fIcy
     "  -a file\tProvide HTTP credentials (user:pass file)\n"
     "  -l num\tRedirect follow limit\n"
     "  -e\t\tEnumerate files when song metadata changes. Use file as prefix\n"
+    "  -E num\tEnumeration starting number (0 autodetects). Implies -e\n"
     "  -m\t\tUse song metadata when writing filenames. file used as prefix\n"
     "  -v\t\tVerbose\n"
     "  -t\t\tDisplay metadata while downloading\n"

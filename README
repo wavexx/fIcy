@@ -81,6 +81,10 @@ fIcy options
   -e		Enumerate number of ripped files when song metadata
 		changes. Uses -o as prefix.
 
+  -E num	Enumeration starting number. When 0, fIcy will try to
+		find the highest unused file number automatically.
+		Implies -e and requires -o.
+
   -h		Help
 
   -c		Do not clobber files.

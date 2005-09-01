@@ -35,6 +35,7 @@ using std::auto_ptr;
 // c system headers
 #include <cstdlib>
 #include <sys/types.h>
+#include <dirent.h>
 #include <stdarg.h>
 #include <signal.h>
 #include <unistd.h>
@@ -200,6 +201,65 @@ write_seq(ofstream& out, const char* file)
 }
 
 
+// find a free file number when using -E
+size_t
+findFreeFile(const char* prefix)
+{
+  // decompose prefix to dir/prefix
+  string dir;
+  string pre;
+
+  const char* sep;
+  if((sep = strrchr(prefix, '/')))
+  {
+    dir.assign(prefix, sep - prefix);
+    pre = sep + 1;
+  }
+  else
+  {
+    dir = ".";
+    pre = prefix;
+  }
+
+  // start reading
+  DIR* dirSt = opendir(dir.c_str());
+  if(!dirSt)
+    throw runtime_error(string("cannot list ") + dir);
+  
+  size_t enu = 1;
+  dirent* entry;
+
+  while((entry = readdir(dirSt)))
+  {
+    const char* name = entry->d_name;
+    if(pre.size())
+    {
+      if(entry->d_namlen > pre.size() &&
+	  !pre.compare(0, pre.size(), name, pre.size()))
+	name += pre.size();
+      else
+	continue;
+    }
+    
+    // support our two formats %lu and [%lu]
+    if(*name && *name == '[')
+      ++name;
+
+    size_t tmp;
+    if(sscanf(name, "%lu", &tmp) == 1)
+    {
+      if(tmp >= enu)
+	enu = tmp + 1;
+      if(enu <= tmp)
+	throw runtime_error("no free files found");
+    }
+  }
+
+  closedir(dirSt);
+  return enu;
+}
+
+
 // implementation
 int
 main(int argc, char* const argv[]) try
@@ -220,11 +280,12 @@ main(int argc, char* const argv[]) try
   time_t maxTime = 0;
   time_t idleTime = 0;
   size_t maxFollow = fIcy::maxFollow;
+  size_t enu = 1;
   auto_ptr<Rewrite> rewrite;
   BMatch match;
 
   int arg;
-  while((arg = getopt(argc, argv, "do:emvtcs:nprhq:x:X:I:f:F:M:l:a:i:")) != -1)
+  while((arg = getopt(argc, argv, "do:eE:mvtcs:nprhq:x:X:I:f:F:M:l:a:i:")) != -1)
     switch(arg)
     {
     case 'd':
@@ -237,6 +298,11 @@ main(int argc, char* const argv[]) try
 
     case 'e':
       enumFiles = true;
+      break;
+
+    case 'E':
+      enumFiles = true;
+      enu = atol(optarg);
       break;
 
     case 'm':
@@ -369,6 +435,13 @@ main(int argc, char* const argv[]) try
     return Exit::args;
   }
 
+  // find the starting number when requested
+  if(!enu)
+  {
+    enu = findFreeFile(outFile);
+    msg("enumeration starting from %lu", enu);
+  }
+
   // install the signals
   instSignal = (instSignal && dupStdout);
   rmPartial = (rmPartial && useMeta);
@@ -421,7 +494,6 @@ main(int argc, char* const argv[]) try
   ssize_t metaInt(reqMeta?
       atol(pReply.find(ICY::Proto::metaint)->second.c_str()): fIcy::bufSz);
   ICY::Reader reader(*s, fIcy::bufSz, idleTime);
-  size_t enu(0);
   time_t tStamp(0);
   string lastTitle;
   

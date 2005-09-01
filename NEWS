@@ -4,6 +4,8 @@ fIcy 1.0.14:
 
 	* Idle network timeout support was implemented (-i).
 
+	* Enumeration starting number can now be specified or autodetected (-E).
+
 
 fIcy 1.0.13: Wed May 11 CEST 2005
 
