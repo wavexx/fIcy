@@ -234,7 +234,7 @@ findFreeFile(const char* prefix)
     const char* name = entry->d_name;
     if(pre.size())
     {
-      if(entry->d_namlen > pre.size() &&
+      if(strlen(name) > pre.size() &&
 	  !pre.compare(0, pre.size(), name, pre.size()))
 	name += pre.size();
       else
