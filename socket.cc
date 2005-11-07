@@ -39,7 +39,7 @@ Socket::open(const in_addr_t& host, const int port)
   sockaddr_in addr;
   addr.sin_family = AF_INET;
   
-  // fetch the geoin port number
+  // fetch the port number
   addr.sin_port = htons(port);
   addr.sin_addr.s_addr = host;
   memset(&(addr.sin_zero), 0, sizeof(addr.sin_zero));
