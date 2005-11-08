@@ -62,12 +62,12 @@ namespace ICY
 
 
     // duping function
-    ssize_t
+    size_t
     dup(std::ostream* out, const size_t size, bool dup = true);
 
 
     // metadata decoding
-    ssize_t
+    size_t
     readMeta(std::map<std::string, std::string>& meta);
   };
 }

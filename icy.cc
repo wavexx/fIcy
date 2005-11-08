@@ -69,14 +69,14 @@ namespace ICY
   }
 
 
-  ssize_t
+  size_t
   Reader::dup(std::ostream* out, const size_t size, bool dup)
   {
     size_t r(0);
     
     while(r != size)
     {
-      ssize_t p(in.read(buf, (bufSz + r > size)? size - r: bufSz, timeout));
+      size_t p(in.read(buf, (bufSz + r > size)? size - r: bufSz, timeout));
       if(!p)
         break;
 
@@ -100,13 +100,12 @@ namespace ICY
   }
 
 
-  ssize_t
+  size_t
   Reader::readMeta(map<string, string>& meta)
   {
     // read the first byte containing the lenght
     char b;
-    if(!in.read(&b, sizeof(b), timeout))
-      throw std::runtime_error("connection terminated prematurely");
+    in.readn(&b, sizeof(b), timeout);
 
     size_t lenght(b * Proto::metaMul);
     if(lenght > Proto::metaSz)
@@ -115,15 +114,7 @@ namespace ICY
     // metadata could be empty
     if(lenght)
     {
-      size_t r(0);
-      while(r != lenght)
-      {
-        ssize_t b(in.read(mBuf + r, lenght - r, timeout));
-        if(!b)
-          throw std::runtime_error("connection terminated prematurely");
-
-        r += b;
-      }
+      in.readn(mBuf, lenght, timeout);
 
       // check for NULL termination
       if(mBuf[lenght - 1])
