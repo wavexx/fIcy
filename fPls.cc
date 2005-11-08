@@ -229,7 +229,7 @@ load_file(string& out, const URL& url,
 
   // load the file
   char buf[fIcy::bufSz];
-  ssize_t ret;
+  size_t ret;
  
   while((ret = s->read(buf, sizeof(buf))) > 0)
     out.append(buf, ret);
