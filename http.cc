@@ -104,6 +104,8 @@ namespace Http
 	  reply.headers->push_back(string(buf, answLen));
       }
     }
+    if(answLen < Proto::endlSz)
+      throw std::runtime_error("premature end of http headers");
 
     // parse the first protocol line
     istringstream in(proto);
@@ -136,7 +138,7 @@ namespace Http
 
     // final newline
     req += Proto::endl;
-    s->write(req.c_str(), req.size());
+    s->writen(req.c_str(), req.size());
 
     // fetch the answer headers
     readReply(*s, reply);
