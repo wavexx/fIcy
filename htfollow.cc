@@ -70,8 +70,10 @@ htFollow(map<string, string>& pReply, const URL& url,
       throw runtime_error("redirection didn't contain an url");
 
     buf = urlPos->second;
-    if(buf.proto != url.proto)
-      throw runtime_error("protocol changes are not allowed");
+    if(buf.proto.size() && buf.proto != url.proto)
+      throw runtime_error(
+	  string("protocol changes are not allowed in redirection (") +
+	  url.proto + " -> " + sanitize_esc(buf.proto) + ")");
   }
 
   return s.release();
