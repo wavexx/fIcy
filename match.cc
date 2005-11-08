@@ -83,6 +83,8 @@ BMatch::operator()(const char* string, int flags)
       retIncl = true;
       break;
     }
+  if(!retIncl)
+    return false;
 
   bool retExcl(true);
   for(vector<regex_t>::const_iterator it = excl.begin(); it != excl.end(); ++it)
@@ -92,5 +94,5 @@ BMatch::operator()(const char* string, int flags)
       break;
     }
   
-  return (retIncl && retExcl);
+  return retExcl;
 }
