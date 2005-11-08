@@ -78,7 +78,7 @@ Socket::close(const int how)
 }
 
 
-ssize_t
+size_t
 Socket::read(char* buffer, const size_t lenght, const timeval* timeout)
 {
   if(timeout)
@@ -105,7 +105,24 @@ Socket::read(char* buffer, const size_t lenght, const timeval* timeout)
 }
 
 
-ssize_t
+void
+Socket::readn(char* buffer, const size_t lenght, const timeval* timeout)
+{
+  size_t res = lenght;
+
+  while(res)
+  {
+    size_t n = read(buffer, res, timeout);
+    if(!n)
+      throw std::runtime_error("connection terminated prematurely");
+  
+    res -= n;
+    buffer += n;
+  }
+}
+
+
+size_t
 Socket::gets(char* buffer, const size_t lenght,
     const char term, const timeval* timeout)
 {
@@ -130,7 +147,7 @@ Socket::gets(char* buffer, const size_t lenght,
 }
 
 
-ssize_t
+size_t
 Socket::write(const char* buffer, const size_t lenght)
 {
   ssize_t b(::send(fd, buffer, lenght, 0));
@@ -140,3 +157,19 @@ Socket::write(const char* buffer, const size_t lenght)
   return b;
 }
 
+
+void
+Socket::writen(const char* buffer, const size_t lenght)
+{
+  size_t res = lenght;
+
+  while(res)
+  {
+    size_t n = write(buffer, res);
+    if(!n)
+      throw std::runtime_error("connection terminated prematurely");
+  
+    res -= n;
+    buffer += n;
+  }
+}

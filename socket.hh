@@ -53,16 +53,21 @@ public:
   void
   close(const int how = 0);
 
-  ssize_t
+  size_t
   read(char* buffer, const size_t lenght, const timeval* timeout = NULL);
 
-  ssize_t
+  void
+  readn(char* buffer, const size_t lenght, const timeval* timeout = NULL);
+
+  size_t
   gets(char* buffer, const size_t lenght,
       const char term = '\n', const timeval* timeout = NULL);
 
-  ssize_t
+  size_t
   write(const char* buffer, const size_t lenght);
+
+  void
+  writen(const char* buffer, const size_t lenght);
 };
 
 #endif
-
