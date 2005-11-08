@@ -491,8 +491,12 @@ main(int argc, char* const argv[]) try
   }
   
   // start reading
-  ssize_t metaInt(reqMeta?
-      atol(pReply.find(ICY::Proto::metaint)->second.c_str()): fIcy::bufSz);
+  size_t metaInt(reqMeta?
+      strtoul(pReply.find(ICY::Proto::metaint)->second.c_str(), NULL, 0):
+      fIcy::bufSz);
+  if(reqMeta && !metaInt)
+    throw std::runtime_error("bad value for metaint");
+
   ICY::Reader reader(*s, fIcy::bufSz, idleTime);
   time_t tStamp(0);
   string lastTitle;
