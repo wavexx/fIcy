@@ -129,9 +129,9 @@ sigTerm(const int sig)
     unlink(lastFName);
   }
 
-  exit((sig == SIGTERM? Exit::success:
-	  (sig == SIGPIPE? Exit::args:
-	      Exit::fail)));
+  exit((sig == SIGTERM || sig == SIGALRM? Exit::success:
+	   (sig == SIGPIPE? Exit::args:
+	       Exit::fail)));
 }
 
 

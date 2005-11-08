@@ -354,17 +354,19 @@ main(int argc, char* argv[]) try
 	int ret = exec_fIcy(params, resTime, it->c_str());
 	if(ret == Exit::args)
 	  return Exit::fail;
-	else if(ret == Exit::success)
-	  break;
 
 	// update residual
 	if(params.maxTime)
 	{
 	  time_t d(time(NULL) - start + params.waitSecs);
 	  if(d >= resTime)
-	    return Exit::success;
+	    return ret;
 	  resTime -= d;
 	}
+
+	// check for success after maxTime
+	if(ret == Exit::success)
+	  break;
 
 	// temporary failure, wait a bit
 	sleep(params.waitSecs);
