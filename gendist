@@ -23,7 +23,7 @@ set -e
 # suffix and version
 SUFFIX="${VERSION:-$DATE}"
 CHECK="${VERSION:-beta}"
-DIST="fIcy-`echo \"$SUFFIX\" | tr . _`"
+DIST="fIcy-$SUFFIX"
 
 # check ancillary files
 echo "1: checking files"
