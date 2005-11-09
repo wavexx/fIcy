@@ -1,3 +1,12 @@
+fIcy 1.0.15: Wed Nov 09 CET 2005
+
+	* Relaxed redirection checks.
+
+	* Exit with success after recording time is elapsed.
+
+	* Some code cleanup.
+
+
 fIcy 1.0.14: Thu Sep 01 CEST 2005
 
 	* Basic HTTP authentication support was implemented (-a).

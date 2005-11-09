@@ -150,7 +150,7 @@ Socket::gets(char* buffer, const size_t lenght,
 size_t
 Socket::write(const char* buffer, const size_t lenght)
 {
-  ssize_t b(::send(fd, buffer, lenght, 0));
+  ssize_t b = ::send(fd, buffer, lenght, 0);
   if(b == -1)
     throw std::runtime_error(strerror(errno));
 

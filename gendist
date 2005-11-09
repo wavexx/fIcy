@@ -1,0 +1,53 @@
+#!/bin/sh
+# generate, tests and submits a fIcy beta distribution
+
+# basic data
+VERSION="$1"
+DATE="`date '+%Y%m%d'`"
+CATALOG="
+	Makefile AUTHORS COPYING NEWS README TODO FAQ
+	copy.cc copy.hh fIcy.cc fIcy.hh fResync.cc hdrparse.cc hdrparse.hh
+	http.cc http.hh icy.cc icy.hh match.cc match.hh mpeg.cc mpeg.hh
+	msg.cc msg.hh resolver.cc resolver.hh sanitize.cc sanitize.hh
+	socket.cc socket.hh urlencode.cc urlencode.hh urlparse.cc urlparse.hh
+	fPls.cc plsparse.hh plsparse.cc rewrite.hh rewrite.cc base64.cc
+	base64.hh tmparse.cc tmparse.hh htfollow.cc htfollow.hh
+	authparse.cc authparse.hh
+"
+
+
+# trap errors
+set -e
+
+
+# suffix and version
+SUFFIX="${VERSION:-$DATE}"
+CHECK="${VERSION:-beta}"
+DIST="fIcy-`echo \"$SUFFIX\" | tr . _`"
+
+# check ancillary files
+echo "1: checking files"
+grep -q "FICY_VERSION.*$CHECK\"" fIcy.hh
+
+
+# creating distribution
+echo "2: creating distribution"
+mkdir "$DIST"
+cp -p $CATALOG "$DIST"
+tar cf - "$DIST" | gzip -9 > "$DIST.tar.gz"
+rm -rf "$DIST"
+
+
+# check
+echo "3: checking distribution"
+gzip -dc "$DIST.tar.gz" | tar xf -
+cd "$DIST"
+pmake || make
+test -x fIcy -a -x fResync -a -x fPls
+cd ..
+rm -rf "$DIST"
+
+
+# ok
+echo "= generated $DIST:"
+gzip -dc "$DIST.tar.gz" | tar tvf -

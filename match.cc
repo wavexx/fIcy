@@ -1,6 +1,6 @@
 /*
  * match - match/filter a string according regex rules - implementation
- * Copyright(c) 2004 of wave++ (Yuri D'Elia)
+ * Copyright(c) 2004-2005 of wave++ (Yuri D'Elia)
  * Distributed under GNU LGPL without ANY warranty.
  */
 
