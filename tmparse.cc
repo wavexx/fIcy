@@ -1,6 +1,6 @@
 /*
  * tmParse - parse a time quantity
- * Copyright(c) 2005 of wave++ (Yuri D'Elia)
+ * Copyright(c) 2005-2006 of wave++ (Yuri D'Elia)
  * Distributed under GNU LGPL without ANY warranty.
  *
  * Tries to parse time quantities in the form HH:MM[:SS] or SS[dhms]
@@ -23,7 +23,7 @@ time_t
 tmParse(const char* spec)
 {
   // try the HH:MM[:SS] format first
-  time_t h, m, s;
+  unsigned long h, m, s;
   int args;
 
   if((args = sscanf(spec, "%lu:%lu:%lu", &h, &m, &s)) > 1)
