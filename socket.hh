@@ -1,6 +1,6 @@
 /*
  * sockets - streams sockets
- * Copyright(c) 2003-2005 of wave++ (Yuri D'Elia)
+ * Copyright(c) 2003-2006 of wave++ (Yuri D'Elia)
  * Distributed under GNU LGPL without ANY warranty.
  */
 
@@ -13,7 +13,8 @@
 #include <sys/time.h>
 
 // not all systems define sock_t
-#ifndef sock_t
+#if !defined(_SOCK_T) && !defined(sock_t)
+#define _SOCK_T
 typedef int sock_t;
 #endif
 
@@ -21,47 +22,47 @@ typedef int sock_t;
 class Socket
 {
   bool conn;
+  timeval* timeout;
 
 protected:
   sock_t fd;
 
 public:
-  Socket(const in_addr_t& host, const int port)
+  Socket(const in_addr_t& host, const int port, const timeval* timeout = NULL)
   : conn(false)
   {
-    open(host, port);
+    open(host, port, timeout);
   }
 
-  Socket(const char* host, const int port)
+  Socket(const char* host, const int port, const timeval* timeout = NULL)
   : conn(false)
   {
-    open(host, port);
+    open(host, port, timeout);
   }
 
   Socket()
   : conn(false)
   {}
 
-  ~Socket();
+  ~Socket() throw();
 
   void
-  open(const char* host, const int port);
-  
+  open(const char* host, const int port, const timeval* timeout = NULL);
+
   void
-  open(const in_addr_t& host, const int port);
+  open(const in_addr_t& host, const int port, const timeval* timeout = NULL);
 
   void
   close(const int how = 0);
 
   size_t
-  read(char* buffer, const size_t lenght, const timeval* timeout = NULL);
+  read(char* buffer, const size_t lenght);
 
   void
-  readn(char* buffer, const size_t lenght, const timeval* timeout = NULL);
+  readn(char* buffer, const size_t lenght);
 
   size_t
-  gets(char* buffer, const size_t lenght,
-      const char term = '\n', const timeval* timeout = NULL);
+  gets(char* buffer, const size_t lenght, const char term = '\n');
 
   size_t
   write(const char* buffer, const size_t lenght);
