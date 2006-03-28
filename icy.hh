@@ -1,6 +1,6 @@
 /*
  * icy - protocol functions and constants
- * Copyright(c) 2003-2005 of wave++ (Yuri D'Elia)
+ * Copyright(c) 2003-2006 of wave++ (Yuri D'Elia)
  * Distributed under GNU LGPL without ANY warranty.
  */
 
@@ -14,9 +14,6 @@
 #include <iostream>
 #include <map>
 #include <string>
-
-// c system headers
-#include <time.h>
 
 
 namespace ICY
@@ -43,7 +40,7 @@ namespace ICY
     const extern char* mTitle;
   }
 
-  
+
   // interface
   class Reader
   {
@@ -52,12 +49,11 @@ namespace ICY
     char* mBuf;
     size_t bufSz;
     size_t mBufSz;
-    timeval* timeout;
 
 
   public:
-    Reader(Socket& in, const size_t bufSz, const time_t timeout = 0,
-        const size_t metaSz = Proto::metaSz);
+    Reader(Socket& in, const size_t bufSz,
+	const size_t metaSz = Proto::metaSz);
     ~Reader();
 
 

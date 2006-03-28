@@ -1,6 +1,6 @@
 /*
  * icy - protocol functions and constants - implementation
- * Copyright(c) 2003-2005 of wave++ (Yuri D'Elia) <wavexx@users.sf.net>
+ * Copyright(c) 2003-2006 of wave++ (Yuri D'Elia) <wavexx@users.sf.net>
  * Distributed under GNU LGPL without ANY warranty.
  */
 
@@ -42,21 +42,11 @@ namespace ICY
   }
 
 
-  Reader::Reader(Socket& in, const size_t bufSz,
-      const time_t timeout, const size_t metaSz)
+  Reader::Reader(Socket& in, const size_t bufSz, const size_t metaSz)
   : in(in), bufSz(bufSz), mBufSz(metaSz)
   {
     buf = new char[bufSz];
     mBuf = new char[mBufSz];
-
-    if(timeout)
-    {
-      this->timeout = new timeval;
-      this->timeout->tv_sec = timeout;
-      this->timeout->tv_usec = 0;
-    }
-    else
-      this->timeout = NULL;
   }
 
 
@@ -64,8 +54,6 @@ namespace ICY
   {
     delete []buf;
     delete []mBuf;
-    if(timeout)
-      delete timeout;
   }
 
 
@@ -73,20 +61,20 @@ namespace ICY
   Reader::dup(std::ostream* out, const size_t size, bool dup)
   {
     size_t r(0);
-    
+
     while(r != size)
     {
-      size_t p(in.read(buf, (bufSz + r > size)? size - r: bufSz, timeout));
+      size_t p(in.read(buf, (bufSz + r > size)? size - r: bufSz));
       if(!p)
-        break;
+	break;
 
       if(out)
-        out->write(buf, p);
+	out->write(buf, p);
       if(dup)
       {
 	// check for writing errors, but do not throw exceptions: SIGPIPE
 	// should be generated already.
-        cout.write(buf, p);
+	cout.write(buf, p);
 	if(!cout)
 	  dup = false;
 	else
@@ -105,7 +93,7 @@ namespace ICY
   {
     // read the first byte containing the lenght
     char b;
-    in.readn(&b, sizeof(b), timeout);
+    in.readn(&b, sizeof(b));
 
     size_t lenght(b * Proto::metaMul);
     if(lenght > Proto::metaSz)
@@ -114,11 +102,11 @@ namespace ICY
     // metadata could be empty
     if(lenght)
     {
-      in.readn(mBuf, lenght, timeout);
+      in.readn(mBuf, lenght);
 
       // check for NULL termination
       if(mBuf[lenght - 1])
-        throw std::runtime_error("invalid metadata stream");
+	throw std::runtime_error("invalid metadata stream");
 
       char* p(mBuf);
       char* n;
@@ -131,21 +119,21 @@ namespace ICY
        */
       while(*p)
       {
-        // variable name
-        n = strstr(p, Proto::vaStart);
-        if(!n)
-          break;
-        string name(p, n);
-        p = n + Proto::vaStartSz;
+	// variable name
+	n = strstr(p, Proto::vaStart);
+	if(!n)
+	  break;
+	string name(p, n);
+	p = n + Proto::vaStartSz;
 
-        // value
-        n = strstr(p, Proto::vaEnd);
-        if(!n)
-          break;
-        string value(p, n);
-        p = n + Proto::vaEndSz;
+	// value
+	n = strstr(p, Proto::vaEnd);
+	if(!n)
+	  break;
+	string value(p, n);
+	p = n + Proto::vaEndSz;
 
-        meta.insert(std::make_pair(name, value));
+	meta.insert(std::make_pair(name, value));
       }
     }
 
