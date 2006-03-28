@@ -1,6 +1,6 @@
 /*
  * HTTP/1.0 for streams sockets
- * Copyright(c) 2003-2005 of wave++ (Yuri D'Elia)
+ * Copyright(c) 2003-2006 of wave++ (Yuri D'Elia)
  * Distributed under GNU LGPL without ANY warranty.
  */
 
@@ -76,8 +76,8 @@ namespace Http
   class Http
   {
     char* host;
-    in_addr_t addr;
     int port;
+    timeval* timeout;
 
     // http functions
     int
@@ -96,7 +96,7 @@ namespace Http
 
   public:
     // de/constructors
-    Http(const char* host, const int port = 0);
+    Http(const char* host, const int port = 0, const timeval* timeout = NULL);
     ~Http();
 
     // basic functionality

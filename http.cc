@@ -1,6 +1,6 @@
 /*
  * HTTP/1.0 for streams sockets - implementation
- * Copyright(c) 2003-2005 of wave++ (Yuri D'Elia)
+ * Copyright(c) 2003-2006 of wave++ (Yuri D'Elia)
  * Distributed under GNU LGPL without ANY warranty.
  */
 
@@ -8,7 +8,6 @@
 #include "http.hh"
 
 // local headers
-#include "resolver.hh"
 #include "urlencode.hh"
 #include "base64.hh"
 
@@ -24,7 +23,6 @@ using std::istringstream;
 
 
 // c system headers
-#include <netinet/in.h>
 #include <netdb.h>
 #include <string.h>
 
@@ -54,17 +52,26 @@ namespace Http
   }
 
 
-  Http::Http(const char* host, const int port)
+  Http::Http(const char* host, const int port, const timeval* timeout)
   {
     this->host = strdup(host);
     this->port = (port? port: getSrvPort());
-    addr = resolve(host);
+
+    if(!timeout)
+      this->timeout = NULL;
+    else
+    {
+      this->timeout = new timeval;
+      *this->timeout = *timeout;
+    }
   }
 
 
   Http::~Http()
   {
     delete []host;
+    if(timeout)
+      delete timeout;
   }
 
 
@@ -74,7 +81,7 @@ namespace Http
     servent* se(getservbyname(Proto::proto, Proto::protoTy));
     if(!se)
       throw
-        std::runtime_error("error while trying to identify http port number");
+	std::runtime_error("error while trying to identify http port number");
 
     return ntohs(se->s_port);
   }
@@ -94,9 +101,9 @@ namespace Http
     {
       if(reply.headers || !*proto)
       {
-        // cut tailing newlines from the buffer
-        while(strchr(Proto::endl, buf[answLen - 1]))
-          buf[--answLen] = 0;
+	// cut trailing newlines from the buffer
+	while(strchr(Proto::endl, buf[answLen - 1]))
+	  buf[--answLen] = 0;
 
 	if(!*proto)
 	  memcpy(proto, buf, answLen);
@@ -122,7 +129,7 @@ namespace Http
   {
     using std::auto_ptr;
 
-    auto_ptr<Socket> s(new Socket(addr, port));
+    auto_ptr<Socket> s(new Socket(host, port, timeout));
 
     // request
     string req;
@@ -133,7 +140,7 @@ namespace Http
     // headers
     if(headers)
       for(Header::const_iterator it = headers->begin();
-          it != headers->end(); ++it)
+	  it != headers->end(); ++it)
 	req += *it + Proto::endl;
 
     // final newline
