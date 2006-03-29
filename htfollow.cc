@@ -1,6 +1,6 @@
 /*
  * htFollow - follow an http url until content is reached - implementation
- * Copyright(c) 2005 of wave++ (Yuri D'Elia)
+ * Copyright(c) 2005-2006 of wave++ (Yuri D'Elia)
  * Distributed under GNU LGPL without ANY warranty.
  */
 
@@ -32,16 +32,23 @@ itos(const int i)
 
 Socket*
 htFollow(map<string, string>& pReply, const URL& url,
-    const Http::Header qHeaders, size_t limit)
+    const Http::Header qHeaders, size_t limit, time_t timeout)
 {
   URL buf = url;
+  timeval tmBuf;
+  if(timeout)
+  {
+    tmBuf.tv_sec = timeout;
+    tmBuf.tv_usec = 0;
+  }
 
   // connection loop
   auto_ptr<Socket> s;
   for(;; --limit)
   {
     msg("connecting to (%s %d)", sanitize_esc(buf.server).c_str(), buf.port);
-    Http::Http httpc(sanitize_esc(buf.server).c_str(), buf.port);
+    Http::Http httpc(sanitize_esc(buf.server).c_str(),
+	buf.port, (timeout? &tmBuf: NULL));
 
     msg("requesting data on (%s)", sanitize_esc(buf.path).c_str());
     Http::Header aHeaders;

@@ -1,6 +1,6 @@
 /*
  * fIcy - HTTP/1.0-ICY stream extractor/separator - implementation
- * Copyright(c) 2003-2005 of wave++ (Yuri D'Elia) <wavexx@users.sf.net>
+ * Copyright(c) 2003-2006 of wave++ (Yuri D'Elia) <wavexx@users.sf.net>
  * Distributed under GNU LGPL without ANY warranty.
  */
 
@@ -40,7 +40,6 @@ using std::auto_ptr;
 #include <signal.h>
 #include <unistd.h>
 #include <string.h>
-#include <time.h>
 
 
 // globals (urgh)
@@ -94,8 +93,8 @@ newNFWrap(string& file)
       snprintf(buf, sizeof(buf), ".%lu", n);
       if((out = newFWrap((file + buf).c_str(), false)))
       {
-        file += buf;
-        break;
+	file += buf;
+	break;
       }
     }
 
@@ -194,7 +193,7 @@ write_seq(ofstream& out, const char* file)
 {
   if(out.rdbuf()->is_open())
   {
-    out << file << std::endl;
+    out << file << std::endl << std::flush;
     if(!out)
       throw runtime_error("cannot append to sequence file");
   }
@@ -225,7 +224,7 @@ findFreeFile(const char* prefix)
   DIR* dirSt = opendir(dir.c_str());
   if(!dirSt)
     throw runtime_error(string("cannot list ") + dir);
-  
+
   size_t enu = 1;
   dirent* entry;
 
@@ -240,7 +239,7 @@ findFreeFile(const char* prefix)
       else
 	continue;
     }
-    
+
     // support our two formats %lu and [%lu]
     if(*name && *name == '[')
       ++name;
@@ -281,11 +280,12 @@ main(int argc, char* const argv[]) try
   time_t idleTime = 0;
   size_t maxFollow = fIcy::maxFollow;
   size_t enu = 1;
-  auto_ptr<Rewrite> rewrite;
+  char* rewriteArg = NULL;
+  Rewrite::arg_t rewriteType;
   BMatch match;
 
   int arg;
-  while((arg = getopt(argc, argv, "do:eE:mvtcs:nprhq:x:X:I:f:F:M:l:a:i:")) != -1)
+  while((arg = getopt(argc, argv, "do:E:mvtcs:nprhq:x:X:I:f:F:M:l:a:i:")) != -1)
     switch(arg)
     {
     case 'd':
@@ -294,10 +294,6 @@ main(int argc, char* const argv[]) try
 
     case 'o':
       outFile = optarg;
-      break;
-
-    case 'e':
-      enumFiles = true;
       break;
 
     case 'E':
@@ -359,11 +355,13 @@ main(int argc, char* const argv[]) try
       break;
 
     case 'f':
-      rewrite.reset(new Rewrite(optarg, Rewrite::expr));
+      rewriteArg = optarg;
+      rewriteType = Rewrite::expr;
       break;
 
     case 'F':
-      rewrite.reset(new Rewrite(optarg, Rewrite::file));
+      rewriteArg = optarg;
+      rewriteType = Rewrite::file;
       break;
 
     case 'M':
@@ -384,7 +382,7 @@ main(int argc, char* const argv[]) try
 
     case 'h':
       cout << prg << fIcy::fIcyHelp << prg << " v" << fIcy::version <<
-        " is\n" << fIcy::copyright;
+	" is\n" << fIcy::copyright;
 
     default:
       return Exit::args;
@@ -404,14 +402,14 @@ main(int argc, char* const argv[]) try
     // avoid the need of the protocol on the command line
     url = argv[optind++];
     if(!url.proto.size())
-      url.proto = "http";
-    else if(url.proto != "http")
+      url.proto = Http::Proto::proto;
+    else if(url.proto != Http::Proto::proto)
       throw runtime_error(string("unknown protocol ") + url.proto);
   }
   else
   {
     // 1.0.4 compatibility
-    url.proto = "http";
+    url.proto = Http::Proto::proto;
     url.server = argv[optind++];
     url.port = atoi(argv[optind++]);
     url.path = (argc == 3? argv[optind++]: "/");
@@ -420,6 +418,8 @@ main(int argc, char* const argv[]) try
   // check for parameters consistency
   bool useMeta(enumFiles || nameFiles || !match.empty());
   bool reqMeta(useMeta || showMeta);
+  auto_ptr<Rewrite> rewrite(rewriteArg?
+      new Rewrite(rewriteArg, rewriteType): NULL);
 
   // enumFiles and nameFiles requires a prefix
   if(useMeta && !outFile)
@@ -465,14 +465,14 @@ main(int argc, char* const argv[]) try
 
   // establish the connection
   map<string, string> pReply;
-  auto_ptr<Socket> s(htFollow(pReply, url, qHeaders, maxFollow));
+  auto_ptr<Socket> s(htFollow(pReply, url, qHeaders, maxFollow, idleTime));
   if(reqMeta && pReply.find(ICY::Proto::metaint) == pReply.end())
   {
     err("requested metadata, but got nothing.");
     return Exit::fail;
   }
-  
-  // show some headers
+
+  // show some headers (crappy)
   if(verbose)
   {
     shwIcyHdr(pReply, ICY::Proto::notice1, "Notice: ");
@@ -489,7 +489,7 @@ main(int argc, char* const argv[]) try
     signal(SIGALRM, sigTerm);
     alarm(maxTime);
   }
-  
+
   // start reading
   size_t metaInt(reqMeta?
       strtoul(pReply.find(ICY::Proto::metaint)->second.c_str(), NULL, 0):
@@ -497,10 +497,10 @@ main(int argc, char* const argv[]) try
   if(reqMeta && !metaInt)
     throw std::runtime_error("bad value for metaint");
 
-  ICY::Reader reader(*s, fIcy::bufSz, idleTime);
+  ICY::Reader reader(*s, fIcy::bufSz);
   time_t tStamp(0);
   string lastTitle;
-  
+
   // initial file
   auto_ptr<std::ostream> out;
   if(outFile && !useMeta)
@@ -518,7 +518,7 @@ main(int argc, char* const argv[]) try
       if(!write(STDOUT_FILENO, NULL, 0))
 	cout.clear();
     }
-    
+
     // read the stream
     if(reader.dup(out.get(), metaInt, dupStdout) != metaInt)
     {
@@ -527,7 +527,7 @@ main(int argc, char* const argv[]) try
     }
     if(!(outFile || dupStdout))
       break;
-    
+
     // read metadata
     if(reqMeta)
     {
@@ -550,10 +550,10 @@ main(int argc, char* const argv[]) try
 	if(title.size() && (title != lastTitle))
 	{
 	  string newFName;
-	  
+
 	  if(showMeta)
 	    tStamp = display_status(title, enu, tStamp);
-	  
+
 	  // skip the first filename generation when discarding partials
 	  // or when the title doesn't match
 	  if(useMeta && (enu || !rmPartial) && match(title.c_str()))
@@ -570,7 +570,7 @@ main(int argc, char* const argv[]) try
 	      newFName += sanitize_file(title);
 	    if(suffix)
 	      newFName += suffix;
-	    
+
 	    // open the new file
 	    if(numEFiles)
 	      out.reset(newNFWrap(newFName));
@@ -579,7 +579,7 @@ main(int argc, char* const argv[]) try
 	  }
 	  else
 	    out.reset();
-	  
+
 	  // update the last filename pointer
 	  if(lastFName)
 	  {
@@ -596,7 +596,7 @@ main(int argc, char* const argv[]) try
 	    lastFName = NULL;
 	    msg("file reset");
 	  }
-	  
+
 	  // update stream number
 	  lastTitle = title;
 	  ++enu;

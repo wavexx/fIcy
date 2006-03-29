@@ -69,6 +69,7 @@ public:
   long maxLoops;
   time_t waitSecs;
   time_t maxTime;
+  time_t idleTime;
   size_t maxFollow;
   char* daemonize;
   char* auth;
@@ -86,6 +87,7 @@ Params::Params(int argc, char* argv[])
   maxLoops = fIcy::maxLoops;
   waitSecs = fIcy::waitSecs;
   maxTime = 0;
+  idleTime = 0;
   maxFollow = fIcy::maxFollow;
   verbose = help = false;
   daemonize = NULL;
@@ -96,7 +98,7 @@ Params::Params(int argc, char* argv[])
 
   // let's again put a bit of SHAME... that FSC**BEEP GNU extensions.
   // WHY _NOT_ BEING POSIXLY_CORRECT BY DEFAULT EH? oooh, "features"! I see.
-  while((arg = getopt(argc, argv, "+P:R:L:T:M:l:d:a:vh")) != -1)
+  while((arg = getopt(argc, argv, "+P:R:L:T:M:l:d:a:vhi:")) != -1)
     switch(arg)
     {
     case 'P':
@@ -137,6 +139,10 @@ Params::Params(int argc, char* argv[])
 
     case 'v':
       verbose = true;
+      break;
+
+    case 'i':
+      idleTime = tmParse(optarg);
       break;
     }
 
@@ -200,7 +206,7 @@ load_file(string& out, const char* file)
 
   // load the file
   char buf[fIcy::bufSz];
- 
+
   do
   {
     in.read(buf, sizeof(buf));
@@ -214,36 +220,36 @@ load_file(string& out, const char* file)
 
 
 void
-load_file(string& out, const URL& url,
-    const size_t maxFollow, const Http::Auth* auth)
+load_file(string& out, const URL& url, const size_t maxFollow,
+    const time_t idleTime, const Http::Auth* auth)
 {
   // setup headers
   Http::Header qHeaders;
   qHeaders.push_back(fIcy::userAgent);
   if(auth)
     qHeaders.push_back(auth->basicHeader());
-  
+
   // connection
   map<string, string> pReply;
-  auto_ptr<Socket> s(htFollow(pReply, url, qHeaders, maxFollow));
+  auto_ptr<Socket> s(htFollow(pReply, url, qHeaders, maxFollow, idleTime));
 
   // load the file
   char buf[fIcy::bufSz];
   size_t ret;
- 
+
   while((ret = s->read(buf, sizeof(buf))) > 0)
     out.append(buf, ret);
 }
 
 
 void
-load_list(string& buf, const char* uri,
-    const size_t maxFollow, const Http::Auth* auth)
+load_list(string& buf, const char* uri, const size_t maxFollow,
+    const time_t idleTime, const Http::Auth* auth)
 {
   URL url(uri);
 
   if(url.proto == "http")
-    load_file(buf, url, maxFollow, auth);
+    load_file(buf, url, maxFollow, idleTime, auth);
   else if(!url.proto.size())
   {
     msg("loading playlist from %s", uri);
@@ -326,7 +332,7 @@ main(int argc, char* argv[]) try
   list<string> playlist;
   {
     string buf;
-    load_list(buf, params.uri, params.maxFollow,
+    load_list(buf, params.uri, params.maxFollow, params.idleTime,
 	(params.auth? &params.authData: NULL));
     istringstream stream(buf);
     plsParse(playlist, stream);
