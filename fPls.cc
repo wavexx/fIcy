@@ -82,21 +82,23 @@ Params::Params(int argc, char* argv[])
 {
   // defaults
   prg = argv[0];
-  char* path = "fIcy";
   maxRetries = fIcy::maxRetries;
   maxLoops = fIcy::maxLoops;
   waitSecs = fIcy::waitSecs;
   maxTime = 0;
-  idleTime = 0;
   maxFollow = fIcy::maxFollow;
+  idleTime = 0;
   verbose = help = false;
   daemonize = NULL;
   auth = NULL;
 
-  // real values
+  // locals
+  char* path = "fIcy";
+  char* maxFollowBuf;
+  char* idleTimeBuf;
   int arg;
 
-  // let's again put a bit of SHAME... that FSC**BEEP GNU extensions.
+  // let's again put a bit of SHAME... those FSC**BEEP GNU extensions.
   // WHY _NOT_ BEING POSIXLY_CORRECT BY DEFAULT EH? oooh, "features"! I see.
   while((arg = getopt(argc, argv, "+P:R:L:T:M:l:d:a:vhi:")) != -1)
     switch(arg)
@@ -122,6 +124,7 @@ Params::Params(int argc, char* argv[])
       break;
 
     case 'l':
+      maxFollowBuf = optarg;
       maxFollow = strtol(optarg, NULL, 0);
       break;
 
@@ -142,6 +145,7 @@ Params::Params(int argc, char* argv[])
       break;
 
     case 'i':
+      idleTimeBuf = optarg;
       idleTime = tmParse(optarg);
       break;
     }
@@ -157,7 +161,7 @@ Params::Params(int argc, char* argv[])
   // fIcy parameters
   if(--argc >= 0)
   {
-    fIcyParams = new char*[argc + 9];
+    fIcyParams = new char*[argc + 13];
     fIcyParams[0] = path;
     arg = 1;
 
@@ -167,8 +171,18 @@ Params::Params(int argc, char* argv[])
       fIcyParams[arg++] = "-a";
       fIcyParams[arg++] = auth;
     }
+    if(maxFollow)
+    {
+      fIcyParams[arg++] = "-l";
+      fIcyParams[arg++] = maxFollowBuf;
+    }
+    if(idleTime)
+    {
+      fIcyParams[arg++] = "-i";
+      fIcyParams[arg++] = idleTimeBuf;
+    }
 
-    // forwarded parameters
+    // forward other parameters
     for(int i = 1; i <= argc; ++i)
       fIcyParams[arg++] = argv[optind++];
 
@@ -248,7 +262,7 @@ load_list(string& buf, const char* uri, const size_t maxFollow,
 {
   URL url(uri);
 
-  if(url.proto == "http")
+  if(url.proto == Http::Proto::proto)
     load_file(buf, url, maxFollow, idleTime, auth);
   else if(!url.proto.size())
   {
@@ -354,9 +368,13 @@ main(int argc, char* argv[]) try
     {
       for(size_t retry = 0; retry != params.maxRetries; ++retry)
       {
-	time_t start(time(NULL));
+	// sweet dreams on temporary failures
+	if(loop || it != playlist.begin())
+	  sleep(params.waitSecs);
 
-	msg("stream %s, retry %d of loop %d", it->c_str(), retry + 1, loop + 1);
+	time_t start(time(NULL));
+	msg("stream %s: retry %d of loop %d", it->c_str(), retry + 1, loop + 1);
+
 	int ret = exec_fIcy(params, resTime, it->c_str());
 	if(ret == Exit::args)
 	  return Exit::fail;
@@ -373,9 +391,6 @@ main(int argc, char* argv[]) try
 	// check for success after maxTime
 	if(ret == Exit::success)
 	  break;
-
-	// temporary failure, wait a bit
-	sleep(params.waitSecs);
       }
     }
   }
