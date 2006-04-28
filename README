@@ -8,19 +8,17 @@ fIcy: an icecast/shoutcast stream grabber suite
 General Description
 -------------------
 
-fIcy is an icecast/shoutcast stream grabber suite for use under shell
-environment. Its goal is to cleanly and automatically rip a stream into user
-customisable files. It will work with ICY compatible streams, allowing you to
-either to save the stream to disk or to pipe the output to a media player, or
-even both. fIcy, among other uses, is ideal for batch/unattended recording of
-radio programs and stream debugging.
+fIcy is a small icecast/shoutcast stream grabber suite for use under shell
+environment. Its goal is to automatically rip a stream into user customisable
+files. It will work with ICY compatible streams, allowing you to either to save
+the stream to disk or to pipe the output to a media player, or even both. fIcy,
+among other uses, is ideal for batch/unattended recording of radio programs and
+stream debugging.
 
 The fIcy package includes:
 
 * fIcy itself, a stream separator/multiplexer,
-
 * fResync, a fast MPEG-resyncing utility,
-
 * fPls, a playlist frontend for fIcy.
 
 
@@ -63,150 +61,149 @@ Synopsis::
 
   fPls [options] <file|url> [fIcy options]
 
-	Playlist manager. Reads a playlist (local or remote) and manages
-	fIcy retries/timeouts/errors, forwarding the specified flags.
+	Playlist manager. Reads a playlist (local or remote) and manages fIcy
+	retries/timeouts/errors, forwarding the specified flags.
 
   fResync [options] file
 
 	MPEG resyncing utility. Re-aligns head frame headers on dumped or
-	broken files. Usually needed for embedded hardware decoders or
-	editing software.
+	broken files. Usually needed for embedded hardware decoders or editing
+	software.
 
 
 fIcy options
-------------
+~~~~~~~~~~~~
 
   -d		Do not dump the output to stdout.
 		Useful when only ripping.
 
-  -e		Enumerate number of ripped files when song metadata
-		changes. Uses -o as prefix.
-
-  -E num	Enumeration starting number. When 0, fIcy will try to
-		find the highest unused file number automatically.
-		Implies -e and requires -o.
+  -E num	Enumerate files when song title [metadata] changes, starting at
+		num. When 0, fIcy will try to find the highest unused file
+		number automatically. Uses -o as a prefix.
 
   -h		Help
 
   -c		Do not clobber files.
 
-  -m		Use song title [metadata] when naming files. Uses -o as
-		prefix.
+  -m		Use song title [metadata] when naming files. Uses -o as	prefix.
 
   -n		If the file exists create new one with .n as suffix.
 
-  -p		When dumping to stdout consider writing errors as transient.
-		Useful when you pipe the output to a media player and
-		want to kill it while not interrupting the rip.
+  -p		When dumping to stdout consider writing errors as transient
+		(that is: flush the output buffer until stdout is ready).
+		Useful when you pipe the output to a media player and want to
+		kill it while not interrupting the rip.
 
-  -o file	Dump the output to file.
-		Hint: to dump without a prefix use "./"
+  -o file	Dump the output to file or use file as a prefix (depending on
+		other settings). Hint: to dump without a prefix use "./".
 
   -s suffix	Use sfx as a suffix for new files.
 		Hint: the .mp3/.m4a extension is NOT implicit.
 
   -t		Display song title [metadata] while ripping.
 
-  -r		Remove/don't save partial chunks. This will skip the
-		first chunk and remove the last one upon
-		termination which are (supposedly) incomplete. To use
-		in combination with -m or -e.
+  -r		Remove/don't save partial chunks. This will skip the first
+		chunk and remove the last one upon termination which are
+		(supposedly) incomplete. To use in combination with -m or -E.
 
-  -q file	Append file sequence list to file. This may be used to
-		rejoin splitted parts with an external tool. fResync
-		will use this file in the future.
+  -q file	Append "file name" sequence to file. The file name is written
+		upon file completition. This may be used to trigger events and
+		rejoin splitted parts with an external tool without -E.
+		fResync will use this file in the future.
 
-  -x regex	Save only files whose title (NOT filename) matches
-		against this (or one of these) extended regular
-		expressions. Multiple -x can be specified on the
-		command line to form OR conditions. Dump unaffected.
-		Can be combined with -X.
+  -x regex	Save only files whose title (NOT filename) matches against this
+		(or one of these) extended regular expressions. Multiple -x can
+		be specified on the command line to form OR conditions. Dump
+		unaffected.  Can be combined with -X.
 
-  -X regex	Do NOT save files whose title matches against this
-		extended regular expression. Same semantics as -x.
+  -X regex	Do NOT save files whose title matches against this extended
+		regular expression. Same semantics as -x.
 
-  -I file	Load include/exclude REs from file. Each line must
-		be prefixed with + or - to indicate whether it's a
-		positive or negative expression (-xX).
+  -I file	Load include/exclude REs from file. Each line must be prefixed
+		with + or - to indicate whether it's a positive or negative
+		expression (-xX).
 
-  -f expr	Filter titles through the specified sed expression.
-		The raw title is passed to the expression (doesn't
-		include	any additional prefixes/suffixes). As the
-		result will be used internally, some limitations apply.
-		Read carefully the Filtering_ section.
+  -f expr	Filter titles through the specified sed expression. The raw
+		title is passed to the expression (doesn't include any
+		additional prefixes/suffixes). As the result will be used
+		internally, some limitations apply. Read carefully the
+		Filtering_ section.
 
-  -F file	Filter titles through the specified sed script.
-		Same semantics as -f, but the expressions are loaded
-		from a file instead. Conflicts with -f.
+  -F file	Filter titles through the specified sed script. Same semantics
+		as -f, but the expressions are loaded from a file
+		instead. Conflicts with -f.
 
   -M time	Maximum recording time. See Notes_.
 
   -i time	Maximum network idle time. Stops recording after the specified
-		amount of time is passed without network activity.
+		amount of time is passed without network activity. Defaults to
+		0 (default tcp timeout).
 
   -a file	Read authentication credentials from file (the file must
 		contain a line of the form user:password). Note that only the
 		Basic HTTP authentication scheme is supported.
 
-  -l num	Redirect follow limit. Defaults to 1. 0 disables
-		redirection entirely.
+  -l num	Redirect follow limit. Defaults to 1. 0 disables redirection
+		entirely.
 
 
 fResync options
----------------
+~~~~~~~~~~~~~~~
 
-  -b		By default fResync maps the entire file into memory
-		when operating. However this can create problems on
-		loaded systems with large files or when simulating.
-		This reverts to a buffered I/O mode. This flag is also
-		implicit when simulating.
+  -b		By default fResync maps the entire file into memory when
+		operating. However this can create problems on loaded systems
+		with large files or when simulating. This reverts to a
+		buffered I/O mode. This flag is also implicit when simulating.
 
-  -s		Simulate the process. Print on the standard output
-		the starting sync offset and stream length, but don't
-		modify the source file.
+  -s		Simulate the process. Print on the standard output the starting
+		sync offset and stream length, but don't modify the source
+		file.
 
   -v		Verbose.
 
-  -n frames	Require/decode at least n valid consecutive frames to
-		validate the sync offset. Defaults to 6.
+  -n frames	Require/decode at least n valid consecutive frames to validate
+		the sync offset. Defaults to 6.
 
-  -m len	Maximum frame length. Defaults to 1597. fResync uses
-		this value to determine the maximal region of the file
-		to be checked.
+  -m len	Maximum frame length. Defaults to 1597. fResync uses this value
+		to determine the maximal region of the file to be checked.
 
 
 fPls options
-------------
+~~~~~~~~~~~~
 
-  -P path	Specify a different name or full path for the fIcy
-		executable (defaults to "fIcy").
+  -P path	Specify a different name or full path for the fIcy executable
+		(defaults to "fIcy").
 
   -v		Verbose.
 
-  -R max	Specifies the maximal number of retries to do for
-		each stream upon connection/read failure.
+  -R max	Specifies the maximal number of retries to do for each stream
+		upon connection/read failure.
 
-  -L max	Specifies the maximal number of loops to do for
-		the entire playlist (-1 for infinite).
+  -L max	Specifies the maximal number of loops to do for the entire
+		playlist (-1 for infinite).
 
   -T time	Wait time to pause after each failure.
 
-  -M time	Maximum recording time. See Notes_.
+  -M time	Maximum cumulative recording time. See Notes_.
+
+  -i time	Maximum network idle time. Same as fIcy's when loading a
+		playlist via http. Forwarded to fIcy.
 
   -a file	Read authentication credentials from file. Same as fIcy's when
 		loading a playlist via http. The credentials are automatically
 		forwarded to fIcy, but you can override them when needed.
 
-  -l num	Redirect follow limit. Same as fIcy's when loading a
-		playlist via http.
+  -l num	Redirect follow limit. Same as fIcy's when loading a playlist
+		via http. Forwarded to fIcy.
 
-  -d file	Run as a daemon, redirecting messages to file.
-		fIcy's -d option is enforced. As the process is chdir-ed to
-		the root directory you also have to specify absolute paths.
+  -d file	Run as a daemon, redirecting messages to file. fIcy's -d
+		option is enforced. As the process is chdir-ed to the root
+		directory you also have to specify absolute paths for all
+		options, including fIcy's ones.
 
 
 Examples
---------
+~~~~~~~~
 
 Use fIcy to display ICY titles while playing::
 
@@ -249,15 +246,13 @@ Companion software
 
 	Frame-level mp3 cutting tool.
 
-Combining these in the right pipeline order is left as an exercise to the user.
-
 
 DISCLAIMER
 ----------
 
-We would like to remind you that saving public streams without paying the
-rights is *ILLEGAL* unless explicitly stated.
-
+We would like to remind you that saving streams containing copyrighted material
+without explicit consent is *ILLEGAL*. For stream administrators, please see
+our statement in the FAQ_.
 
 Notes
 -----
@@ -322,7 +317,7 @@ all of sed's power is available, but some limitations apply:
 
 
 Filtering examples
-------------------
+~~~~~~~~~~~~~~~~~~
 
 As an example, suppose your titles look like this::
 

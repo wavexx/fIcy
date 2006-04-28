@@ -28,7 +28,7 @@ Why not separate tracks on silence points?
 
 Why not write MPEG tracks on frame boundaries directly?
 
-	In a future release.
+	Maybe in a future release.
 
 
 Can you insert id3/v2 tags in the files automagically?
@@ -54,7 +54,7 @@ Is there any plan for a Windows port?
 
 How I can write to a single enormous file?
 
-	Use the -o flag alone, without -m or -e::
+	Use the -o flag alone, without -m or -E::
 
 	  fIcy -o file ...
 
@@ -65,14 +65,11 @@ How I can append to a single file?
 
 	  fIcy ... >> file
 
-	Note that appending a rip onto another will not result in a "blended"
-	rip, and it isn't guaranteed to be playable.
-
 
 fIcy aborts with "requested metadata, but got nothing"
 
 	The stream runs without metadata (ie titles). No separation can take
-	place. You can still write huge file chunks without the -me flags.
+	place. You can still write huge file chunks without the -mE flags.
 
 
 How I can prevent fIcy to rip my station?
@@ -80,18 +77,13 @@ How I can prevent fIcy to rip my station?
 	Short answer: you can't.
 
 	Long answer: if your streaming server supports this, you can block on
-	the user-agent. fIcy uses "fIcy [version]" by default and offers no way
-	of changing it dynamically. Consider however that any user with a
-	minimal amount of brain will be able to change it anyway. A more
-	realistic solution is to disable metadata (ie titles) on your stream,
-	but even then it won't prevent people for saving it on large chunks,
-	and/or use ANY other software like winamp, xmms, wget, telnet, netcat,
-	curl (or even your browser of choice).
-
-
-I really want to prevent people to rip my stream!
-
-	Broadcast with an antenna. Costs less, and please consider AM!
+	the user-agent. fIcy uses "fIcy [version]" by default, and, contrarily
+	to most other software, offers no way of changing it. Consider however
+	that any user with a minimal amount of brain will be able to change it
+	anyway. A more realistic solution is to disable metadata (ie titles) on
+	your stream, but even then it won't prevent people for saving it on
+	large chunks, and/or use ANY other software like winamp, xmms, wget,
+	telnet, netcat, curl (or even your browser of choice).
 
 
 Unanswered question?

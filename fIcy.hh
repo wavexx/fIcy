@@ -36,7 +36,7 @@ namespace fIcy
     "  -p\t\tWhen dumping to stdout consider writing errors as transient\n"
     "  -o file\tDump the output to file (or use file as a prefix with -mE)\n"
     "  -s sfx\tUse sfx as a suffix for new files\n"
-    "  -q file\tAppend \"file name\" list to file (only when saving)\n"
+    "  -q file\tAppend \"file name\" sequence to file (only when saving)\n"
     "  -m\t\tUse song title when writing filenames. file used as prefix\n"
     "  -E num\tEnumerate written files, starting at num (0 autodetects).\n"
     "  -t\t\tDisplay titles while downloading\n"
