@@ -94,8 +94,8 @@ Params::Params(int argc, char* argv[])
 
   // locals
   char* path = "fIcy";
-  char* maxFollowBuf;
-  char* idleTimeBuf;
+  char* maxFollowBuf = NULL;
+  char* idleTimeBuf = NULL;
   int arg;
 
   // let's again put a bit of SHAME... those FSC**BEEP GNU extensions.
@@ -171,12 +171,12 @@ Params::Params(int argc, char* argv[])
       fIcyParams[arg++] = "-a";
       fIcyParams[arg++] = auth;
     }
-    if(maxFollow)
+    if(maxFollowBuf)
     {
       fIcyParams[arg++] = "-l";
       fIcyParams[arg++] = maxFollowBuf;
     }
-    if(idleTime)
+    if(idleTimeBuf)
     {
       fIcyParams[arg++] = "-i";
       fIcyParams[arg++] = idleTimeBuf;
