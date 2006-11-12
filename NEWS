@@ -4,6 +4,7 @@ fIcy 1.0.16:
 	* -e removed on fIcy (use -E1 to get the same effect instead).
 	* fPls now forwards -il flags automatically.
 	* fPls no longer waits after last failure before exiting.
+	* Now honouring also HTTP 301 redirects.
 
 
 fIcy 1.0.15: Wed Nov 09 CET 2005
@@ -127,5 +128,5 @@ fIcy 0.0.0: late 2002
 	    netcat "$1" "$2" << EOF | sed -e "1,9d"
 	    GET $3 HTTP/1.0
 	    Host: $1:$2
-	    
+
 	    EOF

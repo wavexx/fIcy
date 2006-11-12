@@ -35,6 +35,7 @@ namespace Http
 
     // answers
     const int ok = 200;
+    const int moved = 301;
     const int found = 302;
     const int other = 303;
 

@@ -57,6 +57,7 @@ htFollow(map<string, string>& pReply, const URL& url,
 
     // validate the reply code
     if(reply.code != Http::Proto::ok &&
+	reply.code != Http::Proto::moved &&
 	reply.code != Http::Proto::found &&
 	reply.code != Http::Proto::other)
       throw runtime_error(string("unexpected reply: ") +
@@ -75,7 +76,10 @@ htFollow(map<string, string>& pReply, const URL& url,
     map<string, string>::iterator urlPos = pReply.find(Http::Proto::location);
     if(urlPos == pReply.end())
       throw runtime_error("redirection didn't contain an url");
-
+    if(reply.code == Http::Proto::moved)
+      err("warning: content moved permanently to %s",
+	  sanitize_esc(urlPos->second).c_str());
+      
     buf = urlPos->second;
     if(buf.proto.size() && buf.proto != url.proto)
       throw runtime_error(
