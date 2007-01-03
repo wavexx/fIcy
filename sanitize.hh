@@ -1,6 +1,6 @@
 /*
  * sanitize - rewrite a string to a suitable (secure) one
- * Copyright(c) 2003-2004 of wave++ (Yuri D'Elia)
+ * Copyright(c) 2003-2007 of wave++ (Yuri D'Elia)
  * Distributed under GNU LGPL without ANY warranty.
  */
 

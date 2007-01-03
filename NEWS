@@ -1,12 +1,13 @@
-fIcy 1.0.16:
+fIcy 1.0.16: Wed Jan 03 CET 2007
 
 	* Better (full) timeout support on both fIcy/fPls.
 	* -e removed on fIcy (use -E1 to get the same effect instead).
 	* fPls now also forwards -il flags automatically.
 	* fPls no longer waits after last failure before exiting.
 	* Now honouring also HTTP 301 redirects.
-	* GNU sed limitation removed.
-	* Rewrite coprocessor is now customizable (defaulting to "sed").
+	* GNU sed limitation removed: the rewrite coprocessor is now
+	  customizable (defaulting to "sed" like before).
+	* Work around OSX's HFS+ charset requirements.
 
 
 fIcy 1.0.15: Wed Nov 09 CET 2005

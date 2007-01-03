@@ -1,6 +1,6 @@
 /*
  * sanitize - rewrite a string to a suitable (secure) one - implementation
- * Copyright(c) 2003-2004 of wave++ (Yuri D'Elia)
+ * Copyright(c) 2003-2007 of wave++ (Yuri D'Elia)
  * Distributed under GNU LGPL without ANY warranty.
  */
 
@@ -25,9 +25,18 @@ sanitize_file(const string& src)
 
   while(it != src.end())
   {
+#ifndef __APPLE__
     // non-ascii data is preserved (assumed to be locale-specific)
     if(!isascii(*it) || (isprint(*it) && *it != '/'))
       r += *it;
+#else
+    // OSX's HFS+ requires correct UTF-8m encoding, but we don't have the
+    // source's encoding unless we parse Content-Encoding (from the HTTP
+    // connection) and then recode according to LC_CTYPE (with Apple still
+    // being an exception). We just strip for now. TODO: implement this.
+    if(isprint(*it) && *it != '/')
+      r += (*it & 0x7F);
+#endif
     else
       r += '_';
 
