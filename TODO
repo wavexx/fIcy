@@ -15,8 +15,3 @@ Known bugs
 
 	* There's no HDD fIcy can't fill.
 
-
-Internals
-
-	* Use a virtual pty to remove the need of GNU sed.
-
