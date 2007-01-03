@@ -17,8 +17,7 @@
 class Rewrite
 {
   pid_t pid;
-  int in[2];
-  int out[2];
+  int fd;
 
 public:
   enum arg_t {expr, file};

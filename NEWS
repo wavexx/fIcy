@@ -2,9 +2,10 @@ fIcy 1.0.16:
 
 	* Better (full) timeout support on both fIcy/fPls.
 	* -e removed on fIcy (use -E1 to get the same effect instead).
-	* fPls now forwards -il flags automatically.
+	* fPls now also forwards -il flags automatically.
 	* fPls no longer waits after last failure before exiting.
 	* Now honouring also HTTP 301 redirects.
+	* GNU sed limitation removed.
 
 
 fIcy 1.0.15: Wed Nov 09 CET 2005

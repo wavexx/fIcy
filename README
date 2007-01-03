@@ -300,9 +300,6 @@ more), fIcy offers the possibility to rewrite each title through a normal sed
 script via the "-fF" flags. A real sed coprocess is used along the execution so
 all of sed's power is available, but some limitations apply:
 
-* sed must be GNU sed, or support the -u flag (this limitation
-  may eventually be removed in the future).
-
 * Each line of input should result in one output line, and ONE ONLY.
 
 * Two consecutive identical titles will result in the second one
