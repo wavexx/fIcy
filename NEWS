@@ -6,6 +6,7 @@ fIcy 1.0.16:
 	* fPls no longer waits after last failure before exiting.
 	* Now honouring also HTTP 301 redirects.
 	* GNU sed limitation removed.
+	* Rewrite coprocessor is now customizable (defaulting to "sed").
 
 
 fIcy 1.0.15: Wed Nov 09 CET 2005

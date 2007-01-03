@@ -1,6 +1,6 @@
 /*
  * fIcy - HTTP/1.0-ICY stream extractor/separator
- * Copyright(c) 2003-2006 of wave++ (Yuri D'Elia)
+ * Copyright(c) 2003-2007 of wave++ (Yuri D'Elia)
  * Distributed under GNU LGPL without ANY warranty.
  */
 
@@ -27,7 +27,7 @@ namespace fIcy
   // fIcy defaults
   const char userAgent[] = "User-agent: fIcy " FICY_VERSION;
   const size_t bufSz = 1024;
-  const char sed[] = "sed";
+  const char coproc[] = "sed";
   const size_t maxFollow = 1;
 
   const char fIcyHelp[] =
@@ -43,8 +43,9 @@ namespace fIcy
     "  -x regex\tDump only titles matching regex\n"
     "  -X regex\tDo NOT dump titles matching regex\n"
     "  -I file\tLoad include/exclude regexs from file\n"
-    "  -f expr\tRewrite titles using the specified sed expression\n"
-    "  -F file\tRewrite titles using the specified sed script\n"
+    "  -f expr\tRewrite titles using the specified expression\n"
+    "  -F file\tRewrite titles using the specified script\n"
+    "  -C path\tRewrite coprocessor (default: sed)\n"
     "  -a file\tProvide HTTP credentials (user:pass file)\n"
     "  -i time\tMaximum network idle time\n"
     "  -l num\tRedirect follow limit\n"

@@ -1,6 +1,6 @@
 /*
  * fIcy - HTTP/1.0-ICY stream extractor/separator - implementation
- * Copyright(c) 2003-2006 of wave++ (Yuri D'Elia) <wavexx@users.sf.net>
+ * Copyright(c) 2003-2007 of wave++ (Yuri D'Elia) <wavexx@users.sf.net>
  * Distributed under GNU LGPL without ANY warranty.
  */
 
@@ -282,10 +282,11 @@ main(int argc, char* const argv[]) try
   size_t enu = 1;
   char* rewriteArg = NULL;
   Rewrite::arg_t rewriteType;
+  const char* coproc = fIcy::coproc;
   BMatch match;
 
   int arg;
-  while((arg = getopt(argc, argv, "do:E:mvtcs:nprhq:x:X:I:f:F:M:l:a:i:")) != -1)
+  while((arg = getopt(argc, argv, "do:E:mvtcs:nprhq:x:X:I:f:F:C:M:l:a:i:")) != -1)
     switch(arg)
     {
     case 'd':
@@ -364,6 +365,10 @@ main(int argc, char* const argv[]) try
       rewriteType = Rewrite::file;
       break;
 
+    case 'C':
+      coproc = optarg;
+      break;
+
     case 'M':
       maxTime = tmParse(optarg);
       break;
@@ -419,7 +424,7 @@ main(int argc, char* const argv[]) try
   bool useMeta(enumFiles || nameFiles || !match.empty());
   bool reqMeta(useMeta || showMeta);
   auto_ptr<Rewrite> rewrite(rewriteArg?
-      new Rewrite(rewriteArg, rewriteType): NULL);
+      new Rewrite(rewriteArg, coproc, rewriteType): NULL);
 
   // enumFiles and nameFiles requires a prefix
   if(useMeta && !outFile)

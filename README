@@ -123,15 +123,19 @@ fIcy options
 		with + or - to indicate whether it's a positive or negative
 		expression (-xX).
 
-  -f expr	Filter titles through the specified sed expression. The raw
-		title is passed to the expression (doesn't include any
+  -f expr 	Filter titles through the specified coprocessor expression. The
+		raw title is passed to the expression (doesn't include any
 		additional prefixes/suffixes). As the result will be used
 		internally, some limitations apply. Read carefully the
 		Filtering_ section.
 
-  -F file	Filter titles through the specified sed script. Same semantics
-		as -f, but the expressions are loaded from a file
+  -F file	Filter titles through the specified coprocessor script. Same
+		semantics as -f, but the expressions are loaded from a file
 		instead. Conflicts with -f.
+
+  -C path	Specify the path of the external title rewriting coprocessor.
+		Defaults to "sed". The executable must support the '-e', '-f'
+		flags and operate through stdin/out, like "sed".
 
   -M time	Maximum recording time. See Notes_.
 
@@ -311,6 +315,12 @@ all of sed's power is available, but some limitations apply:
 * Please note that the *title* is filtered, not the filename (which may
   still have some characters removed/modified). Use -tv to see what is
   actually sent to the filter.
+
+You can actually use any executable that works as a stream editor by specifying
+the path with '-C'. The executable must support the '-e' (inline expression)
+and '-f' (script file) flags or, at least, ignore them. This allows for any
+script or custom executable to be used when a "sed" script is considered
+inadequate.
 
 
 Filtering examples

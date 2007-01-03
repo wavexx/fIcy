@@ -1,6 +1,6 @@
 /*
  * rewrite - string rewriting functions through sed coproc.
- * Copyright(c) 2004 of wave++ (Yuri D'Elia)
+ * Copyright(c) 2004-2007 of wave++ (Yuri D'Elia)
  * Distributed under GNU LGPL without ANY warranty.
  */
 
@@ -23,7 +23,7 @@ public:
   enum arg_t {expr, file};
 
   explicit
-  Rewrite(const char* arg, const arg_t type);
+  Rewrite(const char* arg, const char* coproc, const arg_t type);
 
   ~Rewrite() throw();
 

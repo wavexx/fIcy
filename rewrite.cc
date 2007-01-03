@@ -1,11 +1,10 @@
 /*
  * rewrite - string rewriting functions through sed coproc. - implementation
- * Copyright(c) 2004-2006 of wave++ (Yuri D'Elia)
+ * Copyright(c) 2004-2007 of wave++ (Yuri D'Elia)
  * Distributed under GNU LGPL without ANY warranty.
  */
 
 // interface
-#include "fIcy.hh"
 #include "rewrite.hh"
 using std::string;
 
@@ -99,7 +98,7 @@ forkpty(int* amaster, char*, termios*, winsize*)
 }
 
 
-Rewrite::Rewrite(const char* arg, const arg_t type)
+Rewrite::Rewrite(const char* arg, const char* coproc, const arg_t type)
 {
   pid = forkpty(&fd, NULL, NULL, NULL);
   if(pid < 0)
@@ -116,8 +115,8 @@ Rewrite::Rewrite(const char* arg, const arg_t type)
     tcsetattr(STDIN_FILENO, TCSANOW | TCSAFLUSH, &t);
 
     // execute the coprocess
-    execlp(fIcy::sed, fIcy::sed, (type == expr? "-e": "-f"), arg, NULL);
-    throw runtime_error(string("cannot execute ") + fIcy::sed);
+    execlp(coproc, coproc, (type == expr? "-e": "-f"), arg, NULL);
+    throw runtime_error(string("cannot execute ") + coproc);
   }
 }
 
