@@ -20,7 +20,7 @@ namespace fIcy
   // common strings
   const char version[] = FICY_VERSION;
   const char copyright[] =
-    "Copyright(c) 2003-2006 of wave++ (Yuri D'Elia) <wavexx@users.sf.net>\n"
+    "Copyright(c) 2003-2007 of wave++ (Yuri D'Elia) <wavexx@users.sf.net>\n"
     "Distributed under GNU LGPL (v2 or above) without ANY warranty.\n";
 
 
@@ -31,7 +31,7 @@ namespace fIcy
   const size_t maxFollow = 1;
 
   const char fIcyHelp[] =
-    " [-dposqmEtxXIfFailMcnrv] <server [port [path]]|url>\n\n"
+    " [-dposqmEtxXIfFCailMcnrv] <server [port [path]]|url>\n\n"
     "  -d\t\tDo not dump the output to stdout\n"
     "  -p\t\tWhen dumping to stdout consider writing errors as transient\n"
     "  -o file\tDump the output to file (or use file as a prefix with -mE)\n"
