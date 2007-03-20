@@ -44,7 +44,7 @@ htFollow(map<string, string>& pReply, const URL& url,
 
   // connection loop
   auto_ptr<Socket> s;
-  for(size_t level = limit;; --level)
+  for(;; --limit)
   {
     msg("connecting to (%s %d)", sanitize_esc(buf.server).c_str(), buf.port);
     Http::Http httpc(sanitize_esc(buf.server).c_str(),
@@ -70,7 +70,7 @@ htFollow(map<string, string>& pReply, const URL& url,
       break;
 
     // recursion
-    if(!level)
+    if(!limit)
       throw runtime_error(string("hit redirect follow limit: ") + itos(limit));
 
     map<string, string>::iterator urlPos = pReply.find(Http::Proto::location);
@@ -79,7 +79,7 @@ htFollow(map<string, string>& pReply, const URL& url,
     if(reply.code == Http::Proto::moved)
       err("warning: content moved permanently to %s",
 	  sanitize_esc(urlPos->second).c_str());
-
+      
     buf = urlPos->second;
     if(buf.proto.size() && buf.proto != url.proto)
       throw runtime_error(

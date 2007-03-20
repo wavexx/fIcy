@@ -25,7 +25,7 @@ namespace fIcy
 
 
   // fIcy defaults
-  const char userAgent[] = "User-agent: iTunes/7.0.2 (Windows; N)";
+  const char userAgent[] = "User-agent: fIcy " FICY_VERSION;
   const size_t bufSz = 1024;
   const char coproc[] = "sed";
   const size_t maxFollow = 1;
