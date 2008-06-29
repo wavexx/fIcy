@@ -1,6 +1,6 @@
 /*
- * rewrite - string rewriting functions through sed coproc. - implementation
- * Copyright(c) 2004-2007 of wave++ (Yuri D'Elia)
+ * rewrite - string rewriting functions through coproc. - implementation
+ * Copyright(c) 2004-2008 of wave++ (Yuri D'Elia)
  * Distributed under GNU LGPL without ANY warranty.
  */
 
@@ -15,6 +15,7 @@ using std::memcpy;
 using std::runtime_error;
 
 // c system headers
+#include <stdlib.h>
 #include <unistd.h>
 #include <sys/wait.h>
 #include <sys/param.h>
@@ -29,15 +30,19 @@ using std::runtime_error;
 #endif
 
 // streams
-#ifndef BSD
+#if !defined(BSD) && !defined(__linux__)
+#define HAS_STREAMS
 #include <sys/ioctl.h>
 #include <stropts.h>
 #endif
 
+// avoid inclusion of pty.h under linux (to avoid redeclaration and libutil)
+struct winsize;
+
 
 // partial replacement to satisfy our needs (forkpty isn't supported enough)
 pid_t
-forkpty(int* amaster, char*, termios*, winsize*)
+forkpty(int* amaster, char*, const termios*, const winsize*)
 {
   pid_t pid;
   int masterFd;
@@ -76,7 +81,7 @@ forkpty(int* amaster, char*, termios*, winsize*)
 
     close(masterFd);
 
-#ifndef BSD
+#ifdef HAS_STREAMS
     if(ioctl(slaveFd, I_PUSH, "ptem") < 0 ||
 	ioctl(slaveFd, I_PUSH, "ldterm") < 0)
     {

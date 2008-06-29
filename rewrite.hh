@@ -1,6 +1,6 @@
 /*
- * rewrite - string rewriting functions through sed coproc.
- * Copyright(c) 2004-2007 of wave++ (Yuri D'Elia)
+ * rewrite - string rewriting functions through coproc.
+ * Copyright(c) 2004-2008 of wave++ (Yuri D'Elia)
  * Distributed under GNU LGPL without ANY warranty.
  */
 

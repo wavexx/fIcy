@@ -2,6 +2,7 @@ fIcy 1.0.17:
 
 	* Fixed "redirection limit" error message.
 	* Fixed build with newer GLIBC/GCC versions.
+	* Fixed -f/-F under linux.
 
 
 fIcy 1.0.16: Wed Jan 03 CET 2007
