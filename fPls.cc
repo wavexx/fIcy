@@ -1,6 +1,6 @@
 /*
  * fPls - playlist handler for fIcy
- * Copyright(c) 2004-2006 of wave++ (Yuri D'Elia) <wavexx@users.sf.net>
+ * Copyright(c) 2004-2008 of wave++ (Yuri D'Elia) <wavexx@users.sf.net>
  * Distributed under GNU LGPL without ANY warranty.
  */
 
@@ -38,6 +38,7 @@ using std::strtol;
 
 #include <stdarg.h>
 #include <stdio.h>
+#include <string.h>
 #include <unistd.h>
 #include <sys/wait.h>
 #include <time.h>
@@ -62,7 +63,7 @@ public:
 
 
   const char* uri;
-  char** fIcyParams;
+  const char** fIcyParams;
   size_t urlPos;
   size_t timePos;
   size_t maxRetries;
@@ -93,9 +94,9 @@ Params::Params(int argc, char* argv[])
   auth = NULL;
 
   // locals
-  char* path = "fIcy";
-  char* maxFollowBuf = NULL;
-  char* idleTimeBuf = NULL;
+  const char* path = "fIcy";
+  const char* maxFollowBuf = NULL;
+  const char* idleTimeBuf = NULL;
   int arg;
 
   // let's again put a bit of SHAME... those FSC**BEEP GNU extensions.
@@ -161,7 +162,7 @@ Params::Params(int argc, char* argv[])
   // fIcy parameters
   if(--argc >= 0)
   {
-    fIcyParams = new char*[argc + 13];
+    fIcyParams = new const char*[argc + 13];
     fIcyParams[0] = path;
     arg = 1;
 
@@ -278,11 +279,11 @@ load_list(string& buf, const char* uri, const size_t maxFollow,
 int
 exec_fIcy(Params& params, const time_t maxTime, const char* stream)
 {
-  char** args = params.fIcyParams;
+  const char** args = params.fIcyParams;
   char buf[16];
   snprintf(buf, sizeof(buf), "%lu", maxTime);
-  args[params.timePos] = const_cast<char*>(buf);
-  args[params.urlPos] = const_cast<char*>(stream);
+  args[params.timePos] = buf;
+  args[params.urlPos] = stream;
   int ret;
 
   switch(fork())
@@ -292,7 +293,7 @@ exec_fIcy(Params& params, const time_t maxTime, const char* stream)
     return Exit::args;
 
   case 0:
-    execvp(args[0], args);
+    execvp(args[0], const_cast<char**>(args));
     err("cannot exec fIcy: %s", strerror(errno));
     exit(Exit::args);
   }

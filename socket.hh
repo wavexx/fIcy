@@ -1,11 +1,14 @@
 /*
  * sockets - streams sockets
- * Copyright(c) 2003-2006 of wave++ (Yuri D'Elia)
+ * Copyright(c) 2003-2008 of wave++ (Yuri D'Elia)
  * Distributed under GNU LGPL without ANY warranty.
  */
 
 #ifndef socket_hh
 #define socket_hh
+
+// system headers
+#include <cstddef>
 
 // c system headers
 #include <arpa/inet.h>
