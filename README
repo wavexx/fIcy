@@ -27,25 +27,25 @@ Files
 
 These files can be found in the latest release of fIcy
 
-`AUTHORS <AUTHORS>`_:
+`AUTHORS <AUTHORS.html>`_:
 	People that have contributed to fIcy.
 
-`NEWS <NEWS>`_:
+`NEWS <NEWS.html>`_:
 	Release changes.
 
 `COPYING <http://www.gnu.org/licenses/lgpl.html>`_:
 	License. Please read carefully.
 
-`README <README>`_:
+`README <README.html>`_:
 	This file. Contains usage description.
 
-`TODO <TODO>`_:
+`TODO <TODO.html>`_:
 	Known bugs, missing/planned improvements.
 
-`FAQ <FAQ>`_:
+`FAQ <FAQ.html>`_:
 	Frequently asked questions.
 
-`DOWNLOAD <http://sourceforge.net/project/showfiles.php?group_id=104571&package_id=112466>`_:
+`DOWNLOAD <releases/>`_:
 	Latest sources.
 
 
@@ -288,9 +288,9 @@ specified time has elapsed).
 For bugs, support, documentation or simply suggestions contact the main
 developer: wave++ <wavexx@users.sf.net>. Our "Concept Developer": SethX
 <sethx@users.sf.net> has been downsized to QA and testing (blame him for each
-bug). The fIcy project is located at <http://ficy.sf.net/>. A general support
-mailing list is hosted on sourceforge_ (low traffic, mostly beta and release
-announcements).
+bug). The fIcy project is located at
+<http://www.thregr.org/~wavexx/software/fIcy/>. A general support mailing list
+is hosted on sourceforge_ (low traffic, mostly beta and release announcements).
 
 .. _sourceforge: http://sourceforge.net/mail/?group_id=104571
 
