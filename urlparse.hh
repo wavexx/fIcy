@@ -22,7 +22,7 @@ struct URL
 {
   // constructors
   URL()
-  {};
+  {}
 
   URL(const std::string& proto, const std::string& server,
       const int port, const std::string& path)
