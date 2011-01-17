@@ -19,6 +19,10 @@ using std::auto_ptr;
 #include <stdexcept>
 using std::runtime_error;
 
+// c system headers
+#include <stdio.h>
+#include <stdarg.h>
+
 
 // implementation
 string

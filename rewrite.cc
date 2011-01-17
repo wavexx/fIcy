@@ -8,13 +8,11 @@
 #include "rewrite.hh"
 using std::string;
 
-#include <cstring>
-using std::memcpy;
-
 #include <stdexcept>
 using std::runtime_error;
 
 // c system headers
+#include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/wait.h>

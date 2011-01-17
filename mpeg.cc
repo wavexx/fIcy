@@ -8,9 +8,7 @@
 #include "mpeg.hh"
 
 // c system headers
-#include <cstring>
-using std::memcpy;
-using std::memchr;
+#include <string.h>
 
 
 namespace mpeg

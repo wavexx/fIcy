@@ -15,7 +15,7 @@ using std::cout;
 #include <stdexcept>
 
 // c system headers
-#include <cstring>
+#include <string.h>
 
 
 // implementation

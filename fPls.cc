@@ -32,10 +32,7 @@ using std::auto_ptr;
 using std::runtime_error;
 
 // c system headers
-#include <cstdlib>
-using std::strtoul;
-using std::strtol;
-
+#include <stdlib.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>

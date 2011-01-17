@@ -23,9 +23,7 @@ using std::cerr;
 using std::auto_ptr;
 
 // c system headers
-#include <cstdlib>
-using std::strtoul;
-
+#include <stdlib.h>
 #include <stdarg.h>
 #include <unistd.h>
 #include <string.h>

@@ -10,7 +10,7 @@
 // system headers
 #include <stdexcept>
 
-// c system headers (inclusion wrappers)
+// c system headers
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>

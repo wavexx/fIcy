@@ -11,8 +11,7 @@
 using std::string;
 
 // c system headers
-#include <cstdlib>
-using std::atoi;
+#include <stdlib.h>
 
 
 // implementation

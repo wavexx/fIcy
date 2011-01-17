@@ -21,7 +21,6 @@ using std::getline;
 #include <sstream>
 using std::istringstream;
 
-
 // c system headers
 #include <netdb.h>
 #include <string.h>

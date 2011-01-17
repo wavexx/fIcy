@@ -9,7 +9,10 @@
 
 // system headers
 #include <iostream>
-#include <cstdio>
+
+// c system headers
+#include <stdio.h>
+
 
 bool
 copy(std::ostream& out, std::istream& in, const std::size_t& len,

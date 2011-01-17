@@ -33,7 +33,7 @@ using std::runtime_error;
 using std::auto_ptr;
 
 // c system headers
-#include <cstdlib>
+#include <stdlib.h>
 #include <sys/types.h>
 #include <dirent.h>
 #include <stdarg.h>

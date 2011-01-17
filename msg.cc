@@ -9,9 +9,7 @@
 
 // c system headers
 #include <stdarg.h>
-#include <cstdio>
-using std::vfprintf;
-using std::fprintf;
+#include <stdio.h>
 
 
 // data
