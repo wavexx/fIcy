@@ -11,7 +11,7 @@
 #include <cstddef>
 
 // some defines
-#define FICY_VERSION "1.0.17"
+#define FICY_VERSION "1.0.18"
 
 
 // some constants
@@ -20,7 +20,7 @@ namespace fIcy
   // common strings
   const char version[] = FICY_VERSION;
   const char copyright[] =
-    "Copyright(c) 2003-2009 of wave++ (Yuri D'Elia) <wavexx@users.sf.net>\n"
+    "Copyright(c) 2003-2011 of wave++ (Yuri D'Elia) <wavexx@users.sf.net>\n"
     "Distributed under GNU LGPL (v2 or above) without ANY warranty.\n";
 
 
