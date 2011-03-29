@@ -5,9 +5,6 @@ fIcy: an icecast/shoutcast stream grabber suite
 .. contents::
 
 
-General Description
--------------------
-
 fIcy is a small icecast/shoutcast stream grabber suite for use under shell
 environment. Its goal is to automatically rip a stream into user customisable
 files. It will work with ICY compatible streams, allowing you to either to save
@@ -25,28 +22,33 @@ The fIcy package includes:
 Files
 -----
 
-These files can be found in the latest release of fIcy
+These files can be found in the latest release of fIcy:
 
-`AUTHORS <AUTHORS.html>`_:
-	People that have contributed to fIcy.
+:`AUTHORS <AUTHORS.html>`_: People that have contributed to fIcy.
+:`NEWS <NEWS.html>`_: Release changes.
+:`FAQ <FAQ.html>`_: Frequently asked questions.
 
-`NEWS <NEWS.html>`_:
-	Release changes.
 
-`COPYING <http://www.gnu.org/licenses/lgpl.html>`_:
-	License. Please read carefully.
+Download
+--------
 
-`README <README.html>`_:
-	This file. Contains usage description.
+Here's a brief list of the latest 5 available releases of fIcy (most recent
+first):
 
-`TODO <TODO.html>`_:
-	Known bugs, missing/planned improvements.
+* `fIcy 1.0.18 <releases/fIcy-1.0.18.tar.gz>`_: 29/03/2011
+* `fIcy 1.0.17 <releases/fIcy-1.0.17.tar.gz>`_: 19/11/2009
+* `fIcy 1.0.16 <releases/fIcy-1.0.16.tar.gz>`_: 03/01/2007
+* `fIcy 1.0.15 <releases/fIcy-1.0.15.tar.gz>`_: 09/11/2005
+* `fIcy 1.0.14 <releases/fIcy-1.0.14.tar.gz>`_: 01/09/2005
 
-`FAQ <FAQ.html>`_:
-	Frequently asked questions.
+Releases are available (and archived) online via HTTP `here <releases/>`__.
+Release announcements are made on `FreshMeat
+<http://freshmeat.net/projects/ficy/>`_ and on the `mailing list
+<http://news.gmane.org/gmane.comp.audio.ficy.user>`_.
 
-`DOWNLOAD <releases/>`_:
-	Latest sources.
+fIcy's GIT repository is publicly accessible at::
+
+  git://src.thregr.org/fIcy
 
 
 Usage
@@ -242,7 +244,7 @@ Cleanup a ripped and/or damaged mp3 file::
 Companion software
 ------------------
 
-`bfr <http://www.glines.org/software/buffer.html>`_:
+`bfr <http://www.glines.org/software/bfr>`_:
 
 	Audio-oriented rebuffering tool. Ideal for lousy streams.
 
@@ -284,15 +286,6 @@ beware that -M specified in fPls means `cumulative recording time` (time
 accumulates across retries/timeouts), while -M specified in fIcy means `single
 stream recording time` (recording stops at the first error or when the
 specified time has elapsed).
-
-For bugs, support, documentation or simply suggestions contact the main
-developer: wave++ <wavexx@users.sf.net>. Our "Concept Developer": SethX
-<sethx@users.sf.net> has been downsized to QA and testing (blame him for each
-bug). The fIcy project is located at
-<http://www.thregr.org/~wavexx/software/fIcy/>. A general support mailing list
-is hosted on sourceforge_ (low traffic, mostly beta and release announcements).
-
-.. _sourceforge: http://sourceforge.net/mail/?group_id=104571
 
 
 Filtering
@@ -368,3 +361,16 @@ Also note that, for "fPls" to work, fIcy must be already installed (be in
 "PATH") or a full fIcy path must be specified with -P.
 
 .. _rst2html: http://docutils.sourceforge.net/
+
+
+General/support mailing list
+----------------------------
+
+If you feel to discuss improvements and suggestions, and/or test beta releases
+before announcement you can subscribe to `ficy-users` by either sending an
+empty email to <ficy-users+subscribe@thregr.org>, using GMane_ (group
+"gmane.comp.audio.ficy.users") or by contacting the author at
+<wavexx@users.sf.net>. The archives are accessible via web through
+http://news.gmane.org/gmane.comp.audio.ficy.user or via news directly.
+
+.. _GMane: http://www.gname.org/
