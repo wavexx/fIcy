@@ -46,15 +46,13 @@ Release announcements are made on `FreshMeat
 <http://freshmeat.net/projects/ficy/>`_ and on the `mailing list
 <http://news.gmane.org/gmane.comp.audio.ficy.user>`_.
 
-fIcy's GIT repository is publicly accessible at::
-
-  git://src.thregr.org/fIcy
+fIcy's GIT repository is publicly accessible at ``git://src.thregr.org/fIcy``.
 
 
 Usage
 -----
 
-Synopsis::
+Synopsis:
 
   fIcy [options] <server [port [path]]|url>
 
@@ -353,7 +351,7 @@ instead of changing manually the Makefile. Please note that, when using gcc, at
 least g++ >= 3 is required to compile fIcy.
 
 There's no "make install" target. Instead you should copy the generated
-executables into the final path, usually doing:
+executables into the final path, usually doing::
 
 	cp fIcy fPls fResync /usr/local/bin
 
