@@ -20,7 +20,7 @@ namespace fIcy
   // common strings
   const char version[] = FICY_VERSION;
   const char copyright[] =
-    "Copyright(c) 2003-2011 of wave++ (Yuri D'Elia) <wavexx@users.sf.net>\n"
+    "Copyright(c) 2003-2011 of wave++ (Yuri D'Elia) <wavexx@thregr.org>\n"
     "Distributed under GNU LGPL (v2 or above) without ANY warranty.\n";
 
 

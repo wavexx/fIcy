@@ -1,6 +1,6 @@
 /*
  * copy - stream 2 stream buffered copy
- * Copyright(c) 2004 of wave++ (Yuri D'Elia) <wavexx@users.sf.net>
+ * Copyright(c) 2004 of wave++ (Yuri D'Elia) <wavexx@thregr.org>
  * Distributed under GNU LGPL without ANY warranty.
  */
 

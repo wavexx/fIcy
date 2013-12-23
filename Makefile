@@ -1,5 +1,5 @@
 # Makefile for fIcy (for pmake or gmake)
-# Copyright(c) 2004-2005 by wave++ (Yuri D'Elia) <wavexx@users.sf.net>
+# Copyright(c) 2004-2005 by wave++ (Yuri D'Elia) <wavexx@thregr.org>
 
 # configuration
 TARGETS := fIcy fResync fPls

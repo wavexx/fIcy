@@ -1,4 +1,4 @@
-Yuri D'Elia "wave++" <wavexx@users.sf.net> http://www.thregr.org/~wavexx/
+Yuri D'Elia "wave++" <wavexx@thregr.org> http://www.thregr.org/~wavexx/
 
 	* Idea
 	* Coding
