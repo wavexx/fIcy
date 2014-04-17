@@ -371,4 +371,4 @@ empty email to <ficy-users+subscribe@thregr.org>, using GMane_ (group
 <wavexx@thregr.org>. The archives are accessible via web through
 http://news.gmane.org/gmane.comp.audio.ficy.user or via news directly.
 
-.. _GMane: http://www.gname.org/
+.. _GMane: http://www.gmane.org/
