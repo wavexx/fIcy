@@ -42,11 +42,15 @@ first):
 * `fIcy 1.0.14 <releases/fIcy-1.0.14.tar.gz>`_: 01/09/2005
 
 Releases are available (and archived) online via HTTP `here <releases/>`__.
-Release announcements are made on `FreshMeat
-<http://freshmeat.net/projects/ficy/>`_ and on the `mailing list
-<http://news.gmane.org/gmane.comp.audio.ficy.user>`_.
+Release announcements are made on the `mailing list
+<http://news.gmane.org/gmane.comp.audio.ficy.user>`_ or through `GitHub
+<https://github.com/wavexx/fIcy>`_.
 
-fIcy's GIT repository is publicly accessible at ``git://src.thregr.org/fIcy``.
+fIcy's GIT repository is publicly accessible at::
+
+  git://src.thregr.org/fIcy
+
+or at `GitHub <https://github.com/wavexx/fIcy>`_.
 
 
 Usage
@@ -54,21 +58,20 @@ Usage
 
 Synopsis:
 
-  fIcy [options] <server [port [path]]|url>
+  ``fIcy [options] <server [port [path]]|url>``
 
-	The main program. Takes directly a stream url and dumps the tracks on
-	the specified file/s and standard output, depending on the settings.
+    The main program. Takes directly a stream url and dumps the tracks on the
+    specified file/s and standard output, depending on the settings.
 
-  fPls [options] <file|url> [fIcy options]
+  ``fPls [options] <file|url> [fIcy options]``
 
-	Playlist manager. Reads a playlist (local or remote) and manages fIcy
-	retries/timeouts/errors, forwarding the specified flags.
+    Playlist manager. Reads a playlist (local or remote) and manages fIcy
+    retries/timeouts/errors, forwarding the specified flags.
 
-  fResync [options] file
+  ``fResync [options] file``
 
-	MPEG resyncing utility. Re-aligns head frame headers on dumped or
-	broken files. Usually needed for embedded hardware decoders or editing
-	software.
+    MPEG resyncing utility. Re-aligns head frame headers on dumped or broken
+    files. Usually needed for embedded hardware decoders or editing software.
 
 
 fIcy options
@@ -319,18 +322,18 @@ Filtering examples
 
 As an example, suppose your titles look like this::
 
-	Artist - Title (radiobanner)
+  Artist - Title (radiobanner)
 
 You can write a sed expression or script containing::
 
-	s/ (radiobanner)$//
+  s/ (radiobanner)$//
 
 to remove the trailing part. This facility can also be used to uniform file
 names, invert Artist/Title positions and so on. Clever use of the pattern space
 can also be used to merge albums. sed alone can be used to debug expressions,
 eg::
 
-	echo "test title" | sed -e 'expr'
+  echo "test title" | sed -e 'expr'
 
 Refer to the sed(1) manual for a complete list of commands you can use.
 
@@ -345,7 +348,7 @@ these files using rst2html_.
 If you need to use a different compiler (for example on OpenBSD), you can call
 make as follows::
 
-	CXX="eg++" make -e
+  CXX="eg++" make -e
 
 instead of changing manually the Makefile. Please note that, when using gcc, at
 least g++ >= 3 is required to compile fIcy.
@@ -353,7 +356,7 @@ least g++ >= 3 is required to compile fIcy.
 There's no "make install" target. Instead you should copy the generated
 executables into the final path, usually doing::
 
-	cp fIcy fPls fResync /usr/local/bin
+  cp fIcy fPls fResync /usr/local/bin
 
 Also note that, for "fPls" to work, fIcy must be already installed (be in
 "PATH") or a full fIcy path must be specified with -P.
