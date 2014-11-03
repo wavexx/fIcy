@@ -4,7 +4,6 @@ fIcy: an icecast/shoutcast stream grabber suite
 
 .. contents::
 
-
 fIcy is a small icecast/shoutcast stream grabber suite for use under shell
 environment. Its goal is to automatically rip a stream into user customisable
 files. It will work with ICY compatible streams, allowing you to either to save
@@ -345,12 +344,12 @@ http://news.gmane.org/gmane.comp.audio.ficy.user or via news directly.
 
 
 Authors and Copyright
-=====================
+---------------------
 
 "fIcy" can be found at http://www.thregr.org/~wavexx/software/fIcy/
 
-| "fIcy" is distributed under GNU LGPL 2, WITHOUT ANY WARRANTY.
-| Copyright(c) 2002-2014 by Yuri D'Elia <wavexx@thregr.org>.
+| "fIcy" is distributed under GNU LGPLv2+, WITHOUT ANY WARRANTY.
+| Copyright(c) 2004-2014 by Yuri D'Elia <wavexx@thregr.org>.
 
 fIcy's GIT repository is publicly accessible at::
 
