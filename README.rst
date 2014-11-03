@@ -19,40 +19,6 @@ The fIcy package includes:
 * fPls, a playlist frontend for fIcy.
 
 
-Files
------
-
-These files can be found in the latest release of fIcy:
-
-:`AUTHORS <AUTHORS.html>`_: People that have contributed to fIcy.
-:`NEWS <NEWS.html>`_: Release changes.
-:`FAQ <FAQ.html>`_: Frequently asked questions.
-
-
-Download
---------
-
-Here's a brief list of the latest 5 available releases of fIcy (most recent
-first):
-
-* `fIcy 1.0.18 <releases/fIcy-1.0.18.tar.gz>`_: 29/03/2011
-* `fIcy 1.0.17 <releases/fIcy-1.0.17.tar.gz>`_: 19/11/2009
-* `fIcy 1.0.16 <releases/fIcy-1.0.16.tar.gz>`_: 03/01/2007
-* `fIcy 1.0.15 <releases/fIcy-1.0.15.tar.gz>`_: 09/11/2005
-* `fIcy 1.0.14 <releases/fIcy-1.0.14.tar.gz>`_: 01/09/2005
-
-Releases are available (and archived) online via HTTP `here <releases/>`__.
-Release announcements are made on the `mailing list
-<http://news.gmane.org/gmane.comp.audio.ficy.user>`_ or through `GitHub
-<https://github.com/wavexx/fIcy>`_.
-
-fIcy's GIT repository is publicly accessible at::
-
-  git://src.thregr.org/fIcy
-
-or at `GitHub <https://github.com/wavexx/fIcy>`_.
-
-
 Usage
 -----
 
@@ -212,13 +178,14 @@ fPls options
 Examples
 ~~~~~~~~
 
-Use fIcy to display ICY titles while playing::
-
-	fPls http://example.com:8080/listen.pls -t | mpg123 -
-
 Rip a station until stopped::
 
-	fPls -L-1 http://netradio.invalid/listen.pls -s.mp3 -o./ -cmrd
+	mkdir files
+	fPls -L-1 http://netradio.invalid/listen.pls -s .mp3 -o files/ -cmrdt
+
+Use fIcy to manage reconnections and display titles while playing::
+
+	fPls http://example.com:8080/listen.pls -t | mpg123 -
 
 Connect directly to the stream with server:port and /path::
 
@@ -375,3 +342,18 @@ empty email to <ficy-users+subscribe@thregr.org>, using GMane_ (group
 http://news.gmane.org/gmane.comp.audio.ficy.user or via news directly.
 
 .. _GMane: http://www.gmane.org/
+
+
+Authors and Copyright
+=====================
+
+"fIcy" can be found at http://www.thregr.org/~wavexx/software/fIcy/
+
+| "fIcy" is distributed under GNU LGPL 2, WITHOUT ANY WARRANTY.
+| Copyright(c) 2002-2014 by Yuri D'Elia <wavexx@thregr.org>.
+
+fIcy's GIT repository is publicly accessible at::
+
+  git://src.thregr.org/fIcy
+
+or at https://github.com/wavexx/fIcy
