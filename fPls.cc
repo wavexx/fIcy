@@ -366,7 +366,7 @@ main(int argc, char* argv[]) try
       for(size_t retry = 0; retry != params.maxRetries; ++retry)
       {
 	// sweet dreams on temporary failures
-	if(loop || it != playlist.begin())
+	if(loop || retry || it != playlist.begin())
 	  sleep(params.waitSecs);
 
 	// residual playing time
