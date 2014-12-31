@@ -232,18 +232,19 @@ load_file(string& out, const char* file)
 
 
 void
-load_file(string& out, const URL& url, const size_t maxFollow,
-    const time_t idleTime, const Http::Auth* auth)
+load_url(string& out, const URL& url, const Params& params)
 {
   // setup headers
   Http::Header qHeaders;
   qHeaders.push_back(fIcy::userAgent);
-  if(auth)
-    qHeaders.push_back(auth->basicHeader());
+  if(params.auth)
+    qHeaders.push_back(params.authData.basicHeader());
 
   // connection
   map<string, string> pReply;
-  auto_ptr<Socket> s(htFollow(pReply, url, qHeaders, maxFollow, idleTime));
+  auto_ptr<Socket> s(htFollow(pReply, url, qHeaders,
+	  params.maxFollow, params.idleTime,
+	  params.maxRetries, params.waitSecs));
 
   // load the file
   char buf[fIcy::bufSz];
@@ -255,13 +256,12 @@ load_file(string& out, const URL& url, const size_t maxFollow,
 
 
 void
-load_list(string& buf, const char* uri, const size_t maxFollow,
-    const time_t idleTime, const Http::Auth* auth)
+load_list(string& buf, const char* uri, const Params& params)
 {
   URL url(uri);
 
   if(url.proto == Http::Proto::proto)
-    load_file(buf, url, maxFollow, idleTime, auth);
+    load_url(buf, url, params);
   else if(!url.proto.size())
   {
     msg("loading playlist from %s", uri);
@@ -347,8 +347,7 @@ main(int argc, char* argv[]) try
   list<string> playlist;
   {
     string buf;
-    load_list(buf, params.uri, params.maxFollow, params.idleTime,
-	(params.auth? &params.authData: NULL));
+    load_list(buf, params.uri, params);
     istringstream stream(buf);
     plsParse(playlist, stream);
   }

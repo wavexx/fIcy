@@ -22,6 +22,7 @@ using std::runtime_error;
 // c system headers
 #include <stdio.h>
 #include <stdarg.h>
+#include <unistd.h>
 
 
 // implementation
@@ -35,8 +36,8 @@ itos(const int i)
 
 
 Socket*
-htFollow(map<string, string>& pReply, const URL& url,
-    const Http::Header qHeaders, size_t limit, time_t timeout)
+htFollow(map<string, string>& pReply, const URL& url, const Http::Header qHeaders,
+    size_t limit, time_t timeout, size_t retries, size_t waitSecs)
 {
   URL buf = url;
   timeval tmBuf;
@@ -48,7 +49,7 @@ htFollow(map<string, string>& pReply, const URL& url,
 
   // connection loop
   auto_ptr<Socket> s;
-  for(size_t level = limit;; --level)
+  for(size_t level = limit, retry = retries;;)
   {
     msg("connecting to (%s %d)", sanitize_esc(buf.server).c_str(), buf.port);
     Http::Http httpc(sanitize_esc(buf.server).c_str(),
@@ -57,7 +58,22 @@ htFollow(map<string, string>& pReply, const URL& url,
     msg("requesting data on (%s)", sanitize_esc(buf.path).c_str());
     Http::Header aHeaders;
     Http::Reply reply(&aHeaders);
-    s.reset(httpc.get(buf.path.c_str(), reply, &qHeaders));
+    try
+    {
+      Socket* tmp = httpc.get(buf.path.c_str(), reply, &qHeaders);
+      s.reset(tmp);
+    }
+    catch(runtime_error& err)
+    {
+      if(!retry--)
+	throw err;
+      else
+      {
+	msg("request failure: %s", err.what());
+	sleep(waitSecs);
+	continue;
+      }
+    }
 
     // validate the reply code
     if(reply.code != Http::Proto::ok &&
@@ -74,7 +90,7 @@ htFollow(map<string, string>& pReply, const URL& url,
       break;
 
     // recursion
-    if(!level)
+    if(!level--)
       throw runtime_error(string("hit redirect follow limit: ") + itos(limit));
 
     map<string, string>::iterator urlPos = pReply.find(Http::Proto::location);

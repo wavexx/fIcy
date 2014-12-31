@@ -20,6 +20,7 @@
 
 Socket*
 htFollow(std::map<std::string, std::string>& pReply, const URL& url,
-    const Http::Header qHeaders, size_t limit, time_t timeout);
+    const Http::Header qHeaders, size_t limit, time_t timeout,
+    size_t retries = 0, size_t waitSecs = 0);
 
 #endif
