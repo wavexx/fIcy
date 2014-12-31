@@ -247,12 +247,11 @@ fResync would remove at least one boundary frame on each file, while other
 tools could also insert extra empty frames to silence the decoder!
 
 The -M flag supported by both fIcy and fPls accepts a time specification in
-seconds, `HH:MM` or `N minutes/hours/days`. Time starts just after the
-connection has been established, but without counting further delays. Also
-beware that -M specified in fPls means `cumulative recording time` (time
-accumulates across retries/timeouts), while -M specified in fIcy means `single
-stream recording time` (recording stops at the first error or when the
-specified time has elapsed).
+seconds, `HH:MM` or `N minutes/hours/days`. Also beware that -M specified in
+fPls means `cumulative recording time` (time accumulates across
+retries/timeouts), while -M specified in fIcy means `single stream recording
+time` (recording stops at the first error or when the specified time has
+elapsed).
 
 
 Filtering

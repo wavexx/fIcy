@@ -468,6 +468,13 @@ main(int argc, char* const argv[]) try
     qHeaders.push_back(authData.basicHeader());
   }
 
+  // setup the timer
+  if(maxTime)
+  {
+    signal(SIGALRM, sigTerm);
+    alarm(maxTime);
+  }
+
   // establish the connection
   map<string, string> pReply;
   auto_ptr<Socket> s(htFollow(pReply, url, qHeaders, maxFollow, idleTime));
@@ -486,13 +493,6 @@ main(int argc, char* const argv[]) try
     shwIcyHdr(pReply, ICY::Proto::genre, "Genre: ");
     shwIcyHdr(pReply, ICY::Proto::url, "URL: ");
     shwIcyHdr(pReply, ICY::Proto::br, "Bit Rate: ");
-  }
-
-  // ensure the max playing time starts _after_ connect
-  if(maxTime)
-  {
-    signal(SIGALRM, sigTerm);
-    alarm(maxTime);
   }
 
   // start reading

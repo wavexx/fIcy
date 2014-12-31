@@ -340,6 +340,9 @@ main(int argc, char* argv[]) try
     return Exit::args;
   }
 
+  time_t start(time(NULL));
+  time_t resTime(params.maxTime);
+
   // fetch and parse the playlist
   list<string> playlist;
   {
@@ -355,9 +358,6 @@ main(int argc, char* argv[]) try
   if(params.daemonize)
     daemonize(params.daemonize);
 
-  // residual playing time
-  time_t resTime(params.maxTime);
-
   // main loop
   for(size_t loop = 0; static_cast<long>(loop) != params.maxLoops; ++loop)
   {
@@ -370,21 +370,20 @@ main(int argc, char* argv[]) try
 	if(loop || it != playlist.begin())
 	  sleep(params.waitSecs);
 
-	time_t start(time(NULL));
+	// residual playing time
+	if(params.maxTime)
+	{
+	  time_t d(time(NULL) - start);
+	  if(d >= params.maxTime)
+	    return Exit::success;
+	  resTime = params.maxTime - d;
+	}
+
 	msg("stream %s: retry %d of loop %d", it->c_str(), retry + 1, loop + 1);
 
 	int ret = exec_fIcy(params, resTime, it->c_str());
 	if(ret == Exit::args)
 	  return Exit::fail;
-
-	// update residual
-	if(params.maxTime)
-	{
-	  time_t d(time(NULL) - start + params.waitSecs);
-	  if(d >= resTime)
-	    return ret;
-	  resTime -= d;
-	}
 
 	// check for success after maxTime
 	if(ret == Exit::success)
