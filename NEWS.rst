@@ -1,3 +1,13 @@
+fIcy 1.0.19 11/01/2015
+----------------------
+
+* fPls will now correctly retry loading remote playlists on connection
+  timeout/failures according to the requested limit (3 by default).
+* fPls/fIcy ``-T`` (maximum time) flag now takes connection/retry delays
+  into account, ensuring the requested time is never exceeded.
+* Some examples in the documentation have been clarified.
+
+
 fIcy 1.0.18 29/03/2011
 ----------------------
 

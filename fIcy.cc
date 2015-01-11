@@ -1,6 +1,6 @@
 /*
  * fIcy - HTTP/1.0-ICY stream extractor/separator - implementation
- * Copyright(c) 2003-2007 of wave++ (Yuri D'Elia) <wavexx@thregr.org>
+ * Copyright(c) 2003-2015 of wave++ (Yuri D'Elia) <wavexx@thregr.org>
  * Distributed under GNU LGPL without ANY warranty.
  */
 

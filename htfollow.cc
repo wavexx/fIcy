@@ -1,6 +1,6 @@
 /*
  * htFollow - follow an http url until content is reached - implementation
- * Copyright(c) 2005-2006 of wave++ (Yuri D'Elia)
+ * Copyright(c) 2005-2015 of wave++ (Yuri D'Elia)
  * Distributed under GNU LGPL without ANY warranty.
  */
 
