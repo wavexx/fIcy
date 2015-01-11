@@ -5,7 +5,7 @@
 VERSION="$1"
 DATE="`date '+%Y%m%d'`"
 CATALOG="
-	Makefile AUTHORS COPYING NEWS README TODO FAQ
+	Makefile COPYING.txt NEWS.rst README.rst TODO.rst FAQ.rst
 	copy.cc copy.hh fIcy.cc fIcy.hh fResync.cc hdrparse.cc hdrparse.hh
 	http.cc http.hh icy.cc icy.hh match.cc match.hh mpeg.cc mpeg.hh
 	msg.cc msg.hh resolver.cc resolver.hh sanitize.cc sanitize.hh
