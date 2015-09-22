@@ -60,7 +60,11 @@ m3uParse(std::list<std::string>& list, std::istream& fd)
 {
   string buf;
   while(getRealLine(fd, buf))
+  {
+    if(!buf.size() || buf[0] == '#')
+      continue;
     list.push_back(buf);
+  }
 }
 
 
@@ -74,16 +78,7 @@ extm3uParse(std::list<std::string>& list, std::istream& fd)
   if(buf != "#EXTM3U")
     throw runtime_error("not an extm3u file");
 
-  while(getRealLine(fd, buf))
-  {
-    if(!buf.compare(0, 7, "#EXTINF"))
-    {
-      if(buf.size() == 7) continue;
-      if(buf[7] == ':' || buf[7] == ',') continue;
-    }
-
-    list.push_back(buf);
-  }
+  m3uParse(list, fd);
 }
 
 void
