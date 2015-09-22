@@ -1,3 +1,9 @@
+fIcy 1.0.20
+----------------------
+
+* fPls accepts more (broken) EXTM3U files.
+
+
 fIcy 1.0.19 11/01/2015
 ----------------------
 

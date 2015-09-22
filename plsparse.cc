@@ -1,6 +1,6 @@
 /*
  * plsParse - M3U/EXTM3U/PLS/PLSv2 playlist parser/s - implementation
- * Copyright(c) 2004-2005 of wave++ (Yuri D'Elia)
+ * Copyright(c) 2004-2015 of wave++ (Yuri D'Elia)
  * Distributed under GNU LGPL without ANY warranty.
  */
 
@@ -76,8 +76,11 @@ extm3uParse(std::list<std::string>& list, std::istream& fd)
 
   while(getRealLine(fd, buf))
   {
-    if(!buf.compare(0, 8, "#EXTINF:"))
-      continue;
+    if(!buf.compare(0, 7, "#EXTINF"))
+    {
+      if(buf.size() == 7) continue;
+      if(buf[7] == ':' || buf[7] == ',') continue;
+    }
 
     list.push_back(buf);
   }
