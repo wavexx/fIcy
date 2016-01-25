@@ -1,56 +1,47 @@
-# Makefile for fIcy (for pmake or gmake)
-# Copyright(c) 2004-2005 by wave++ (Yuri D'Elia) <wavexx@thregr.org>
+## Makefile for fIcy
+# Copyright(c) 2004-2016 by wave++ (Yuri D'Elia) <wavexx@thregr.org>
 
-# configuration
+# Flags
+CWARN += -Wall -Wextra -Wpedantic -Wno-unused-parameter
+CXXFLAGS += -std=c++03 $(CWARN)
+CPPFLAGS += -MD -D_FILE_OFFSET_BITS=64
+
+# Paths
+DESTDIR :=
+PREFIX := /usr/local
+
+# Objects/targets
 TARGETS := fIcy fResync fPls
-FICY_OBJECTS := msg.o resolver.o socket.o http.o tmparse.o urlencode.o \
+fIcy_OBJECTS := msg.o resolver.o socket.o http.o tmparse.o urlencode.o \
 	base64.o urlparse.o hdrparse.o sanitize.o htfollow.o authparse.o \
-	match.o icy.o rewrite.o fIcy.o 
-FRESYNC_OBJECTS := msg.o mpeg.o copy.o fResync.o
-FPLS_OBJECTS := msg.o resolver.o socket.o http.o tmparse.o urlencode.o \
+	match.o icy.o rewrite.o fIcy.o
+fResync_OBJECTS := msg.o mpeg.o copy.o fResync.o
+fPls_OBJECTS := msg.o resolver.o socket.o http.o tmparse.o urlencode.o \
 	base64.o urlparse.o hdrparse.o sanitize.o htfollow.o authparse.o \
 	plsparse.o fPls.o
 
-# parameters
-DEPS := Makedepend
-#if $(CXX) != "g++"
-# This will be overriden when using GNU make, so let's assume MIPSPro.
-# .ORDER is needed to avoid linking in parallel with -prelink
-.ORDER: $(TARGETS)
-DGEN := -MDupdate $(DEPS)
-#else
-DGEN := -MD
-#endif
-CPPFLAGS += $(DGEN)
 
+# Rules
+.SUFFIXES:
+.SECONDEXPANSION:
+.PHONY: all clean install
 
-# suffixes, rules
-.SUFFIXES: .cc .o
-.cc.o:
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
-
-
-# targets
+all_OBJECTS := $(foreach T,$(TARGETS),$($(T)_OBJECTS))
+all_DEPS := $(all_OBJECTS:.o=.d)
 all: $(TARGETS)
 
-fIcy: $(FICY_OBJECTS)
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $(FICY_OBJECTS)
+%.o: %.cc
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
 
-fResync: $(FRESYNC_OBJECTS)
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $(FRESYNC_OBJECTS)
+$(TARGETS): %: $$($$@_OBJECTS)
+	$(CXX) $(CXXFLAGS) -o $@ $($@_OBJECTS) $(LDFLAGS) $($@_LDADD)
 
-fPls: $(FPLS_OBJECTS)
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $(FPLS_OBJECTS)
-
-
-# stubs
-.PHONY: all clean distclean
 clean:
-	rm -rf $(TARGETS) $(FICY_OBJECTS) $(FRESYNC_OBJECTS) \
-		 $(FPLS_OBJECTS) ii_files core $(DEPS) *.d
+	rm -f $(all_OBJECTS) $(all_DEPS) $(TARGETS)
 
-distclean: clean
-	rm -rf *~
+install: $(TARGETS)
+	install -p -t $(DESTDIR)$(PREFIX)/bin/ $(TARGETS)
 
-sinclude $(DEPS)
-sinclude *.d
+
+# Dependencies
+sinclude $(all_DEPS)
