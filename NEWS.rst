@@ -2,6 +2,8 @@ fIcy 1.0.20
 ----------------------
 
 * fPls accepts more (broken) EXTM3U files.
+* fIcy output file (``-o``) is no longer overwritten if ``-n`` is requested
+  without metadata-based splitting.
 
 
 fIcy 1.0.19 11/01/2015

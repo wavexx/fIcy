@@ -61,9 +61,9 @@ shwIcyHdr(const map<string, string>& headers, const char* search,
 }
 
 
-// this helper function returns a new file opened for writing.
+// return a new file opened for writing
 ofstream*
-newFWrap(const char* file, const bool clobber)
+newFileName(const char* file, const bool clobber)
 {
   if(!clobber && !access(file, F_OK))
     return NULL;
@@ -79,19 +79,18 @@ newFWrap(const char* file, const bool clobber)
 }
 
 
-// a wrapper to the wrapper: if a file exists retry with a new file with
-// an incremental number appended. changes file to the real name of the file
+// return a new file opened for writing (file is update with the final path)
 ofstream*
-newNFWrap(string& file)
+newFileName(string& file, bool clobber, bool enumerate)
 {
-  ofstream* out(newFWrap(file.c_str(), false));
-  if(!out)
+  ofstream* out(newFileName(file.c_str(), enumerate? false: clobber));
+  if(!out && enumerate)
   {
     char buf[16];
     for(size_t n = 0; n != std::numeric_limits<size_t>::max(); ++n)
     {
       snprintf(buf, sizeof(buf), ".%lu", n);
-      if((out = newFWrap((file + buf).c_str(), false)))
+      if((out = newFileName((file + buf).c_str(), false)))
       {
 	file += buf;
 	break;
@@ -101,7 +100,6 @@ newNFWrap(string& file)
     if(!out)
       throw runtime_error(string("no free files for `") + file + "'");
   }
-
   return out;
 }
 
@@ -266,7 +264,7 @@ main(int argc, char* const argv[]) try
   // option defaults
   prg = argv[0];
 
-  char* outFile = NULL;
+  string outFile;
   char* suffix = NULL;
   char* auth = NULL;
   ofstream seq;
@@ -427,14 +425,14 @@ main(int argc, char* const argv[]) try
       new Rewrite(rewriteArg, coproc, rewriteType): NULL);
 
   // enumFiles and nameFiles requires a prefix
-  if(useMeta && !outFile)
+  if(useMeta && !outFile.size())
   {
     err("a prefix is required (see -o) when writing files");
     return Exit::args;
   }
 
   // you cannot disable duping if you don't write anything!
-  if(!(outFile || dupStdout))
+  if(!(outFile.size() || dupStdout))
   {
     err("trying to perform a do-nothing download");
     return Exit::args;
@@ -443,7 +441,7 @@ main(int argc, char* const argv[]) try
   // find the starting number when requested
   if(!enu)
   {
-    enu = findFreeFile(outFile);
+    enu = findFreeFile(outFile.c_str());
     msg("enumeration starting from %lu", enu);
   }
 
@@ -508,8 +506,8 @@ main(int argc, char* const argv[]) try
 
   // initial file
   auto_ptr<std::ostream> out;
-  if(outFile && !useMeta)
-    out.reset(newFWrap(outFile, clobber));
+  if(outFile.size() && !useMeta)
+    out.reset(newFileName(outFile, true, numEFiles));
   else
     // the first filename is unknown as the metadata block will
     // arrive in the next metaInt bytes
@@ -530,7 +528,7 @@ main(int argc, char* const argv[]) try
       msg("connection terminated");
       break;
     }
-    if(!(outFile || dupStdout))
+    if(!(outFile.size() || dupStdout))
       break;
 
     // read metadata
@@ -577,10 +575,7 @@ main(int argc, char* const argv[]) try
 	      newFName += suffix;
 
 	    // open the new file
-	    if(numEFiles)
-	      out.reset(newNFWrap(newFName));
-	    else
-	      out.reset(newFWrap(newFName.c_str(), clobber));
+	    out.reset(newFileName(newFName, clobber, numEFiles));
 	  }
 	  else
 	    out.reset();
