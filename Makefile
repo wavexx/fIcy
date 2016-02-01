@@ -2,7 +2,7 @@
 # Copyright(c) 2004-2016 by wave++ (Yuri D'Elia) <wavexx@thregr.org>
 
 # Flags
-CWARN += -Wall -Wextra -Wpedantic -Wno-unused-parameter
+CWARN += -Wall -Wextra -Wno-unused-parameter
 CXXFLAGS += -std=c++03 $(CWARN)
 CPPFLAGS += -MD -D_FILE_OFFSET_BITS=64
 
