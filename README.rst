@@ -306,9 +306,8 @@ Refer to the sed(1) manual for a complete list of commands you can use.
 Installation
 ------------
 
-fIcy comes with a very simple Makefile that should work on any system using
-gcc, or IRIX. GNU make or pmake is required. Documentation is generated from
-these files using rst2html_.
+fIcy comes with a very simple Makefile that should work on any system using gcc
+and GNU make. Documentation is generated from these files using rst2html_.
 
 If you need to use a different compiler (for example on OpenBSD), you can call
 make as follows::
@@ -345,10 +344,10 @@ http://news.gmane.org/gmane.comp.audio.ficy.user or via news directly.
 Authors and Copyright
 ---------------------
 
-"fIcy" can be found at http://www.thregr.org/~wavexx/software/fIcy/
+"fIcy" can be found at https://www.thregr.org/~wavexx/software/fIcy/
 
 | "fIcy" is distributed under GNU LGPLv2+, WITHOUT ANY WARRANTY.
-| Copyright(c) 2004-2016 by Yuri D'Elia <wavexx@thregr.org>.
+| Copyright(c) 2004-2017 by Yuri D'Elia <wavexx@thregr.org>.
 
 fIcy's GIT repository is publicly accessible at::
 

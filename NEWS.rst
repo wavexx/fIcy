@@ -1,9 +1,13 @@
-fIcy 1.0.20
+fIcy 1.0.20 23/06/2017
 ----------------------
 
 * fPls accepts more (broken) EXTM3U files.
 * fIcy output file (``-o``) is no longer overwritten if ``-n`` is requested
   without metadata-based splitting.
+* fIcy output file is now correctly not interrupted if titles are requested
+  without flags affecting filename generation (``-t``, ``-E`` or ``-m``).
+* fIcy now builds fine by default on systems using gcc 4.7.
+* Support for building with ``pmake`` under IRIX has been removed.
 
 
 fIcy 1.0.19 11/01/2015
