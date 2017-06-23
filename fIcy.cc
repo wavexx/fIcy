@@ -559,26 +559,29 @@ main(int argc, char* const argv[]) try
 
 	  // skip the first filename generation when discarding partials
 	  // or when the title doesn't match
-	  if(useMeta && (enu || !rmPartial) && match(title.c_str()))
+	  if(useMeta)
 	  {
-	    newFName = outFile;
-
-	    if(enumFiles)
+	    if((enu || !rmPartial) && match(title.c_str()))
 	    {
-	      char buf[16];
-	      snprintf(buf, sizeof(buf), (nameFiles? "[%lu] ": "%lu"), enu);
-	      newFName += buf;
-	    }
-	    if(nameFiles)
-	      newFName += sanitize_file(title);
-	    if(suffix)
-	      newFName += suffix;
+	      newFName = outFile;
 
-	    // open the new file
-	    out.reset(newFileName(newFName, clobber, numEFiles));
+	      if(enumFiles)
+	      {
+		char buf[16];
+		snprintf(buf, sizeof(buf), (nameFiles? "[%lu] ": "%lu"), enu);
+		newFName += buf;
+	      }
+	      if(nameFiles)
+		newFName += sanitize_file(title);
+	      if(suffix)
+		newFName += suffix;
+
+	      // open the new file
+	      out.reset(newFileName(newFName, clobber, numEFiles));
+	    }
+	    else
+	      out.reset();
 	  }
-	  else
-	    out.reset();
 
 	  // update the last filename pointer
 	  if(lastFName)
