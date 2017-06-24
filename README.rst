@@ -309,18 +309,14 @@ Installation
 fIcy comes with a very simple Makefile that should work on any system using gcc
 and GNU make. Documentation is generated from these files using rst2html_.
 
-If you need to use a different compiler (for example on OpenBSD), you can call
-make as follows::
+All standard environment flags are supported, including DESTDIR/PREFIX for
+relocated installation. If you need to use a different compiler (for example on
+OpenBSD), you can call make as follows::
 
-  CXX="eg++" make -e
+  make CXX=eg++ PREFIX=/usr install
 
 instead of changing manually the Makefile. Please note that, when using gcc, at
 least g++ >= 3 is required to compile fIcy.
-
-There's no "make install" target. Instead you should copy the generated
-executables into the final path, usually doing::
-
-  cp fIcy fPls fResync /usr/local/bin
 
 Also note that, for "fPls" to work, fIcy must be already installed (be in
 "PATH") or a full fIcy path must be specified with -P.
