@@ -11,7 +11,7 @@
 #include <cstddef>
 
 // some defines
-#define FICY_VERSION "1.0.20"
+#define FICY_VERSION "1.0.21"
 
 
 // some constants

@@ -1,6 +1,6 @@
 /*
  * fPls - playlist handler for fIcy
- * Copyright(c) 2004-2015 of wave++ (Yuri D'Elia) <wavexx@thregr.org>
+ * Copyright(c) 2004-2017 of wave++ (Yuri D'Elia) <wavexx@thregr.org>
  * Distributed under GNU LGPL without ANY warranty.
  */
 

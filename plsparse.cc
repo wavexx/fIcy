@@ -1,6 +1,6 @@
 /*
  * plsParse - M3U/EXTM3U/PLS/PLSv2 playlist parser/s - implementation
- * Copyright(c) 2004-2015 of wave++ (Yuri D'Elia)
+ * Copyright(c) 2004-2016 of wave++ (Yuri D'Elia)
  * Distributed under GNU LGPL without ANY warranty.
  */
 
