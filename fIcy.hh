@@ -31,7 +31,7 @@ namespace fIcy
   const size_t maxFollow = 1;
 
   const char fIcyHelp[] =
-    " [-dposqmEtxXIfFCailMcnrv] <server [port [path]]|url>\n\n"
+    " [-dposqmEtxXIfFCailMcAnrv] <server [port [path]]|url>\n\n"
     "  -d\t\tDo not dump the output to stdout\n"
     "  -p\t\tWhen dumping to stdout consider writing errors as transient\n"
     "  -o file\tDump the output to file (or use file as a prefix with -mE)\n"
@@ -51,6 +51,7 @@ namespace fIcy
     "  -l num\tRedirect follow limit\n"
     "  -M time\tMaximum playing time\n"
     "  -c\t\tDo not clobber files (implicit with -n)\n"
+    "  -A\t\tAppend to existing files instead of overwriting\n"
     "  -n\t\tIf the file exists create a new file with .n appended\n"
     "  -r\t\tRemove partials. Keep only complete sequences\n"
     "  -v\t\tVerbose\n\n";

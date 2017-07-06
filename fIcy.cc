@@ -40,14 +40,18 @@ using std::auto_ptr;
 #include <signal.h>
 #include <unistd.h>
 #include <string.h>
+#include <fcntl.h>
 
 
 // globals (urgh)
+enum file_mode { fm_overwrite, fm_append, fm_noclobber };
+
 namespace
 {
-  bool dupStdout(true);
-  char* lastFName(NULL);
-  bool rmPartial(false);
+  bool dupStdout = true;
+  char* lastFName = NULL;
+  bool rmPartial = false;
+  file_mode fileMode = fm_overwrite;
 }
 
 
@@ -61,44 +65,50 @@ shwIcyHdr(const map<string, string>& headers, const char* search,
 }
 
 
-// return a new file opened for writing
+// return a new file opened for writing according to the default open mode
 ofstream*
-newFileName(const char* file, const bool clobber)
+newFileName(const char* file)
 {
-  if(!clobber && !access(file, F_OK))
+  // use open directly to avoid races
+  int flags = O_WRONLY|O_CREAT;
+  if(fileMode == fm_overwrite) flags |= O_TRUNC;
+  else if(fileMode == fm_append) flags |= O_APPEND;
+  else if(fileMode == fm_noclobber) flags |= O_EXCL;
+
+  int fd = open(file, flags);
+  if(fd == -1)
     return NULL;
 
-  ofstream* out(new ofstream(file, std::ios_base::out));
-  if(!*out)
-  {
-    delete out;
-    throw runtime_error(string("cannot write `") + file + "'");
-  }
-
-  return out;
+  ofstream* ret = new ofstream(file, std::ios_base::out|std::ios_base::app);
+  close(fd);
+  return ret;
 }
 
 
-// return a new file opened for writing (file is update with the final path)
+// return a new file opened for writing (file is updated to the final path)
 ofstream*
-newFileName(string& file, bool clobber, bool enumerate)
+newFileName(string& file, bool enumerate)
 {
-  ofstream* out(newFileName(file.c_str(), enumerate? false: clobber));
-  if(!out && enumerate)
+  ofstream* out = newFileName(file.c_str());
+  if(!out)
   {
-    char buf[16];
-    for(size_t n = 0; n != std::numeric_limits<size_t>::max(); ++n)
+    if(!enumerate)
+      throw runtime_error(string("cannot write to `") + file + "'");
+    else
     {
-      snprintf(buf, sizeof(buf), ".%lu", n);
-      if((out = newFileName((file + buf).c_str(), false)))
+      char buf[16];
+      for(size_t n = 0; n != std::numeric_limits<size_t>::max(); ++n)
       {
-	file += buf;
-	break;
+	snprintf(buf, sizeof(buf), ".%lu", n);
+	if((out = newFileName((file + buf).c_str())))
+	{
+	  file += buf;
+	  break;
+	}
       }
+      if(!out)
+	throw runtime_error(string("no free files for `") + file + "'");
     }
-
-    if(!out)
-      throw runtime_error(string("no free files for `") + file + "'");
   }
   return out;
 }
@@ -271,7 +281,6 @@ main(int argc, char* const argv[]) try
   bool enumFiles = false;
   bool nameFiles = false;
   bool showMeta = false;
-  bool clobber = true;
   bool numEFiles = false;
   bool instSignal = false;
   time_t maxTime = 0;
@@ -284,7 +293,7 @@ main(int argc, char* const argv[]) try
   BMatch match;
 
   int arg;
-  while((arg = getopt(argc, argv, "do:E:mvtcs:nprhq:x:X:I:f:F:C:M:l:a:i:")) != -1)
+  while((arg = getopt(argc, argv, "do:E:mvtcAs:nprhq:x:X:I:f:F:C:M:l:a:i:")) != -1)
     switch(arg)
     {
     case 'd':
@@ -313,7 +322,11 @@ main(int argc, char* const argv[]) try
       break;
 
     case 'c':
-      clobber = false;
+      fileMode = fm_noclobber;
+      break;
+
+    case 'A':
+      fileMode = fm_append;
       break;
 
     case 's':
@@ -321,6 +334,7 @@ main(int argc, char* const argv[]) try
       break;
 
     case 'n':
+      fileMode = fm_noclobber;
       numEFiles = true;
       break;
 
@@ -431,6 +445,13 @@ main(int argc, char* const argv[]) try
     return Exit::args;
   }
 
+  // numEFiles and append aren't compatible
+  if(numEFiles && fileMode == fm_append)
+  {
+    err("cannot append (-A) with numeric suffixes (-n)");
+    return Exit::args;
+  }
+
   // you cannot disable duping if you don't write anything!
   if(!(outFile.size() || dupStdout))
   {
@@ -507,7 +528,7 @@ main(int argc, char* const argv[]) try
   // initial file
   auto_ptr<std::ostream> out;
   if(outFile.size() && !useMeta)
-    out.reset(newFileName(outFile, true, numEFiles));
+    out.reset(newFileName(outFile, numEFiles));
   else
     // the first filename is unknown as the metadata block will
     // arrive in the next metaInt bytes
@@ -577,7 +598,7 @@ main(int argc, char* const argv[]) try
 		newFName += suffix;
 
 	      // open the new file
-	      out.reset(newFileName(newFName, clobber, numEFiles));
+	      out.reset(newFileName(newFName, numEFiles));
 	    }
 	    else
 	      out.reset();

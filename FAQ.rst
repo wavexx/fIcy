@@ -46,11 +46,6 @@ How I can write to a single enormous file?
   
     fIcy -o file ...
 
-How I can append to a single file?
-  You can use the standard output instead of a named file::
-  
-    fIcy ... >> file
-
 fIcy aborts with "requested metadata, but got nothing"
   The stream runs without metadata (ie titles). No separation can take
   place. You can still write huge file chunks without the -mE flags.
