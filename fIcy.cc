@@ -427,14 +427,14 @@ main(int argc, char* const argv[]) try
   // enumFiles and nameFiles requires a prefix
   if(useMeta && !outFile.size())
   {
-    err("a prefix is required (see -o) when writing files");
+    err("a prefix is required (-o) when writing files");
     return Exit::args;
   }
 
   // you cannot disable duping if you don't write anything!
   if(!(outFile.size() || dupStdout))
   {
-    err("trying to perform a do-nothing download");
+    err("an output file (-o) is required when stdout is disabled (-d)");
     return Exit::args;
   }
 
