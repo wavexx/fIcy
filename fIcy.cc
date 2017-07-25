@@ -75,7 +75,7 @@ newFileName(const char* file)
   else if(fileMode == fm_append) flags |= O_APPEND;
   else if(fileMode == fm_noclobber) flags |= O_EXCL;
 
-  int fd = open(file, flags);
+  int fd = open(file, flags, 00666);
   if(fd == -1)
     return NULL;
 
