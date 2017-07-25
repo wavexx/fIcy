@@ -1,5 +1,5 @@
-fIcy 1.0.20 23/06/2017
-----------------------
+fIcy 1.0.20: 2017-06-23
+-----------------------
 
 * fPls accepts more (broken) EXTM3U files.
 * fIcy output file (``-o``) is no longer overwritten if ``-n`` is requested
@@ -10,8 +10,8 @@ fIcy 1.0.20 23/06/2017
 * Support for building with ``pmake`` under IRIX has been removed.
 
 
-fIcy 1.0.19 11/01/2015
-----------------------
+fIcy 1.0.19: 2015-01-11
+-----------------------
 
 * fPls will now correctly retry loading remote playlists on connection
   timeout/failures according to the requested limit (3 by default).
@@ -20,22 +20,22 @@ fIcy 1.0.19 11/01/2015
 * Some examples in the documentation have been clarified.
 
 
-fIcy 1.0.18 29/03/2011
-----------------------
+fIcy 1.0.18: 2011-03-29
+-----------------------
 
 * Fixed build with recent C++ compilers/libs.
 
 
-fIcy 1.0.17 19/11/2009
-----------------------
+fIcy 1.0.17: 2009-11-19
+-----------------------
 
 * Fixed "redirection limit" error message.
 * Fixed build with newer GLIBC/GCC versions.
 * Fixed -f/-F under linux.
 
 
-fIcy 1.0.16 03/01/2007
-----------------------
+fIcy 1.0.16: 2007-01-03
+-----------------------
 
 * Better (full) timeout support on both fIcy/fPls.
 * -e removed on fIcy (use -E1 to get the same effect instead).
@@ -47,16 +47,16 @@ fIcy 1.0.16 03/01/2007
 * Work around OSX's HFS+ charset requirements.
 
 
-fIcy 1.0.15 09/11/2005
-----------------------
+fIcy 1.0.15: 2005-11-09
+-----------------------
 
 * Relaxed redirection checks.
 * Exit with success after recording time is elapsed.
 * Some code cleanup.
 
 
-fIcy 1.0.14 01/09/2005
-----------------------
+fIcy 1.0.14: 2005-09-01
+-----------------------
 
 * Basic HTTP authentication support was implemented (-a).
 * Idle network timeout support was implemented (-i).
@@ -64,8 +64,8 @@ fIcy 1.0.14 01/09/2005
 * fResync was unable to sync small files in mmap mode.
 
 
-fIcy 1.0.13 11/05/2005
-----------------------
+fIcy 1.0.13: 2005-05-11
+-----------------------
 
 * Relaxed the playlist parser (fixes behaviour on "fancy" playlists).
 * -xXI can now be used with -o alone (dump matching title/s on the specified
@@ -73,31 +73,31 @@ fIcy 1.0.13 11/05/2005
 * Added fPls daemon support.
 
 
-fIcy 1.0.12 18/04/2005
-----------------------
+fIcy 1.0.12: 2005-04-18
+-----------------------
 
 * HTTP redirection handling was implemented.
 * Support for abort-on-clobber (-i) was dropped.
 
 
-fIcy 1.0.11 11/02/2005
-----------------------
+fIcy 1.0.11: 2005-02-11
+-----------------------
 
 * Added a maximum playing time option (-M).
 * Exit values are more strict now.
 * Dropped "ohg" for `rst <http://docutils.sourceforge.net/>`_.
 
 
-fIcy 1.0.10 06/12/2004
-----------------------
+fIcy 1.0.10: 2004-12-06
+-----------------------
 
 * Added a title filtering/rewriting mechanism (-fF).
 * Include/exclude expressions can be loaded from a file now (-I).
 * Fixed other endianess problems affecting the URL parser.
 
 
-fIcy 1.0.9 03/12/2004
----------------------
+fIcy 1.0.9: 2004-12-03
+----------------------
 
 * Malicious .pls files could contain an option that would be passed along to
   fIcy (harmless, but fixed).
@@ -107,31 +107,31 @@ fIcy 1.0.9 03/12/2004
 * Fixed fResync endianess problems.
 
 
-fIcy 1.0.8 15/11/2004
----------------------
+fIcy 1.0.8: 2004-11-15
+----------------------
 
 * Bug in fResync truncation code.
 * New utility: fPls: playlist handler.
 
 
-fIcy 1.0.7 06/11/2004
----------------------
+fIcy 1.0.7: 2004-11-06
+----------------------
 
 * Using -x did not reset the file for non-matching titles.
 * New -X flag: exclude matching titles (complements -x).
 * Multiple -x and -X can be combined on the command line.
 
 
-fIcy 1.0.6 02/11/2004
----------------------
+fIcy 1.0.6: 2004-11-02
+----------------------
 
 * OpenBSD compilation fixes (thanks to Tobias Franke "deimoz").
 * SHOUTcast > 1.9 compatibility [aka: bug in SHOUTcast] fixes.
 * Reduced HTTP's request fragmentation.
 
 
-fIcy 1.0.5 06/09/2004
----------------------
+fIcy 1.0.5: 2004-09-06
+----------------------
 
 * WARNING: -i has changed semantics!!!
 * -p has changed semantics. Look into README's example section.
@@ -140,8 +140,8 @@ fIcy 1.0.5 06/09/2004
 * New utility fResync: cleanup badly cut MPEG files.
 
 
-fIcy 1.0.4 03/05/2004
----------------------
+fIcy 1.0.4: 2004-05-03
+----------------------
 
 * ohg now included into the distribution.
 * Better filename sanitization.
@@ -149,16 +149,16 @@ fIcy 1.0.4 03/05/2004
 * Better error reporting. No more "unexpected ICY reply".
 
 
-fIcy 1.0.3 09/04/2004
----------------------
+fIcy 1.0.3: 2004-04-09
+----------------------
 
 * Support for removing partial dumps.
 * URL parsing on the command line.
 * New -r flag to remove partial dumps.
 
 
-fIcy 1.0.2 15/03/2004
----------------------
+fIcy 1.0.2: 2004-03-15
+----------------------
 
 * SIGPIPE handler
 * public release!
