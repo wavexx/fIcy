@@ -332,7 +332,7 @@ before announcement you can subscribe to `ficy-users` by either sending an
 empty email to <ficy-users+subscribe@thregr.org>, using GMane_ (group
 "gmane.comp.audio.ficy.users") or by contacting the author at
 <wavexx@thregr.org>. The archives are accessible via web through
-http://news.gmane.org/gmane.comp.audio.ficy.user or via news directly.
+https://www.mail-archive.com/ficy-users@thregr.org/ or via news directly.
 
 .. _GMane: http://www.gmane.org/
 

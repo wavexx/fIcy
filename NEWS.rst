@@ -1,3 +1,10 @@
+fIcy 1.0.21: 2017-08-10
+-----------------------
+
+* fIcy can now append to output files directly using ``-A``.
+* Error messages about missing or incompatible flags are now clearer.
+
+
 fIcy 1.0.20: 2017-06-23
 -----------------------
 
