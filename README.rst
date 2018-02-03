@@ -53,6 +53,8 @@ fIcy options
 
   -c		Do not clobber files.
 
+  -A		Append to existing files instead of overwriting.
+
   -m		Use song title [metadata] when naming files. Uses -o as	prefix.
 
   -n		If the file exists create new one with .n as suffix.
