@@ -80,28 +80,26 @@ namespace Http
   void
   Http::readReply(Socket& s, Reply& reply)
   {
-    char proto[Proto::hdrLen];
-    *proto = 0;
-
+    string proto;
     char buf[Proto::hdrLen];
-    size_t answLen;
+    size_t bufLen;
 
     // read all lines
-    while((answLen = s.gets(buf, Proto::hdrLen)) > Proto::endlSz)
+    while((bufLen = s.gets(buf, Proto::hdrLen)) > Proto::endlSz)
     {
-      if(reply.headers || !*proto)
+      if(reply.headers || !proto.size())
       {
 	// cut trailing newlines from the buffer
-	while(strchr(Proto::endl, buf[answLen - 1]))
-	  buf[--answLen] = 0;
+	while(strchr(Proto::endl, buf[bufLen - 1]))
+	  buf[--bufLen] = 0;
 
-	if(!*proto)
-	  memcpy(proto, buf, answLen);
+	if(!proto.size())
+	  proto = string(buf, bufLen);
 	else if(reply.headers)
-	  reply.headers->push_back(string(buf, answLen));
+	  reply.headers->push_back(string(buf, bufLen));
       }
     }
-    if(answLen < Proto::endlSz)
+    if(bufLen < Proto::endlSz)
       throw std::runtime_error("premature end of http headers");
 
     // parse the first protocol line
