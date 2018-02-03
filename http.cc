@@ -33,6 +33,7 @@ namespace Http
   {
     // definitions
     const char* proto = "http";
+    const char* port = "80";
     const char* protoTy = "tcp";
     const char* version = "HTTP/1.0";
     const char* endl = "\r\n";
@@ -51,10 +52,10 @@ namespace Http
   }
 
 
-  Http::Http(const char* host, const int port, const timeval* timeout)
+  Http::Http(const char* host, const char* port, const timeval* timeout)
   {
     this->host = strdup(host);
-    this->port = (port? port: getSrvPort());
+    this->port = strdup(port? port: Proto::port);
 
     if(!timeout)
       this->timeout = NULL;
@@ -69,20 +70,9 @@ namespace Http
   Http::~Http()
   {
     delete []host;
+    delete []port;
     if(timeout)
       delete timeout;
-  }
-
-
-  int
-  Http::getSrvPort()
-  {
-    servent* se(getservbyname(Proto::proto, Proto::protoTy));
-    if(!se)
-      throw
-	std::runtime_error("error while trying to identify http port number");
-
-    return ntohs(se->s_port);
   }
 
 

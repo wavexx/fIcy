@@ -6,13 +6,11 @@
 
 // local headers
 #include "socket.hh"
-#include "resolver.hh"
 
 // system headers
 #include <stdexcept>
 
 // c system headers
-#include <netinet/in.h>
 #include <unistd.h>
 #include <string.h>
 #include <errno.h>
@@ -31,26 +29,16 @@ Socket::~Socket() throw()
 
 
 void
-Socket::open(const in_addr_t& host, const int port, const timeval* timeout)
+Socket::open(const addrinfo& ai, const timeval* timeout)
 {
   if(conn)
     close();
 
-  fd = socket(AF_INET, SOCK_STREAM, 0);
+  fd = socket(ai.ai_family, ai.ai_socktype, ai.ai_protocol);
   if(fd == -1)
     throw std::runtime_error(strerror(errno));
 
-  // bind the socket
-  sockaddr_in addr;
-  addr.sin_family = AF_INET;
-
-  // fetch the port number
-  addr.sin_port = htons(port);
-  addr.sin_addr.s_addr = host;
-  memset(&(addr.sin_zero), 0, sizeof(addr.sin_zero));
-
-  if(::connect(fd, reinterpret_cast<struct sockaddr*>(&addr),
-	 sizeof(struct sockaddr)) == -1)
+  if(::connect(fd, ai.ai_addr, ai.ai_addrlen) == -1)
     throw std::runtime_error(strerror(errno));
 
   if(!timeout)
@@ -66,9 +54,28 @@ Socket::open(const in_addr_t& host, const int port, const timeval* timeout)
 
 
 void
-Socket::open(const char* host, const int port, const timeval* timeout)
+Socket::open(const char* host, const char* port, const timeval* timeout)
 {
-  open(resolve(host), port, timeout);
+  // resolve the hostname
+  addrinfo hints;
+  memset(&hints, 0, sizeof(hints));
+  hints.ai_family = AF_UNSPEC;
+  hints.ai_socktype = SOCK_STREAM;
+
+  addrinfo* ai;
+  int r = getaddrinfo(host, port, &hints, &ai);
+  if(r)
+    throw std::runtime_error(gai_strerror(r));
+
+  // connect
+  try { open(*ai, timeout); }
+  catch(...)
+  {
+    freeaddrinfo(ai);
+    throw;
+  }
+
+  freeaddrinfo(ai);
 }
 
 

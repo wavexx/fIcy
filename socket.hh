@@ -11,8 +11,8 @@
 #include <cstddef>
 
 // c system headers
-#include <arpa/inet.h>
 #include <sys/socket.h>
+#include <netdb.h>
 #include <sys/time.h>
 
 // not all systems define sock_t
@@ -31,13 +31,13 @@ protected:
   sock_t fd;
 
 public:
-  Socket(const in_addr_t& host, const int port, const timeval* timeout = NULL)
+  Socket(const addrinfo& ai, const timeval* timeout = NULL)
   : conn(false)
   {
-    open(host, port, timeout);
+    open(ai, timeout);
   }
 
-  Socket(const char* host, const int port, const timeval* timeout = NULL)
+  Socket(const char* host, const char* port, const timeval* timeout = NULL)
   : conn(false)
   {
     open(host, port, timeout);
@@ -50,10 +50,10 @@ public:
   ~Socket() throw();
 
   void
-  open(const char* host, const int port, const timeval* timeout = NULL);
+  open(const char* host, const char* port, const timeval* timeout = NULL);
 
   void
-  open(const in_addr_t& host, const int port, const timeval* timeout = NULL);
+  open(const addrinfo& ai, const timeval* timeout = NULL);
 
   void
   close(const int how = 0);

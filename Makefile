@@ -2,7 +2,7 @@
 # Copyright(c) 2004-2017 by wave++ (Yuri D'Elia) <wavexx@thregr.org>
 
 # Flags
-CWARN += -Wall -Wextra -Wno-unused-parameter
+CWARN += -Wall -Wextra -Wno-unused-parameter -Wno-shadow
 CXXFLAGS += -std=c++03 $(CWARN)
 CPPFLAGS += -MD -D_FILE_OFFSET_BITS=64
 
@@ -12,12 +12,12 @@ PREFIX := /usr/local
 
 # Objects/targets
 TARGETS := fIcy fResync fPls
-fIcy_OBJECTS := msg.o resolver.o socket.o http.o tmparse.o urlencode.o \
-	base64.o urlparse.o hdrparse.o sanitize.o htfollow.o authparse.o \
-	match.o icy.o rewrite.o fIcy.o
+fIcy_OBJECTS := msg.o socket.o http.o tmparse.o urlencode.o base64.o \
+	urlparse.o hdrparse.o sanitize.o htfollow.o authparse.o match.o \
+	icy.o rewrite.o fIcy.o
 fResync_OBJECTS := msg.o mpeg.o copy.o fResync.o
-fPls_OBJECTS := msg.o resolver.o socket.o http.o tmparse.o urlencode.o \
-	base64.o urlparse.o hdrparse.o sanitize.o htfollow.o authparse.o \
+fPls_OBJECTS := msg.o socket.o http.o tmparse.o urlencode.o base64.o \
+	urlparse.o hdrparse.o sanitize.o htfollow.o authparse.o \
 	plsparse.o fPls.o
 
 

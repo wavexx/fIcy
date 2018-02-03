@@ -22,6 +22,7 @@ namespace Http
   {
     // parameters
     const extern char* proto;
+    const extern char* port;
     const extern char* protoTy;
     const extern char* version;
     const size_t hdrLen = 1024;
@@ -77,13 +78,10 @@ namespace Http
   class Http
   {
     char* host;
-    int port;
+    char* port;
     timeval* timeout;
 
     // http functions
-    int
-    getSrvPort();
-
     void
     readReply(Socket& s, Reply& reply);
 
@@ -97,7 +95,7 @@ namespace Http
 
   public:
     // de/constructors
-    Http(const char* host, const int port = 0, const timeval* timeout = NULL);
+    Http(const char* host, const char* port = NULL, const timeval* timeout = NULL);
     ~Http();
 
     // basic functionality

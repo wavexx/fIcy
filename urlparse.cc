@@ -16,7 +16,7 @@ using std::string;
 
 // implementation
 void
-urlParse(string& proto, string& server, int& port, string& path,
+urlParse(string& proto, string& server, string& port, string& path,
     const string& url)
 {
   // check for proto
@@ -44,10 +44,10 @@ urlParse(string& proto, string& server, int& port, string& path,
   if(colon == string::npos || colon > slash)
   {
     colon = slash;
-    port = 0;
+    port.clear();
   }
   else
-    port = atoi(url.substr(colon + 1, slash).c_str());
+    port = url.substr(colon + 1, slash - colon - 1);
 
   // finally, the server
   server = url.substr(protoEnd,

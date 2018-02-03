@@ -13,8 +13,8 @@
 
 // underlying parsers
 void
-urlParse(std::string& proto, std::string& server, int& port, std::string& path,
-    const std::string& url);
+urlParse(std::string& proto, std::string& server, std::string& port,
+	 std::string& path, const std::string& url);
 
 
 // common structures
@@ -25,7 +25,7 @@ struct URL
   {}
 
   URL(const std::string& proto, const std::string& server,
-      const int port, const std::string& path)
+      const std::string& port, const std::string& path)
   : proto(proto), server(server), port(port), path(path)
   {}
 
@@ -47,7 +47,7 @@ struct URL
   // data
   std::string proto;
   std::string server;
-  int port;
+  std::string port;
   std::string path;
 };
 
