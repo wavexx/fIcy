@@ -55,7 +55,8 @@ htFollow(map<string, string>& pReply, const URL& url, const Http::Header qHeader
     if(!buf.port.size())
       buf.port = Http::Proto::port;
 
-    msg("connecting to %s:%s", sanitize_esc(buf.server).c_str(), buf.port.c_str());
+    msg("connecting to %s:%s", sanitize_esc(buf.server).c_str(),
+	sanitize_esc(buf.port).c_str());
     Http::Http httpc(buf.server.c_str(), buf.port.c_str(), (timeout? &tmBuf: NULL));
 
     msg("requesting data on %s", sanitize_esc(buf.path).c_str());
