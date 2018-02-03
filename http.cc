@@ -24,6 +24,7 @@ using std::istringstream;
 // c system headers
 #include <netdb.h>
 #include <string.h>
+#include <stdlib.h>
 
 
 // implementation
@@ -69,8 +70,8 @@ namespace Http
 
   Http::~Http()
   {
-    delete []host;
-    delete []port;
+    free(host);
+    free(port);
     if(timeout)
       delete timeout;
   }
