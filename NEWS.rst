@@ -1,3 +1,10 @@
+fIcy 1.0.22: 2018-01-xx
+-----------------------
+
+* Use getaddrinfo to resolve hostnames.
+* Resolve service names as well as port numbers everywhere.
+
+
 fIcy 1.0.21: 2017-08-10
 -----------------------
 

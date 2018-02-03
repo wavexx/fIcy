@@ -1,5 +1,5 @@
 ## Makefile for fIcy
-# Copyright(c) 2004-2017 by wave++ (Yuri D'Elia) <wavexx@thregr.org>
+# Copyright(c) 2004-2018 by wave++ (Yuri D'Elia) <wavexx@thregr.org>
 
 # Flags
 CWARN += -Wall -Wextra -Wno-unused-parameter -Wno-shadow

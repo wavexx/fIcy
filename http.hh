@@ -1,6 +1,6 @@
 /*
  * HTTP/1.0 for streams sockets
- * Copyright(c) 2003-2006 of wave++ (Yuri D'Elia)
+ * Copyright(c) 2003-2018 of wave++ (Yuri D'Elia)
  * Distributed under GNU LGPL without ANY warranty.
  */
 

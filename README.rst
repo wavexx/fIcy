@@ -345,7 +345,7 @@ Authors and Copyright
 "fIcy" can be found at https://www.thregr.org/~wavexx/software/fIcy/
 
 | "fIcy" is distributed under GNU LGPLv2+, WITHOUT ANY WARRANTY.
-| Copyright(c) 2004-2017 by Yuri D'Elia <wavexx@thregr.org>.
+| Copyright(c) 2004-2018 by Yuri D'Elia <wavexx@thregr.org>.
 
 fIcy's GIT repository is publicly accessible at::
 

@@ -1,6 +1,6 @@
 /*
  * fIcy - HTTP/1.0-ICY stream extractor/separator
- * Copyright(c) 2003-2017 of wave++ (Yuri D'Elia)
+ * Copyright(c) 2003-2018 of wave++ (Yuri D'Elia)
  * Distributed under GNU LGPL without ANY warranty.
  */
 
@@ -11,7 +11,7 @@
 #include <cstddef>
 
 // some defines
-#define FICY_VERSION "1.0.21"
+#define FICY_VERSION "1.0.22"
 
 
 // some constants
@@ -20,7 +20,7 @@ namespace fIcy
   // common strings
   const char version[] = FICY_VERSION;
   const char copyright[] =
-    "Copyright(c) 2003-2017 of wave++ (Yuri D'Elia) <wavexx@thregr.org>\n"
+    "Copyright(c) 2003-2018 of wave++ (Yuri D'Elia) <wavexx@thregr.org>\n"
     "Distributed under GNU LGPL (v2 or above) without ANY warranty.\n";
 
 

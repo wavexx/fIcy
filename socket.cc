@@ -1,6 +1,6 @@
 /*
  * sockets - streams sockets - implementation
- * Copyright(c) 2003-2008 of wave++ (Yuri D'Elia)
+ * Copyright(c) 2003-2018 of wave++ (Yuri D'Elia)
  * Distributed under GNU LGPL without ANY warranty.
  */
 
