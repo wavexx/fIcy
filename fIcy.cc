@@ -428,7 +428,7 @@ main(int argc, char* const argv[]) try
     // 1.0.4 compatibility
     url.proto = Http::Proto::proto;
     url.server = argv[optind++];
-    url.port = atoi(argv[optind++]);
+    url.port = argv[optind++];
     url.path = (argc == 3? argv[optind++]: "/");
   }
 
